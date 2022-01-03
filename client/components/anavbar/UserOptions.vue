@@ -5,8 +5,7 @@
         <img alt="image" src="/img/avatar/avatar-1.png" class="rounded-circle mr-1">
         <div class="d-sm-none d-lg-inline-block">Hi, {{$auth.user.name}}</div>
       </a>
-      <div class="dropdown-menu dropdown-menu-right"           
-        v-if="isNotAccessOtherLogin">
+      <div class="dropdown-menu dropdown-menu-right">           
         <!--
           <div class="dropdown-title">Logged in 5 min ago</div>
         -->
@@ -36,11 +35,6 @@ export default {
     }
   },
   
-  computed: {
-    isNotAccessOtherLogin(){
-      return this.$nuxt.$cookiz.get("isNotAccessOtherLogin");
-    }
-  },
 
   methods : {
     logout(){
@@ -51,7 +45,7 @@ export default {
       this.$auth.logout()
       .then(() => {
         this.isLoadingLogout = false;
-        this.$router.push("/signin");
+        this.$router.push("/login");
         // window.location.reload();
        })      
     }
