@@ -25,7 +25,7 @@
       <!-- PENGATURAN -->
       <li class="menu-header">PENGATURAN</li>
       <li class="nav-item dropdown">
-        <nuxt-link class="nav-link" to="/setting/change-password">
+        <nuxt-link class="nav-link" to="/setting/user">
           <i class="fas fa-users-cog"></i>
           <span> Akun </span>
         </nuxt-link>
@@ -33,7 +33,7 @@
           <i class="fas fa-cogs"></i>
           <span> Aplikasi</span>
         </nuxt-link>
-        <nuxt-link class="nav-link" to="/setting/change-password">
+        <nuxt-link class="nav-link" to="/setting/activity">
           <i class="fas fa-users-cog"></i>
           <span> Aktifitas </span>
         </nuxt-link>
