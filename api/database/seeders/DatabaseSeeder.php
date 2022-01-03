@@ -14,24 +14,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            UserSeeder::class,
-            PayrollParameterSeeder::class,
-            PositionSeeder::class,
-            DivisionSeeder::class,
-            EmployeSeeder::class,
-            EmployePayrollParameter::class,
+            UserSeeder::class,          
             SettingSeeder::class,
-
-            IndexFormulaSeeder::class,
-            OvertimeCategorySeeder::class,
-            OvertimeFormulaSeeder::class,            
-
-            AttLogSeeder::class,
-            FingerDeviceSeeder::class,
-            NationalHolidaySeeder::class,
-            PermitTypeSeeder::class,
-            PermitEmployeSeeder::class,
-            PermitFormulaSeeder::class
         ]);
     }
 }

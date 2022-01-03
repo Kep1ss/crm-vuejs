@@ -6,20 +6,25 @@
           <div class="card">
             <div class="card-body">
               <div class="card-title">
-                <list-option-section :self="this"  ref="form-option"></list-option-section>
+                <list-option-section :self="this" ref="form-option"></list-option-section>
               </div>
               <!--  start table -->
-              <table class="table table-striped table-sm vld-parent" ref="formContainer">
+              <table class="table table-striped table-sm vld-parent"
+              ref="formContainer">
+
                 <thead>
                   <tr>
                     <th style="width:5%">No</th>
+                    <th style="width:20%">Code</th>
                     <th style="width:45%">Name</th>
                     <th style="width:10%" class="text-center">Options</th>
                   </tr>
                 </thead>
                 <tbody>
+
                   <tr v-for="(item,i) in data" :key="i">
                     <td>{{1+i++}}</td>
+                    <td>{{ item.code }}</td>
                     <td>{{ item.name }}</td>
                     <td class="text-center">
                       <div class="btn-group">
@@ -30,10 +35,9 @@
                     </td>
                   </tr>
                 </tbody>
-
-                <table-data-not-found-section
-                :self="this"/>
                 <table-data-loading-section
+                :self="this"/>
+                <table-data-not-found-section
                 :self="this"/>
               </table>
               <!-- end table -->
@@ -49,56 +53,63 @@
       :self="this"
       ref="form-input"></FormInput>
     <filter-section
-      :self="this"></filter-section>
+      :self="this" ref="form-filter"></filter-section>
   </section>
 </template>
 
 <script>
-import { mapActions, mapState} from 'vuex'
+import { mapActions,mapState,mapMutations} from 'vuex'
 import FormInput from "./form";
 
+
 export default {
-  props: {
+   props: {
     self: Object,
-     isLoadingPage : Boolean
-  },
+    isLoadingPage : Boolean
+   },
   created() {
-    this.onLoad();
+     this.set_data([]);
+     this.onLoad();
+  },
+  mounted() {
+    this.$refs['form-option'].isMaintenancePage = false;
+    this.$refs['form-option'].isFilter          = false;
   },
   data() {
     return {
-      title: 'Kategori Lembur',
-      isLoadingData : false,
-      isPaginate: true,
+      title               : 'User',
+      isLoadingData       : false,
+      isPaginate          : true,
       parameters : {
-        url : 'overtime-category',
-        type :'pdf',
-        params :{
-          soft_delete : '',
-          search      : '',
-          order       : '',
-          sort        : '',
-          all         : '',
-          per_page    : 10,
-          page        : '',
-        }
-      },
+                url : 'user',
+                type :'pdf',
+                params :{
+                        soft_delete : '',
+                        search      : '',
+                        order       : '',
+                        sort        : '',
+                        all         : '',
+                        per_page    : 10,
+                        page        : '',}
+                      },
     }
   },
-mounted() {
-      this.$refs['form-option'].isMaintenancePage = false;
-      this.$refs['form-option'].isFilter          = false;
-    },
+
+
   computed : {
-    ...mapState('moduleSalaryConfiguration',['data','error','result'],{
+    ...mapState('modulMaster',['data','error','result'],{
       data: state => state.data
     }),
   },
   components : {
+
     FormInput,
+
   },
-  methods: {
-    ...mapActions('moduleSalaryConfiguration',['getData','deleteData']),
+
+  methods : {
+    ...mapActions('modulMaster',['getData','deleteData']),
+    ...mapMutations('modulMaster',['set_data']),
     async onLoad(page = 1){
 
       if(this.isLoadingData) return;
@@ -107,38 +118,44 @@ mounted() {
       this.parameters.params.order  = 'id'
       this.parameters.params.page   = page
       this.parameters.params.sort   = 'asc'
-      this.parameters.url           = 'overtime-category'
+      this.parameters.url           = 'division'
 
       let loader = this.$loading.show({
-          // Optional parameters
-          container: this.$refs.formContainer,
-          canCancel: true,
-          onCancel: this.onCancel,
-      });
+                    // Optional parameters
+                    container: this.$refs.formContainer,
+                    canCancel: true,
+                    onCancel: this.onCancel,
+                });
 
       await this.getData(this.parameters);
       this.result == 'true' ? '' : this.$toaster.error(this.error);
 
-      this.isLoadingData = false;
+      this.isLoadingData            = false;
       loader.hide();
       this.$refs['pagination'].generatePage();
+
     },
 
     onFormShow(){
+      this.$refs["form-input"].parameters.form = {};
       this.$refs["form-input"].isEditable = false;
       window.$("#modal-form").modal("show")
       this.$refs["form-input"].onInitial()
+
     },
 
     onEdit(item){
+
       this.$refs["form-input"].isEditable = true;
       this.$refs["form-input"].form = {},
       this.$refs["form-input"].parameters.form = {...item};
       window.$("#modal-form").modal("show");
       this.$refs["form-input"].onInitial()
+
     },
 
     onTrashed(item){
+
       let self = this
       this.$confirm({
         auth: false,
@@ -150,11 +167,11 @@ mounted() {
         callback: async confirm => {
           if (confirm) {
             await this.deleteData({url:this.parameters.url,id:item.id});
-            if (this.result == 'true'){
-              this.$toaster.success("Data berhasil di pindahkan ke dalam Trash!");
-            }else {
-              this.$toaster.error(this.error);
-            }
+              if (this.result == 'true'){
+                this.$toaster.success("Data berhasil di pindahkan ke dalam Trash!");
+              }else {
+                this.$toaster.error(this.error);
+                }
           }
         },
       });
@@ -169,4 +186,5 @@ select.form-control:not([size]):not([multiple]) {
     padding-top: 5px;
     padding-bottom: 5px;
 }
+
 </style>

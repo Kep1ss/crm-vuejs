@@ -142,7 +142,7 @@ export default{
         this.$axios.post("/reset-password",this.form)
         .then(res => {
           this.$toaster.success("Berhasil Reset Password");
-          this.$router.push("/signin");
+          this.$router.push("/login");
         })
         .catch(err => {
           console.log(err);

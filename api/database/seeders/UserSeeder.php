@@ -16,8 +16,8 @@ class UserSeeder extends Seeder
     {
         for($i=0;$i<30;$i++){
             User::create([
-                "username" => "user-".$i,
-                "fullname" => "user-".$i,
+                "username" => "user".$i,
+                "fullname" => "user".$i,
                 "email" => "user".$i."@gmail.com",
                 "password" => \Hash::make("password"),
             ]);

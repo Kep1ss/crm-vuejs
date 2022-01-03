@@ -38,10 +38,5 @@ class SettingSeeder extends Seeder
             "name" => "logo",
             "value" => "defualt.jpeg"
         ]);
-
-        Setting::create([
-            "name" => "umk",
-            "value" => 0
-        ]);
     }
 }

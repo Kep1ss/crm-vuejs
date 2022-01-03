@@ -115,7 +115,7 @@ export default {
       local: {
         endpoints: {
           login: {
-            url: 'signin',
+            url: 'login',
             method: 'post',
             propertyName: 'access_token'
           },

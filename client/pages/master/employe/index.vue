@@ -101,7 +101,8 @@ export default {
           sort        : '',
           all         : '',
           per_page    : 10,
-          page        : '',}
+          page        : '',
+        }
       },
 
     }

@@ -1,9 +1,5 @@
 <template>
   <section class="section">
-    <div class="section-header">
-      <h1>Setting</h1>
-    </div>
-
     <div class="section-body"
       v-if="isLoadingPage">
       <div class="row">
@@ -128,6 +124,24 @@
                     v-model="form.address">
                   </textarea>
                 </div>
+
+
+                <ValidationProvider 
+                  name="umk"
+                  rules="required|decimal:2">
+                  <div class="form-group col-12" slot-scope="{errors,valid}">
+                    <label for="umk">UMK</label>
+
+                    <money v-model="form.umk"
+                        class="form-control"                            
+                        :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')"/>
+
+                    <div class="invalid-feedback" v-if="errors[0]">
+                      {{ errors[0] }}
+                    </div>                                                           
+                  </div>     
+                </ValidationProvider> 
+
               </div>
               <div class="card-footer text-right">
                 <button class="btn btn-primary"
@@ -166,6 +180,7 @@ export default {
         email : '',
         phone : '',
         logo : '',
+        umk : 0
       },
 
       isLoadingForm : false,
@@ -180,8 +195,8 @@ export default {
   created(){
     this.$axios.get("/setting")
     .then(res => {
-      res.data.forEach(item => {
-          this.form[item.name] = item.value;
+      res.data.forEach(item => {          
+        this.form[item.name] = item.name == 'umk' ? parseInt(item.value) : item.value;
       });
       this.isLoadingPage = false;
     })

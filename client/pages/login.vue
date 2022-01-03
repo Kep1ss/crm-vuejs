@@ -14,7 +14,7 @@
 
             <div class="card card-primary">
               <div class="card-header">
-                <h4>Signin</h4>
+                <h4>Login</h4>
               </div>
 
               <div class="card-body">
@@ -24,11 +24,11 @@
                     autocomplete="off">
                     <ValidationProvider 
                       name="email"
-                      rules="required|email">
+                      rules="required">
                       <div class="form-group" slot-scope="{errors,valid}">
                         <label for="email">Email</label>
                         <input id="email" 
-                          type="email" 
+                          type="text" 
                           class="form-control" 
                           name="email" 
                           v-model="form.email"
@@ -93,7 +93,7 @@
                           <i class="fas fa-circle-notch fa-spin"></i>
                         </span>
                         <span v-else>
-                          Signin
+                          Login
                         </span>
                       </button>
                     </div>
@@ -120,7 +120,7 @@ export default {
 
     head() {
         return {
-            title: 'Signin',
+            title: 'Login',
         }
     },
 

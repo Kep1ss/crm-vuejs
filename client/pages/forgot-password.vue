@@ -56,7 +56,7 @@
                     </div>
 
                     <div class="form-group">
-                      <nuxt-link to="/signin">Kembali</nuxt-link>
+                      <nuxt-link to="/login">Kembali</nuxt-link>
                     </div>
                   </form>
                 </ValidationObserver>
