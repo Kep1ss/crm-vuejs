@@ -4,7 +4,7 @@ const state = () => ({
 
 const mutations = {
      SET_SETTINGS: (state,settings) => {
-         state.settings = settings;
+        state.settings = settings;
      }
 }
 

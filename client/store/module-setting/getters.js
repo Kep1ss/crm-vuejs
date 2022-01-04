@@ -2,10 +2,7 @@ export default{
   getData(state){
     return state.data
   },
-  getLookUpDivision(state){
-    return state.lookup_division
+  getLookUpUser(state){
+    return state.lookup_user;
   },
-  getLookUpPosition(state){
-    return state.lookup_position
-  }
 }

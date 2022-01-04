@@ -11,15 +11,8 @@ export default {
   },
   set_result :(state,payload) => {
     state.result = payload
-  },
-  set_lookup_division : (state,payload) => {
-    state.lookup_division  = payload
-  },
-  set_lookup_position : (state,payload) => {
-    state.lookup_position  = payload
-  },
-  set_lookup_cites : (state,payload) => {
-    state.lookup_cites  = payload
+  },  
+  set_lookup_user : (state,payload) => {
+    state.lookup_user  = payload
   }
-
 }

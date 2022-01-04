@@ -18,7 +18,7 @@ class CheckAllRequest extends FormRequest
     {
         return [
             "checkboxs" => "required|array",
-            "checkboxs.*" => "required|string"
+            "checkboxs.*" => "required|integer"
         ];
     }
 }

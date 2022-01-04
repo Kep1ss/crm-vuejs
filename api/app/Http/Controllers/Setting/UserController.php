@@ -25,7 +25,7 @@ class UserController extends Controller
 
         $data = User::query();
 
-        $data->select("id","username","fullname","email");
+        $data->select("id","username","fullname","email","role","deleted_at");
 
         if($request->filled("soft_deleted")){
             if($request->soft_deleted == "deleted"){
@@ -84,7 +84,7 @@ class UserController extends Controller
                 ->performedOn($user)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'username' => $user->username,
+                    'name' => $user->username,
                     'id' => $user->id,
                     'table' => 'users'
                 ])
@@ -125,7 +125,7 @@ class UserController extends Controller
                 ->performedOn($user)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'username' => $user->username,
+                    'name' => $user->username,
                     'id' => $user->id,
                     'table' => 'users'
                 ])
@@ -163,7 +163,7 @@ class UserController extends Controller
                 ->performedOn($user)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'username' => $user->username,
+                    'name' => $user->username,
                     'id' => $user->id,
                     'table' => 'users'
                 ])
@@ -189,11 +189,11 @@ class UserController extends Controller
             $data->restore();
             
             activity()
-                ->performedOn($user)
+                ->performedOn($data)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'username' => $user->username,
-                    'id' => $user->id,
+                    'name' => $data->username,
+                    'id' => $data->id,
                     'table' => 'users'
                 ])
                 ->log('Restore Data');
@@ -286,7 +286,7 @@ class UserController extends Controller
                 ? $this->indexFilter()->getCollection() 
                 : $this->indexFilter()
         ]);
-
+        
         return  $pdf->stream();
     }
 }

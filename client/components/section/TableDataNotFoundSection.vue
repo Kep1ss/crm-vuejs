@@ -14,10 +14,7 @@
 export default {
   props: {
     self: Object,
-    // pagination : Object,
-    // isLoadingPage : Boolean
   },
-
   computed: {
     isShowNotFound() {
       return (this.self.data.length == 0 && !this.self.isLoadingData);

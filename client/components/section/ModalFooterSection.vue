@@ -3,7 +3,7 @@
     <button type="button" class="btn btn-secondary" data-dismiss="modal">
       <i class="fas fa-ban"></i> Close
     </button>
-    <button type="submit" class="btn btn-primary" :disabled="isLoadingForm" @click="self.onSubmit()">
+    <button type="submit" class="btn btn-primary" :disabled="isLoadingForm">
       <span v-if="isLoadingForm">
         <i class="fas fa-circle-notch fa-spin"></i>
       </span>

@@ -21,8 +21,20 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('remember_token',100)->nullable();			
             $table->integer("role")->default(0);
+            /*
+                // ROLE =>
+                0 => Super Admin
+                1 => Manager Nasional
+                2 => Manager Area
+                3 => Kaper 
+                4 => SPV
+                5 => Sales
+            */
+            $table->bigInteger("parent_id")->unsigned()->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('parent_id')->references('id')->on('users');         
         });
     }
 
