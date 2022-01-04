@@ -21,7 +21,6 @@ class SettingRequest extends FormRequest
             "email" => "required|email",
             "phone" => "required",
             "address" => "required",
-            "umk" => "required|numeric|regex:/^-?[0-9]+(?:.[0-9]{1,2})?$/"
         ];
     }
 }

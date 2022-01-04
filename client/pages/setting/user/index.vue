@@ -15,17 +15,19 @@
                 <thead>
                   <tr>
                     <th style="width:5%">No</th>
-                    <th style="width:20%">Code</th>
-                    <th style="width:45%">Name</th>
+                    <th style="width:20%">Username</th>
+                    <th style="width:45%">Email</th>
+                    <th style="width:10%">Role</th>
                     <th style="width:10%" class="text-center">Options</th>
                   </tr>
                 </thead>
                 <tbody>
 
                   <tr v-for="(item,i) in data" :key="i">
-                    <td>{{1+i++}}</td>
-                    <td>{{ item.code }}</td>
-                    <td>{{ item.name }}</td>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.username }}</td>
+                    <td>{{ item.email }}</td>
+                    <td>{{ item.role || '-'}}</td>
                     <td class="text-center">
                       <div class="btn-group">
                         <button class="btn btn-sm btn-success"><i class="fas fa-info-circle"></i></button>
@@ -60,7 +62,6 @@
 <script>
 import { mapActions,mapState,mapMutations} from 'vuex'
 import FormInput from "./form";
-
 
 export default {
    props: {
@@ -118,7 +119,7 @@ export default {
       this.parameters.params.order  = 'id'
       this.parameters.params.page   = page
       this.parameters.params.sort   = 'asc'
-      this.parameters.url           = 'division'
+      this.parameters.url           = 'user'
 
       let loader = this.$loading.show({
                     // Optional parameters
@@ -159,7 +160,7 @@ export default {
       let self = this
       this.$confirm({
         auth: false,
-        message: "Data "+item.name+" akan dipindahkan ke dalam Trash. Yakin ??",
+        message: "Data "+item.username+" akan dipindahkan ke dalam Trash. Yakin ??",
         button: {
           no: 'No',
           yes: 'Yes'

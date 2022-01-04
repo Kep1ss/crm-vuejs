@@ -29,8 +29,8 @@
                     <td>{{ item.description }}</td>                                   
                     <td>
                       Table : {{ item.properties ? item.properties.table : '-'}} <br/>
-                      Id Data : {{item.properties ? item.properties.id : '-'}} <br/>
-                      Nama Data : {{item.properties ? item.properties.name : '-'}} <br>
+                      Id Data : {{item.properties ? item.properties.id || '-' : '-'}} <br/>
+                      Nama Data : {{item.properties ? item.properties.name || '-' : '-'}} <br>
                     </td>
                     <td>
                       {{item.causer ? item.causer.username : '-'}}

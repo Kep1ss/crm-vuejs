@@ -17,9 +17,9 @@ class ProfilRequest extends FormRequest
     public function rules()
     {
         return [
-            "username" => "required|max:255",
+            "username" => "required|max:255|unique:users,username,".auth()->user()->id,
             "fullname" => "nullable|max:200",
-            "email" => "required|unique:db_users.users,email,".auth()->user()->id."|max:50",
-        ];                    
+            "email" => "required|unique:users,email,".auth()->user()->id."|max:50",
+        ];           
     }
 }

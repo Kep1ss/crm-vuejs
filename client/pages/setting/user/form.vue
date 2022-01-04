@@ -1,43 +1,77 @@
 <template>
   <portal to="modal">
-    <div class="modal fade" aria-hidden="true" id="modal-form">
+    <div class="modal fade" 
+      aria-hidden="true" 
+      id="modal-form">
       <div class="modal-dialog">
         <div class="modal-content">
 
-          <modal-header-section></modal-header-section>
+          <modal-header-section/>
 
 					<div class="modal-body">
+            <div class="form-group">
+              <label for="fullname">Nama Lengkap</label>
+              <input id="fullname"
+                type="text"
+                class="form-control"
+                name="fullname"
+                v-model="parameters.form.fullname"/>
+                <div class="invalid-feedback"></div>
+            </div>
+
 						<ValidationProvider
-							name="division_code"
+							name="username"
 							rules="required">
 							<div class="form-group">
-								<label for="division_code">Division code</label>
-								<input id="division_code"
+								<label for="uername">Username</label>
+								<input id="username"
 									type="text"
 									class="form-control"
-									name="division_code"
-                  v-model="parameters.form.code"
-                  value="DV0001"/>
+									name="username"
+                  v-model="parameters.form.username"/>
 								<div class="invalid-feedback"></div>
 							</div>
 						</ValidationProvider>
+
 						<ValidationProvider
-							name="division_name"
+							name="email"
 							rules="required">
 							<div class="form-group">
-								<label for="division_name">Division name</label>
-								<input id="division_name"
+								<label for="email">Email</label>
+								<input id="email"
 									type="text"
 									class="form-control"
-									name="division_name"
-                  value="Some division name"
-                  v-model="parameters.form.name"/>
+									name="email"            
+                  v-model="parameters.form.email"/>
 								<div class="invalid-feedback"></div>
 							</div>
 						</ValidationProvider>
+            
+            <ValidationProvider
+							name="password"
+							rules="required">
+							<div class="form-group">
+								<label for="password">Password</label>
+								<input id="password"
+									type="text"
+									class="form-control"
+									name="password"            
+                  v-model="parameters.form.password"/>
+								<div class="invalid-feedback"></div>
+							</div>
+						</ValidationProvider>
+
+            <div class="form-group">
+              <label for="role">Role</label>
+              <select name="role" class="form-control">
+                <option value="0">Super Admin</option>
+                <option value="1">Manager Nasional</option>            
+              </select>                  
+            </div>
 					</div>
 
-          <modal-footer-section :self="this"></modal-footer-section>
+          <modal-footer-section 
+            :self="this"/>
         </div>
       </div>
     </div>

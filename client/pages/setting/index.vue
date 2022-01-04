@@ -126,22 +126,6 @@
                 </div>
 
 
-                <ValidationProvider 
-                  name="umk"
-                  rules="required|decimal:2">
-                  <div class="form-group col-12" slot-scope="{errors,valid}">
-                    <label for="umk">UMK</label>
-
-                    <money v-model="form.umk"
-                        class="form-control"                            
-                        :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')"/>
-
-                    <div class="invalid-feedback" v-if="errors[0]">
-                      {{ errors[0] }}
-                    </div>                                                           
-                  </div>     
-                </ValidationProvider> 
-
               </div>
               <div class="card-footer text-right">
                 <button class="btn btn-primary"
@@ -180,7 +164,6 @@ export default {
         email : '',
         phone : '',
         logo : '',
-        umk : 0
       },
 
       isLoadingForm : false,

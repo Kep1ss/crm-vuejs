@@ -9,6 +9,7 @@ use App\Http\Requests\{
     ProfilPasswordRequest
 };
 use App\Helpers\FormatResponse;
+use Illuminate\Support\Str;
 
 class ProfilController extends Controller
 {
@@ -16,7 +17,9 @@ class ProfilController extends Controller
     	try{
     		\DB::beginTransaction();
 
-    		auth()->user()->update($request->validated());
+    		auth()->user()->update($request->validated() + [
+                "username" => Str::slug($request->username)
+            ]);
 
     		\DB::commit();
     		return response()->json([

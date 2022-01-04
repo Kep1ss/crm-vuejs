@@ -26,7 +26,6 @@ class ActivityController extends Controller
             }
         ]);
             
-
         if($request->filled("search")){
             $data->where(function($q) use ($request) {
                 $q->orWhere("description","like","%".$request->search."%");                

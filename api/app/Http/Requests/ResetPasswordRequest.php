@@ -17,8 +17,8 @@ class ResetPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            "email" => "required|email|exists:db_users.users,email",
-            "token" => "required|exists:db_users.users,remember_token",
+            "email" => "required|email|exists:users,email",
+            "token" => "required|exists:users,remember_token",
             "password" => "required|min:8|confirmed",
             "password_confirmation" => "required|min:8",
         ];

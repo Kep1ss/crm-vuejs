@@ -10,7 +10,7 @@
         <app-section></app-section>
         <Nuxt/>
       </div>
-    <vue-confirm-dialog></vue-confirm-dialog>
+      <vue-confirm-dialog></vue-confirm-dialog>
     </div>
 
     <portal-target name="modal"></portal-target>
@@ -66,7 +66,10 @@ export default {
 
   methods : {
     topScroll(){
-      window.scroll({top: 0,behavior: 'smooth'});
+      window.scroll({
+        top: 0,
+        behavior: 'smooth'
+      });
     }
   },
 

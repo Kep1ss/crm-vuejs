@@ -9,11 +9,9 @@
         <!--
           <div class="dropdown-title">Logged in 5 min ago</div>
         -->
-        <!-- <nuxt-link to="/profil" class="dropdown-item has-icon"><i class="far fa-user"></i> Profile </nuxt-link> -->
+        <nuxt-link to="/profil" class="dropdown-item has-icon"><i class="far fa-user"></i> Profile </nuxt-link>
         <!--
-          <a href="" class="dropdown-item has-icon"><i class="fas fa-bolt"></i> Activities </a>
-          <a href="" class="dropdown-item has-icon"><i class="fas fa-cog"></i> Settings </a>
-        -->
+          <a href="" class="dropdown-item has-icon"><i class="fas fa-bolt"></i> Activities </a> -->
         <!-- <div class="dropdown-divider"></div> -->
         <a href="#" @click="logout" class="dropdown-item has-icon text-danger">
           <span v-if="isLoadingLogout" class="text-center">

@@ -26,7 +26,7 @@
                       name="email"
                       rules="required">
                       <div class="form-group" slot-scope="{errors,valid}">
-                        <label for="email">Email</label>
+                        <label for="email">Email / Username </label>
                         <input id="email" 
                           type="text" 
                           class="form-control" 
@@ -158,8 +158,7 @@ export default {
           
           this.$router.push("/");        
         }).catch(err => {
-          console.log(err);
-          
+          console.log(err);          
           this.isLoadingForm = false;
           this.$globalErrorToaster(this.$toaster,err);
         })

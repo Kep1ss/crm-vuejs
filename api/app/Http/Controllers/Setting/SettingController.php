@@ -16,7 +16,7 @@ class SettingController extends Controller
     public function index(){
         return response()->json(
             Setting::select("name","value")
-                ->whereIn("name",["email","company_name","phone","address","logo","umk"])
+                ->whereIn("name",["email","company_name","phone","address","logo"])
                 ->get()
         );
     }

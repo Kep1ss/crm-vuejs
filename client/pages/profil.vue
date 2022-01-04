@@ -1,16 +1,6 @@
 <template>
   <section class="section">
-    <div class="section-header">
-      <h1>Profile</h1>
-    </div>
-
     <div class="section-body">
-      <h2 class="section-title">Hi, {{$auth.user.name}}!</h2>
-
-      <p class="section-lead">
-        Change information about yourself on this page.
-      </p>
-
       <div class="row mt-sm-4">
         <div class="col-8">
           <div class="card">
@@ -26,14 +16,14 @@
                 <div class="card-body">
                     <div class="row p-0 m-0">
                       <ValidationProvider
-                          name="name"
+                          name="username"
                           rules="required">
                           <div class="form-group col" slot-scope="{errors,valid}">
-                            <label>Nama</label>
+                            <label>Username</label>
                             <input type="text"
                               class="form-control"
-                              v-model="form.name"
-                              name="name"
+                              v-model="form.username"
+                              name="username"
                               :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')"/>
                              <div class="invalid-feedback" v-if="errors[0]">
                               {{ errors[0] }}
@@ -98,7 +88,7 @@ export default {
   data(){
     return {
       form : {
-        name : '',
+        username : '',
         fullname : '',
         email : ''
       },
@@ -108,7 +98,7 @@ export default {
 
   created(){
     this.form = {
-      name : this.$auth.user.name,
+      username : this.$auth.user.username,
       fullname : this.$auth.user.fullname,
       email : this.$auth.user.email
     }

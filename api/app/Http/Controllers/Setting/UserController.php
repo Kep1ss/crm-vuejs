@@ -76,7 +76,8 @@ class UserController extends Controller
             \DB::beginTransaction();
 
             $user = User::create($request->validated() + [
-                "password" => \Hash::make($request->password)
+                "password" => \Hash::make($request->password),
+                "username" => str_slug($request->username)
             ]);
 
             activity()
@@ -112,8 +113,9 @@ class UserController extends Controller
             \DB::beginTransaction();
             
             $payload = $request->validated();
-
-            if($request->filled("password")){
+            $payload["username"] = str_slug($payload["username"]);
+            
+            if($request->filled("password")){   
                 $payload["password"] = \Hash::make($request->password);
             }
 

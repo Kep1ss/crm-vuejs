@@ -14,7 +14,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'SiPayRoll',
+    title: 'Crm Mediatama',
     htmlAttrs: {
       lang: 'en'
     },
@@ -52,7 +52,6 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    "~/plugins/axios",
     "~/plugins/vee-validate",
     '~/plugins/toaster',
     '~/plugins/swal',
@@ -92,11 +91,11 @@ export default {
 
   pwa: {
     meta: {
-      title: 'SiPayRoll',
+      title: 'Crm Mediatama',
       author: 'Anaba Software',
     },
     manifest: {
-      name: 'SiPayRoll Anaba Software',
+      name: 'Crm Mediatama Anaba Software',
       short_name: '',
       lang: 'en',
     },

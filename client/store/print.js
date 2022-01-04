@@ -1,5 +1,3 @@
-
-
 const actions = {
   printFile({},payload) {
     var token = this.$auth.ctx.$cookiz.get(('auth._token.local')).replace('Bearer ','');

@@ -4,33 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Profil\ProfilController;
-
 use App\Http\Controllers\Setting\{
 	UserController,
 	ActivityController,
 	SettingController
-};
-
-use App\Http\Controllers\Attendance\{
-	PermitTypeController,
-	PermitEmployeController,
-	NationalHolidayController,
-	FingerDeviceController
-};
-
-use App\Http\Controllers\MasterData\{
-	EmployeController,
-	DivisionController,
-	PositionController,
-	PayrollParameterController
-};
-
-use App\Http\Controllers\SalaryConfiguration\{
-	EmployePayrollParameterController,
-	PayrollParameterFormulaController,
-	OvertimeCategoryController,
-	OvertimeFormulaController,	
-	IndexFormulaController
 };
 
 /*
@@ -72,7 +49,7 @@ Route::group(["prefix" => $version],function() use ($version) {
 		Route::put("/profil/password",[ProfilController::class,"password"])->name("profil.password");		
 
 		/* MODULE SETTING */
-		Route::group(["as" => "setting."],function(){        
+		Route::group(["as" => "setting.","middleware" => "is-super-admin"],function(){        
 			Route::post("/user/restore-all",[UserController::class,"restoreAll"])->name("user.restore-all");
 			Route::delete("/user/destroy-all",[UserController::class,"destroyAll"])->name("user.destroy-all");
 			Route::post("/user/restore/{id}",[UserController::class,"restore"])->name("user.restore");
