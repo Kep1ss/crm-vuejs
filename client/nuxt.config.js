@@ -61,7 +61,8 @@ export default {
     '~/plugins/global-components',
     '~/plugins/v-money',
     '~/plugins/vue-confirm-dialog',
-    '~/plugins/vue-loading-overlay'
+    '~/plugins/vue-loading-overlay',
+    '~/plugins/nuxt-client-init',
     // '~/plugins/vue-htmlpdf'
   ],
 

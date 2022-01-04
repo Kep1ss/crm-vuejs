@@ -21,8 +21,7 @@ class UserRequest extends FormRequest
             "fullname" => "nullable|max:255",
             "email" => "required|max:255|unique:users",
             "password" => "required|min:8",
-            "status" => "nullable|in:active,inactive",
-            "role" => "nullable"
+            "role" => "nullable|integer"
         ];
 
         if($this->method() == "PUT" || $this->method() == "put"){

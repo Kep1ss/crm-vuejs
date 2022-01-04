@@ -25,17 +25,24 @@
       <!-- PENGATURAN -->
       <li class="menu-header">PENGATURAN</li>
       <li class="nav-item dropdown">
-        <nuxt-link class="nav-link" to="/setting/user">
+        <nuxt-link class="nav-link" to="/setting/user"
+          v-if="$auth.user.role === 0">
           <i class="fas fa-users-cog"></i>
           <span> Akun </span>
         </nuxt-link>
-        <nuxt-link class="nav-link" to="/setting">
+        <nuxt-link class="nav-link" to="/setting"
+          v-if="$auth.user.role === 0">
           <i class="fas fa-cogs"></i>
           <span> Aplikasi</span>
         </nuxt-link>
-        <nuxt-link class="nav-link" to="/setting/activity">
+        <nuxt-link class="nav-link" to="/setting/activity"
+          v-if="$auth.user.role === 0">
           <i class="fas fa-users-cog"></i>
           <span> Aktifitas </span>
+        </nuxt-link>
+        <nuxt-link class="nav-link" to="/setting/change-password">
+          <i class="fas fa-users-cog"></i>
+          <span> Ganti Password </span>
         </nuxt-link>
       </li>
       <!-- END PENGATURAN -->

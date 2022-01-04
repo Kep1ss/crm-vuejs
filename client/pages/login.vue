@@ -48,14 +48,12 @@
                       rules="required|min:8"> 
                       <div class="form-group" slot-scope="{errors,valid}">
                         <div class="d-block">
-                          <label for="password" class="control-label">Password</label>
-                          <!-- 
+                          <label for="password" class="control-label">Password</label>                          
                             <div class="float-right">
-                            <nuxt-link to="/forgot-password" class="text-small">
-                              Forgot Password?
-                            </nuxt-link>
-                            </div>
-                          -->
+                              <nuxt-link to="/forgot-password" class="text-small">
+                                Forgot Password?
+                              </nuxt-link>
+                            </div>                         
                         </div>
                         <input                       
                           type="password" 
@@ -104,7 +102,7 @@
             </div>         
 
             <div class="simple-footer">
-              Copyright &copy; PT. Software Anak Bangsa - {{year}}.<br>
+              Copyright &copy; {{company_name}} - {{year}}.<br>
               Stisla. Developed by <a href="http://anabasoftware.com">Anabasoftware</a>
             </div>
           </div>
@@ -119,9 +117,9 @@ export default {
     middleware : "isNotLogin",  
 
     head() {
-        return {
-            title: 'Login',
-        }
+      return {
+        title: 'Login',
+      }
     },
 
     layout : 'empty',
@@ -142,6 +140,10 @@ export default {
       },
       year(){    
         return new Date().getFullYear();
+      },     
+      company_name(){
+        let company_name = this.$store.state.setting.settings.find(item => item.name == "company_name");
+        return company_name ? company_name.value : "PT. Software Anak Bangsa";        
       }
     },
 
@@ -153,9 +155,7 @@ export default {
 
         this.$auth.login({
           data: this.form,
-        }).then(res => {  
-          this.$nuxt.$cookiz.set("isNotAccessOtherLogin",res.data.isNotAccessOtherLogin)  
-          
+        }).then(res => {            
           this.$router.push("/");        
         }).catch(err => {
           console.log(err);          

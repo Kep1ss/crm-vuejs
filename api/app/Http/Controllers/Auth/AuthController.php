@@ -23,7 +23,7 @@ class AuthController extends Controller
             "password" => $request->password
         ])) {
             return response()->json([
-                "message" => "Unauthorized"
+                "message" => "Email Atau Password Salah"
             ],401);
         }
 

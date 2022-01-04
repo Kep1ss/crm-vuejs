@@ -11,7 +11,12 @@
                 valign="top"
                 align="center">
                 <b>Deskripsi</b>
-            </td>   
+            </td> 
+            <td style="width:100px"
+                valign="top"  
+                align="center">
+                Detail
+            </td>
         </tr>
     </thead>
 
@@ -27,6 +32,12 @@
                 valign="top">
                 {{$item->description ?? '-'}}
             </td>            
+            <td align="center"
+                valign="top">
+                Table : {{$item->property ? $itme->property->table ?? '-' : '-'}} <br/>
+                Nama : {{$item->property ? $item->property->name  ?? '-' : '-'}}<br/>
+                User : {{$item->causer ? $item->causer->username ?? '-' : '-'}}
+            </td>        
         </tr>
         @endforeach
     </tbody>

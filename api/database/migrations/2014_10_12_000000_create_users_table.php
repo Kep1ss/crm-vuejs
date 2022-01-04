@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string("fullname",100)->nullable();
             $table->string('email')->unique();
             $table->string('password');
-            // $table->enum("status",["active","inactive"])->default("active");
+            $table->string('remember_token',100)->nullable();			
             $table->integer("role")->default(0);
             $table->timestamps();
             $table->softDeletes();

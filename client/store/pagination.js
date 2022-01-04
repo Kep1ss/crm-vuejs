@@ -1,5 +1,4 @@
-
- const state  = {
+const state  = {
   from          : '',
   to            : '',
   total_page    : '',
@@ -8,7 +7,7 @@
   per_page      : '',
 }
 
- const mutations = {
+const mutations = {
   SET_PAGINATION(state,payload){
     state.from          = payload.from
     state.to            = payload.to
@@ -18,12 +17,12 @@
     state.per_page      = payload.per_page
   },
 }
- const actions = {
-   setPagination({commit},payload) {
-          commit('SET_PAGINATION',payload)
+
+const actions = {
+  setPagination({commit},payload) {
+    commit('SET_PAGINATION',payload)
   }
 }
-
 
 export default {
   namespaced : true,

@@ -1,8 +1,6 @@
-
-
 export default {
-    getData({commit,dispatch},payload) {
-       return  this.$axios.get('/'+payload.url,{params :payload.params})
+   async getData({commit,dispatch},payload) {
+       return  await this.$axios.get('/'+payload.url,{params :payload.params})
           .then ((response) => {
             commit('set_data',response.data.data)
             commit('set_result','true');
@@ -42,12 +40,28 @@ export default {
         })
     },
 
+    genCode({commit},payload){
+      return this.$axios.get('/'+payload.url+'/getcode')
+        .then((response) => {
+          commit('set_code',response.data.code);
+        }).catch((error) =>{
+          commit('set_error',error.response)
+        })
+    },
+
     lookUp({commit},payload){
-      return this.$axios.get(payload+'/formula-index')
+      let url = (payload.url == 'employe/getcites' ? payload.url : payload.url+'?all=true');
+      return this.$axios.get('/'+url)
       .then((response) => {
         switch(payload.url) {
-          case 'overtime_parameter':
-            commit('set_overtime_parameter',response.data)
+          case 'division':
+            commit('set_lookup_division',response.data)
+            break;
+          case 'position':
+            commit('set_lookup_position',response.data)
+            break;
+          case 'employe/getcites':
+            commit('set_lookup_cites',response.data)
             break;
         }
 
@@ -55,4 +69,5 @@ export default {
         commit('set_error', error.response.data.message)
       })
     },
+
 }

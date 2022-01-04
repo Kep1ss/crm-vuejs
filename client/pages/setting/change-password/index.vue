@@ -1,18 +1,12 @@
 <template>
   <section class="section">
-    <div class="section-header">
-      <h1>Ubah Password</h1>     
-    </div>
-
-    <div class="section-body"> 
-      <h2 class="section-title">Hi, {{$auth.user.name}}!</h2>
-      <p class="section-lead">
-        Change information about yourself on this page.
-      </p>
-
-      <div class="row mt-sm-4">        
+    <div class="section-body">     
+      <div class="row mt-sm-4">              
         <div class="col-8">
           <div class="card">
+            <div class="card-header">
+              <h4>Edit Password</h4>
+            </div>        
             <div class="col-12 mt-3">
               <ValidationObserver v-slot="{invalid,validate}">  
                 <form @submit.prevent="validate().then(onSubmit(invalid))"

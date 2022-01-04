@@ -16,7 +16,7 @@ class SettingSeeder extends Seeder
     {
         Setting::create([
             "name" => "company_name",
-            "value" => "Payroll"
+            "value" => "mediatama"
         ]);
 
         Setting::create([
@@ -26,7 +26,7 @@ class SettingSeeder extends Seeder
 
         Setting::create([
             "name" => "email",
-            "value" => "payroll@gmail.com"
+            "value" => "mediatama@gmail.com"
         ]);
 
         Setting::create([

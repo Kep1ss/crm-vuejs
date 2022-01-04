@@ -31,6 +31,7 @@ Route::group(["prefix" => $version],function() use ($version) {
 		]);
 	})->name("status");
 
+	Route::get("/get-setting",[SettingController::class,"index"])->name("get-setting");
 
     Route::group(["namespace" => "Auth","as" => "auth."],function(){
 		Route::post('/login', [AuthController::class,"login"])->name("login");
@@ -61,9 +62,9 @@ Route::group(["prefix" => $version],function() use ($version) {
 			Route::get('/activity/export/{type}', [ActivityController::class,"export"])->name("activity.export");
 			Route::get('/activity/print',[ActivityController::class,"print"])->name("activity.print");
 
-			Route::get("/setting",[SettingController::class,"index"])->name("setting.index");
-        	Route::put("/setting",[SettingController::class,"update"])->name("setting.update");
-        	Route::put("/setting/logo",[SettingController::class,"updateLogo"])->name("setting.logo");
+			Route::get("/setting",[SettingController::class,"index"])->name("index");
+        	Route::put("/setting",[SettingController::class,"update"])->name("update");
+        	Route::put("/setting/logo",[SettingController::class,"updateLogo"])->name("logo");
 		});
     });
 });
