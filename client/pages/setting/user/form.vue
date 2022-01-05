@@ -6,12 +6,13 @@
       <div class="modal-dialog">
         <div class="modal-content">
 
-        <modal-header-section/>
+        <modal-header-section
+          :self="this"/>
 
         <ValidationObserver
           v-slot="{invalid,validate}"
           ref="form-validate">
-          <form @submit.prevent="validate().then(onSubmit(invalid))"
+            <form @submit.prevent="validate().then(onSubmit(invalid))"
               autocomplete="off">
 
             <div class="modal-body">
@@ -50,7 +51,7 @@
 
               <ValidationProvider
                 name="email"
-                rules="required">
+                rules="required|email">
                 <div class="form-group" slot-scope="{errors,valid}">
                   <label for="email">Email</label>
                   <input id="email"
@@ -69,27 +70,24 @@
               <ValidationProvider
                 name="password"
                 :rules="isEditable ? 'min:8' : 'required|min:8'">
-                <div class="form-group">
+                <div class="form-group" slot-scope="{errors,valid}">
                   <label for="password">Password</label>
                   <input id="password"
                     type="text"
                     class="form-control"
                     name="password"            
-                    v-model="parameters.form.password"/>
-                </div>
-              </ValidationProvider>
+                    v-model="parameters.form.password"
+                    :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')">
 
-              <div class="form-group">
-                <label for="role">Role</label>
-                <select name="role" class="form-control">
-                  <option value="0">Super Admin</option>
-                  <option value="1">Manager Nasional</option>            
-                </select>                  
-              </div>
+                  <div class="invalid-feedback" v-if="errors[0]">
+                    {{ errors[0] }}
+                  </div>      
+                </div>
+              </ValidationProvider>              
             </div>
 
-            <modal-footer-section 
-              :self="this"/>
+            <modal-footer-section     
+              :isLoadingForm="isLoadingForm"/>
           </form>
         </ValidationObserver>
 
@@ -107,17 +105,9 @@ export default {
 
   data() {
     return {
-      isActive: "",
       isEditable  : false,
-      title: 'User',
-      roles : [
-        {value : 0,title : "Super Admin"},
-        {value : 1,title : "Manager Nasional"},
-        {value : 2,title : "Mangaer Area"},
-        {value : 3,title : "Kaper"},
-        {value : 4,title : "Spv"},
-        {value : 5,title : "Sales"}
-      ],
+      isLoadingForm : false,
+      title: 'User',      
       parameters : {
         url : 'user',
         form : {
@@ -138,30 +128,27 @@ export default {
   methods: {
      ...mapActions('modulSetting',['addData','updateData']),
 
-      onInitial() {
-        let isActive = this.isActive;
-        this.isActive = "";
-      },
-
-     async onSubmit(isInvalid){
-      if(isInvalid || this.isLoadingForm) return false;      
-
+     async onSubmit(isInvalid){       
+      if(isInvalid || this.isLoadingForm) return;            
+      
       this.isLoadingForm = true;
-      this.isEditable == true ? await this.updateData(this.parameters) : await this.addData(this.parameters) ;
 
-      if (this.result == 'true') {
+      if(this.isEditable){
+        await this.updateData(this.parameters)
+      }else{ 
+        await this.addData(this.parameters)
+      }
+
+      if (this.result == true) {      
+        this.self.onLoad(this.self.parameters.params.page);  
         this.$toaster.success('Data berhasil di '+ (this.isEditable == true ? 'Diedit': 'Tambah'));
         window.$("#modal-form").modal("hide");
       }else {
-        this.$toaster.error(this.error);
+        this.$globalErrorToaster(this.$toaster,this.error);      
       }
 
       this.isLoadingForm = false;
-     },
-
-    onClose() {
-      this.onLoad();
-    },
+     }
   },
 };
 </script>

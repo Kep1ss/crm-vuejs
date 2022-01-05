@@ -1,12 +1,15 @@
 const actions = {
-  printFile({},payload) {
+  printFile({},payload) {    
     var token = this.$auth.ctx.$cookiz.get(('auth._token.local')).replace('Bearer ','');
-    window.open(process.env.API_URL+'/'+payload+'/print?token='+token+'&all=true','_blank');
+    let tokenParam = "?token="+token+"&all=true"
+    window.open(process.env.API_URL+'/'+payload.parameters.url+'/print'+tokenParam,'_blank');
   },
 
   exportFile({},payload){
     var token = this.$auth.ctx.$cookiz.get(('auth._token.local')).replace('Bearer ','');    
-    window.open(process.env.API_URL+'/'+payload.url+'/export/'+payload.type+'?token='+token+'&all='+payload.params.all,'_blank');
+    let tokenParam = '?token='+token+'&all=true' 
+  
+    window.open(process.env.API_URL+'/'+payload.parameters.url+'/export/'+payload.type + tokenParam,'_blank');
   }
 }
 

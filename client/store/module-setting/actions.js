@@ -18,7 +18,6 @@ export default {
   addData({commit,dispatch},payload){
     return this.$axios.post('/'+payload.url,payload.form)
       .then(response => {
-        dispatch('getData',payload);
         commit('set_result',true);
       }).catch(error =>{
         commit('set_result',false)
@@ -29,7 +28,6 @@ export default {
   updateData({commit,dispatch},payload){
     return this.$axios.put('/'+payload.url+'/'+payload.form.id,payload.form)
       .then(response => {
-        dispatch('getData',payload);
         commit('set_result',true);
       }).catch(error =>{
         commit('set_result',false)
@@ -40,7 +38,6 @@ export default {
   deleteData({commit,dispatch},payload){
     return this.$axios.delete('/'+payload.url+'/'+payload.id)
       .then(response => {
-        dispatch('getData',payload);
         commit('set_result',true);
       }).catch(error =>{
         commit('set_result',false)
@@ -54,7 +51,6 @@ export default {
           checkboxs : payload.checkboxs, 
         }
       }).then(response => {
-        dispatch("getData",payload)
         commit('set_result',true)
       }).catch(error => {
         commit('set_result',false)
@@ -65,7 +61,6 @@ export default {
   restoreData({commit,dispatch},payload){
     return this.$axios.post("/"+payload.url+"/restore/"+payload.id)
     .then(response => {
-      dispatch('getData',payload)
       commit('set_result',true)
     }).catch(error => {
       commit('set_result',false)
@@ -78,7 +73,6 @@ export default {
       checkboxs : payload.checkboxs
     })
     .then(response => {
-      dispatch('getData',payload)
       commit('set_result',true)
     }).catch(error => {
       commit('set_result',false)
@@ -95,19 +89,19 @@ export default {
       })
   },
 
-  lookUp({commit},payload){
-    let url = payload.url+'?all='+payload.all;  
-    return this.$axios.get('/'+url)
-    .then(response => {      
-      commit('set_result',true)
-      switch(payload.url) {
-        case 'user':
-          commit('set_lookup_user',response.data)
-          break;        
-      }      
-    }).catch(error => {
-      commit('set_result',false)
-      commit('set_error', error.response)
-    })
-  },
+  // lookUp({commit},payload){
+  //   let url = payload.url+'?all='+payload.all;  
+  //   return this.$axios.get('/'+url)
+  //   .then(response => {      
+  //     commit('set_result',true)
+  //     switch(payload.url) {
+  //       case 'user':
+  //         commit('set_lookup_user',response.data)
+  //         break;        
+  //     }      
+  //   }).catch(error => {
+  //     commit('set_result',false)
+  //     commit('set_error', error.response)
+  //   })
+  // },
 }

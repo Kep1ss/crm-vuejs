@@ -11,6 +11,7 @@ use App\Http\Requests\{
     UserRequest,
     CheckAllRequest 
 };
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -75,10 +76,10 @@ class UserController extends Controller
         try{    
             \DB::beginTransaction();
 
-            $user = User::create($request->validated() + [
+            $user = User::create([
                 "password" => \Hash::make($request->password),
-                "username" => str_slug($request->username)
-            ]);
+                "username" => Str::slug($request->username,'-')
+            ] + $request->validated());
 
             activity()
                 ->performedOn($user)
@@ -113,7 +114,7 @@ class UserController extends Controller
             \DB::beginTransaction();
             
             $payload = $request->validated();
-            $payload["username"] = str_slug($payload["username"]);
+            $payload["username"] = Str::slug($payload["username"],'-');
             
             if($request->filled("password")){   
                 $payload["password"] = \Hash::make($request->password);
@@ -156,6 +157,8 @@ class UserController extends Controller
                 $user->id == auth()->user()->id,
                 new \Exception("Anda tidak dapat menghapus diri anda sendiri",422)
             );            
+            
+            // RELASIONAL DELETE
 
             $user->delete();
 
@@ -216,6 +219,8 @@ class UserController extends Controller
                 in_array(auth()->user()->id,$request->checkboxs),
                 new \Exception("Anda tidak dapat menghapus diri anda sendiri",422)
             );
+
+            // RELASIONAL DELETE
 
             User::whereIn("id",$request->checkboxs)
                 ->delete();  

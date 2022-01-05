@@ -14,8 +14,7 @@
 <script>
 export default {
   props: {
-    self : Object,
-    isLoadingForm: Boolean,
+    isLoadingForm : Boolean
   },
 };
 </script>

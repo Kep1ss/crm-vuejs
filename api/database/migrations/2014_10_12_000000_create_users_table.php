@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('remember_token',100)->nullable();			
+            $table->decimal("target_copies",20,2)->default(0)->usigned();
             $table->integer("role")->default(0);
             /*
                 // ROLE =>
@@ -29,6 +30,8 @@ class CreateUsersTable extends Migration
                 3 => Kaper 
                 4 => SPV
                 5 => Sales
+                6 => Kotele
+                7 => Tele Marketing
             */
             $table->bigInteger("parent_id")->unsigned()->nullable();
             $table->timestamps();

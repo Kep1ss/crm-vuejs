@@ -8,48 +8,106 @@
               <div class="card-title">
                 <list-option-section 
                   :self="this" 
-                  ref="form-option">
-                </list-option-section>
+                  ref="form-option"/>
               </div>
 
-              <table class="table table-striped table-sm vld-parent"
-                ref="formContainer">
-                <thead>
-                  <tr>
-                    <th style="width:5%">No</th>
-                    <th style="width:45%">Deskripsi</th>
-                    <th>Data</th>
-                    <th>User</th>
-                  </tr>
-                </thead>
-                <tbody>
+              <div v-if="parameters.form.checkboxs.length">
+                <button class="btn btn-sm btn-danger" 
+                  data-toggle="tooltip" 
+                  data-placement="top" 
+                  data-original-title="Hapus Semua Data"
+                  @click="onDeleteAll()"
+                  v-if="parameters.params.soft_deleted != 'deleted'">
+                  <i class="fas fa-trash"></i>
+                </button>
+                <button class="btn btn-sm btn-success" 
+                  data-toggle="tooltip" 
+                  data-placement="top" 
+                  data-original-title="Restore Semua Data"
+                  @click="onRestoreAll()"
+                  v-if="parameters.params.soft_deleted">
+                  <i class="fas fa-redo"></i>
+                </button>
+              </div>
 
-                  <tr v-for="(item,i) in data" :key="i">
-                    <td>{{ i+1 }}</td>
-                    <td>{{ item.description }}</td>                                   
-                    <td>
-                      Table : {{ item.properties ? item.properties.table : '-'}} <br/>
-                      Id Data : {{item.properties ? item.properties.id || '-' : '-'}} <br/>
-                      Nama Data : {{item.properties ? item.properties.name || '-' : '-'}} <br>
-                    </td>
-                    <td>
-                      {{item.causer ? item.causer.username : '-'}}
-                    </td>
-                  </tr>
-                </tbody>
+              <!-- start table -->
+              <div class="table-responsive">
+                <table class="table table-striped table-sm vld-parent"
+                  ref="formContainer">
+                  <thead>
+                    <tr>
+                      <th><input type="checkbox" id="checkAll" @click="onCheckAll"></th>
+                      <th>No</th>
+                      <th @click="onSort('username',parameters.params.sort == 'asc' ? 'desc' : 'asc')"
+                        class="cursor-pointer">
+                        <div class="d-flex flex-row justify-content-between align-items-baseline">
+                          <div>Username</div>
+                          <div>
+                            <i class="fas fa-caret-up"
+                              :class="parameters.params.order == 'username' && parameters.params.sort == 'asc' ? '' : 'light-gray'"></i>
+                            <i class="fas fa-caret-down"
+                              :class="parameters.params.order == 'username' && parameters.params.sort == 'desc' ? '' : 'light-gray'"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th @click="onSort('email',parameters.params.sort == 'asc' ? 'desc' : 'asc')"
+                        class="cursor-pointer">
+                        <div class="d-flex flex-row justify-content-between align-items-baseline">
+                          <div>Email</div>
+                          <div>
+                            <i class="fas fa-caret-up"
+                              :class="parameters.params.order == 'email' && parameters.params.sort == 'asc' ? '' : 'light-gray'"></i>
+                            <i class="fas fa-caret-down"
+                              :class="parameters.params.order == 'email' && parameters.params.sort == 'desc' ? '' : 'light-gray'"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th>Detail</th>
+                      <th class="text-center">Options</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item,i) in data" :key="i">
+                      <td><input type="checkbox" name="checkboxs[]" :value="item.id" v-model="parameters.form.checkboxs"></td>
+                      <td>{{ i + 1 }}</td>
+                      <td>{{ item.causer.username }}</td>
+                      <td>{{ item.description }}</td>
+                      <td>
+                        Table : {{ item.properties.table}}                           
+                      </td>
+                      <td class="text-center">
+                        <div class="btn-group">
+                          <button class="btn btn-sm btn-success" @click="onDetail(item)">
+                            <i class="fas fa-info-circle"></i>
+                          </button>
+                          <button class="btn btn-sm btn-primary" @click="onEdit(item)">
+                            <i class="fas fa-pen"></i>
+                          </button>
+                          <button class="btn btn-sm btn-danger" @click="onTrashed(item)" v-if="!item.deleted_at">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                          <button class="btn btn-sm btn-success" @click="onRestored(item)" v-if="item.deleted_at">
+                            <i class="fas fa-redo"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                  
+                  <table-data-loading-section
+                    :self="this"/>
 
-                <table-data-loading-section
-                  :self="this"/>
+                  <table-data-not-found-section
+                    :self="this"/>
+                </table>
+              </div>
+              <!-- end table -->
 
-                <table-data-not-found-section
-                  :self="this"/>
-              </table>
-
-              <div class="card-title border-top" 
-               style="padding-bottom: -100px !important">
+              <div class="card-title border-top"  
+                style="padding-bottom: -100px !important">
                 <pagination-section 
                   :self="this" 
-                  ref="pagination"></pagination-section>
+                  ref="pagination"/>
               </div>
             </div>
           </div>
@@ -57,98 +115,251 @@
       </div>
     </div>
 
-    <filter-section
-      :self="this" 
-      ref="form-filter">
-    </filter-section>
   </section>
 </template>
 
 <script>
 import { mapActions,mapState,mapMutations} from 'vuex'
 
-
 export default {
-  props: {
-    self: Object,
-    isLoadingPage : Boolean
-  },
-
-  created() {
-     this.set_data([]);
-     this.onLoad();
+  created() {    
+    this.onLoad();  
   },
 
   mounted() {
-    this.$refs['form-option'].isMaintenancePage = false;
-    this.$refs['form-option'].isFilter          = false;
-    this.$refs['form-option'].isAddData         = false;
+    this.$refs["form-option"].isExport          = false;
+    this.$refs['form-option'].isFilter          = false;  
+    this.$refs["form-option"].isMaintenancePage = false;
   },
-  
+
   data() {
     return {
-      title               : 'Activity',
+      title               : 'Log Activities',
       isLoadingData       : false,
       isPaginate          : true,
       parameters : {
         url : 'activity',
-        type :'pdf',
+        type : 'pdf',
         params :{
-          soft_delete : '',
+          soft_deleted : '',
           search      : '',
-          order       : '',
-          sort        : '',
+          order       : 'id',
+          sort        : 'desc',
           all         : '',
           per_page    : 10,
-          page        : '',}
+          page        : 1,
         },
+        form : {
+          checkboxs : []
+        },
+        loadings : {
+          isDelete  : false,
+          isRestore : false,          
+        }
+      }    
     }
   },
 
 
   computed : {
-    ...mapState('modulMaster',['data','error','result'],{
-      data: state => state.data
-    }),
+    ...mapState('modulSetting',['data','error','result']),
   },
 
   methods : {
-    ...mapActions('modulMaster',['getData']),
-    ...mapMutations('modulMaster',['set_data']),
-    onFormShow(){},
+    ...mapActions('modulSetting',['getData','deleteData','restoreData','deleteAllData','restoreAllData']),
 
-    async onLoad(page = 1){
+    ...mapMutations('modulSetting',['set_data']),
+
+    onFormShow(){
+      this.$refs["form-input"].parameters.form = {};
+      this.$refs["form-input"].isEditable = false;
+      window.$("#modal-form").modal("show")
+      this.$refs["form-input"].$refs['form-validate'].reset();
+    },
+
+    onEdit(item){
+      this.$refs["form-input"].isEditable = true;      
+      this.$refs["form-input"].parameters.form = {...item};
+      window.$("#modal-form").modal("show");    
+      this.$refs["form-input"].$refs['form-validate'].reset();  
+    },
+
+    onDetail(item){
+      this.$refs["modal-detail"].parameters.form = {...item};
+      window.$("#modal-detail").modal("show");
+    },
+
+    async onLoad(page = 1){      
       if(this.isLoadingData) return;
 
       this.isLoadingData            = true;
-      this.active_page              = page;
-      this.parameters.params.order  = 'id'
       this.parameters.params.page   = page
-      this.parameters.params.sort   = 'asc'
-      this.parameters.url           = 'activity'
+
+      this.parameters.form.checkboxs = [];
+      if(document.getElementById("checkAll")){
+        document.getElementById("checkAll").checked = false;
+      }
 
       let loader = this.$loading.show({
-          // Optional parameters
-          container: this.$refs.formContainer,
-          canCancel: true,
-          onCancel: this.onCancel,
+        container: this.$refs.formContainer,
+        canCancel: true,
+        onCancel: this.onCancel,
       });
 
       await this.getData(this.parameters);
-      this.result == 'true' ? '' : this.$toaster.error(this.error);
 
-      this.isLoadingData            = false;
-      loader.hide();
-      this.$refs['pagination'].generatePage();
-    }
+      if(this.result == true){
+        loader.hide();
+        this.$refs['pagination'].generatePage();        
+      }else{
+        this.$globalErrorToaster(this.$toaster,this.error);      
+      }  
+
+      this.isLoadingData = false;
+    },
+
+    onTrashed(item){    
+      if(this.parameters.loadings.isDelete) return 
+
+      this.$confirm({
+        auth: false,
+        message: "Data ini akan dipindahkan ke dalam Trash. Yakin ??",
+        button: {
+          no: 'No',
+          yes: 'Yes'
+        },
+        callback: async confirm => {
+          if (confirm) {            
+            this.parameters.loadings.isDelete = true;
+
+            await this.deleteData({
+              url :  this.parameters.url,
+              id  :  item.id,
+              params : this.parameters.params
+            });
+          
+            if (this.result == true){
+              this.onLoad(this.parameters.params.page)
+              this.$toaster.success("Data berhasil di pindahkan ke dalam Trash!");
+            }else {
+              this.$globalErrorToaster(this.$toaster,this.error);      
+            }
+
+            this.parameters.loadings.isDelete = false;
+          }
+        },
+      });
+    },
+
+    async onRestored(item){    
+      if(this.parameters.loadings.isRestore) return 
+
+      this.parameters.loadings.isRestore = true;
+
+      await this.restoreData({
+        url : this.parameters.url,
+        id : item.id,
+        params : this.parameters.params
+      })    
+
+      if(this.result == true){
+        this.onLoad(this.parameters.params.page)
+        this.$toaster.success("Data berhail di restore")
+      }else{
+        this.$globalErrorToaster(this.$toaster,this.error);      
+      }
+
+      this.parameters.loadings.isRestore = false;
+    },
+
+    async onRestoreAll(){
+      if(!this.parameters.form.checkboxs.length || this.parameters.loadings.isRestore) return
+
+      this.parameters.loadings.isRestore = true;
+
+      await this.restoreAllData({
+        url : this.parameters.url,        
+        checkboxs : this.parameters.form.checkboxs,
+        params : this.parameters.params
+      })    
+
+      if(this.result == true){
+        this.onLoad(this.parameters.params.page)
+        this.parameters.form.checkboxs = [];
+        document.getElementById("checkAll").checked = false;
+        this.$toaster.success("Data berhail di restore")
+      }else{
+        this.$globalErrorToaster(this.$toaster,this.error);      
+      }
+
+      this.parameters.loadings.isRestore = false;
+    },
+
+    onDeleteAll(){
+      if(!this.parameters.form.checkboxs.length || this.parameters.loadings.isDelete) return
+
+      this.$confirm({       
+        auth: false, 
+        message: "Semua Data ini akan dipindahkan ke dalam Trash. Yakin ??",
+        button: {
+          no: 'No',
+          yes: 'Yes'
+        },
+        callback: async confirm => {
+          if (confirm) {          
+            this.parameters.loadings.isDelete = true;
+            
+            await this.deleteAllData({
+              url :  this.parameters.url,
+              checkboxs : this.parameters.form.checkboxs,              
+              params : this.parameters.params
+            });
+          
+            if (this.result == true){
+              this.onLoad()
+              this.parameters.form.checkboxs = [];
+              document.getElementById("checkAll").checked = false;
+              this.$toaster.success("Data berhasil di pindahkan ke dalam Trash!");
+            }else {
+              this.$globalErrorToaster(this.$toaster,this.error);      
+            }
+
+            this.parameters.loadings.isDelete = false;
+          }
+        },
+      });
+    },
+
+    onCheckAll(evt){
+      let tmpCheckboxs = [];
+
+      document.querySelectorAll("input[name='checkboxs[]']").forEach(item => {      
+        item.checked = evt.target.checked;    
+        if(evt.target.checked){      
+          tmpCheckboxs.push(item.value);
+        }
+      })
+
+      this.parameters.form.checkboxs = tmpCheckboxs
+    },
+
+    onSort(column,sort = 'asc'){
+      this.parameters.params = {
+        ...this.parameters.params,
+        order : column,
+        sort : sort
+      }
+      
+      this.onLoad(this.parameters.params.page)
+    }    
   }
 }
 </script>
 
 <style scoped>
 select.form-control:not([size]):not([multiple]) {
-    height: calc(1.5em + .5rem + 2px);
-    padding-top: 5px;
-    padding-bottom: 5px;
+  height: calc(1.5em + .5rem + 2px);
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 </style>

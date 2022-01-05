@@ -12,7 +12,7 @@
             <select class="form-control form-control-sm"
               style="padding-left:2px;padding-right:0px;"
               v-model="self.parameters.params.per_page"
-              @change="self.onLoad()">
+              @change="self.parameters.params.page = 1;self.onLoad()">
               <option value="10">10</option>
               <option value="20">20</option>
               <option value="30">30</option>
@@ -93,14 +93,14 @@
               data-toggle="tooltip" 
               data-placement="top" 
               data-original-title="Download Excel" 
-              @click="onExport('excel')">
+              @click="exportFile({type : 'execl',parameters : self.parameters})">
               <i class="fas fa-file-excel"></i> Excel
             </button>
             <button class="btn btn-sm btn-info" 
               data-toggle="tooltip" 
               data-placement="top"
               data-original-title="Download Pdf" 
-              @click="onExport('pdf')">
+              @click="exportFile({type : 'pdf',parameters : self.parameters})">
               <i class="fas fa-file-pdf"></i> PDF
             </button>
             <button 
@@ -108,7 +108,7 @@
               data-toggle="tooltip" 
               data-placement="top"
               data-original-title="Print Semua Data" 
-              @click="printFile(self.title.toLowerCase())">
+              @click="printFile({parameters : self.parameters})">
               <i class="fas fa-print"></i> Print
             </button>
           </div>
@@ -119,7 +119,7 @@
 </template>
 
 <script>
-import { mapState,mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   props: {
@@ -137,18 +137,8 @@ export default {
     }
   },
 
-  computed: {
-    ...mapState('pagination',['total'])
-  },
-
   methods: {
-    ...mapActions('print',['printFile','exportFile']),
-
-    onExport(type){
-      this.self.parameters.type = type;
-      this.self.parameters.params.all  = true;
-      this.exportFile(this.self.parameters);
-    },
+    ...mapActions('print',['printFile','exportFile']),    
   },
 };
 </script>

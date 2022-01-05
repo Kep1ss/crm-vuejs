@@ -18,7 +18,8 @@
     <portal-target name="modal-bandwidth"></portal-target>
     <portal-target name="child-modal"></portal-target>
     <portal-target name="pdf"></portal-target>
-
+    <portal-target name="modal-detail"></portal-target>
+    
     <button @click="topScroll"
       id="topBtn" title="Go to top">
       <i class="fas fa-caret-up"></i>
@@ -31,12 +32,14 @@
 import AppSidebar from "@/components/Sidebar.vue";
 import AppNavbar from "@/components/Navbar.vue";
 import AppSection from "@/components/Section.vue";
+import Profil from '../pages/profil.vue';
 
 export default {
   components: {
     AppNavbar,
     AppSidebar,
     AppSection,
+    Profil,
   },
 
   middleware : ["isLogin"],

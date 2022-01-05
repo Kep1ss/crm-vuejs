@@ -12,7 +12,9 @@ export default {
   set_result :(state,payload) => {
     state.result = payload
   },  
+  /*
   set_lookup_user : (state,payload) => {
     state.lookup_user  = payload
   }
+  */
 }

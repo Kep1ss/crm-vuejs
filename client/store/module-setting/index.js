@@ -7,7 +7,7 @@ const defaultState = {
   code                     : '',
   error                    : '',
   result                   : '',
-  lookup_user              : [],
+  // lookup_user              : [],
 }
 
 const state = defaultState;

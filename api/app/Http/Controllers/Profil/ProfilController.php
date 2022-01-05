@@ -17,9 +17,9 @@ class ProfilController extends Controller
     	try{
     		\DB::beginTransaction();
 
-    		auth()->user()->update($request->validated() + [
-                "username" => Str::slug($request->username)
-            ]);
+    		auth()->user()->update([
+                "username" => Str::slug($request->username,'-')
+            ] + $request->validated() );
 
     		\DB::commit();
     		return response()->json([

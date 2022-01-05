@@ -11,7 +11,8 @@
                   ref="form-option"/>
               </div>
 
-              <div v-if="parameters.form.checkboxs.length">
+              <!-- 
+                <div v-if="parameters.form.checkboxs.length">
                 <button class="btn btn-sm btn-danger" 
                   data-toggle="tooltip" 
                   data-placement="top" 
@@ -29,81 +30,105 @@
                   <i class="fas fa-redo"></i>
                 </button>
               </div>
+              -->
 
               <!-- start table -->
-              <table class="table table-striped table-sm vld-parent"
-                ref="formContainer">
-                <thead>
-                  <tr>
-                    <th><input type="checkbox" id="checkAll" @click="onCheckAll"></th>
-                    <th>No</th>
-                    <th @click="onSort('username',parameters.params.sort == 'asc' ? 'desc' : 'asc')"
-                      class="cursor-pointer">
-                      <div class="d-flex flex-row justify-content-between align-items-baseline">
-                        <div>Username</div>
-                        <div>
-                          <i class="fas fa-caret-up"
-                            :class="parameters.params.order == 'username' && parameters.params.sort == 'asc' ? '' : 'light-gray'"></i>
-                          <i class="fas fa-caret-down"
-                            :class="parameters.params.order == 'username' && parameters.params.sort == 'desc' ? '' : 'light-gray'"></i>
+              <div class="table-responsive">
+                <table class="table table-striped table-sm vld-parent"
+                  ref="formContainer">
+                  <thead>
+                    <tr>
+                      <th><input type="checkbox" id="checkAll" @click="onCheckAll"></th>
+                      <th>No</th>
+                      <th @click="onSort('username',parameters.params.sort == 'asc' ? 'desc' : 'asc')"
+                        class="cursor-pointer">
+                        <div class="d-flex flex-row justify-content-between align-items-baseline">
+                          <div>Username</div>
+                          <div>
+                            <i class="fas fa-caret-up"
+                              :class="parameters.params.order == 'username' && parameters.params.sort == 'asc' ? '' : 'light-gray'"></i>
+                            <i class="fas fa-caret-down"
+                              :class="parameters.params.order == 'username' && parameters.params.sort == 'desc' ? '' : 'light-gray'"></i>
+                          </div>
                         </div>
-                      </div>
-                    </th>
-                     <th @click="onSort('email',parameters.params.sort == 'asc' ? 'desc' : 'asc')"
-                      class="cursor-pointer">
-                      <div class="d-flex flex-row justify-content-between align-items-baseline">
-                        <div>Email</div>
-                        <div>
-                          <i class="fas fa-caret-up"
-                            :class="parameters.params.order == 'email' && parameters.params.sort == 'asc' ? '' : 'light-gray'"></i>
-                          <i class="fas fa-caret-down"
-                            :class="parameters.params.order == 'email' && parameters.params.sort == 'desc' ? '' : 'light-gray'"></i>
+                      </th>
+                      <th @click="onSort('email',parameters.params.sort == 'asc' ? 'desc' : 'asc')"
+                        class="cursor-pointer">
+                        <div class="d-flex flex-row justify-content-between align-items-baseline">
+                          <div>Email</div>
+                          <div>
+                            <i class="fas fa-caret-up"
+                              :class="parameters.params.order == 'email' && parameters.params.sort == 'asc' ? '' : 'light-gray'"></i>
+                            <i class="fas fa-caret-down"
+                              :class="parameters.params.order == 'email' && parameters.params.sort == 'desc' ? '' : 'light-gray'"></i>
+                          </div>
                         </div>
-                      </div>
-                    </th>
-                    <th>Role</th>
-                    <th class="text-center">Options</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(item,i) in data" :key="i">
-                    <td><input type="checkbox" name="checkboxs[]" :value="item.id" v-model="parameters.form.checkboxs"></td>
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ item.username }}</td>
-                    <td>{{ item.email }}</td>
-                    <td>
-                      <span v-if="item.role === 0" class="badge badge-danger">
-                        Super Admin
-                      </span>
-                      <span class="badge badge-default" v-else>
-                        Tidak diketahui
-                      </span>                
-                    </td>
-                    <td class="text-center">
-                      <div class="btn-group">
-                        <button class="btn btn-sm btn-success">
-                          <i class="fas fa-info-circle"></i>
-                        </button>
-                        <button class="btn btn-sm btn-primary" @click="onEdit(item)">
-                          <i class="fas fa-pen"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger" @click="onTrashed(item)" v-if="!item.deleted_at">
-                          <i class="fas fa-trash"></i>
-                        </button>
-                        <button class="btn btn-sm btn-success" @click="onRestored(item)" v-if="item.deleted_at">
-                          <i class="fas fa-redo"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-                
-                <table-data-loading-section
-                  :self="this"/>
+                      </th>
+                      <th>Role</th>
+                      <th class="text-center">Options</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item,i) in data" :key="i">
+                      <!-- <td><input type="checkbox" name="checkboxs[]" :value="item.id" v-model="parameters.form.checkboxs"></td> -->
+                      <td>{{ i + 1 }}</td>
+                      <td>{{ item.username }}</td>
+                      <td>{{ item.email }}</td>
+                      <td>
+                        <span v-if="item.role === 0" class="badge badge-danger">
+                          Super Admin
+                        </span>      
+                        <span v-else-if="item.role === 1" class="badge badge-success">
+                          Manager Nasional
+                        </span>          
+                        <span v-else-if="item.role === 2" class="badge badge-success">
+                          Manager Area
+                        </span>
+                        <span v-else-if="item.role === 3" class="badge badge-primary">
+                          Kaper
+                        </span>
+                        <span v-else-if="item.role === 4" class="badge badge-primary">
+                          Spv
+                        </span>
+                        <span v-else-if="item.role === 5" class="badge badge-info">
+                          Sales
+                        </span>
+                        <span v-else-if="item.role === 6" class="badge badge-info">
+                          Kotele
+                        </span>
+                        <span v-else-if="item.role === 7" class="badge badge-info">
+                          Tele Markerting
+                        </span>
+                        <span class="badge badge-default" v-else>
+                          Tidak Diketahui
+                        </span>                
+                      </td>
+                      <td class="text-center">
+                        <div class="btn-group">
+                          <button class="btn btn-sm btn-success" @click="onDetail(item)">
+                            <i class="fas fa-info-circle"></i>
+                          </button>
+                          <button class="btn btn-sm btn-primary" @click="onEdit(item)">
+                            <i class="fas fa-pen"></i>
+                          </button>
+                          <button class="btn btn-sm btn-danger" @click="onTrashed(item)" v-if="!item.deleted_at && item.role != 0">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                          <button class="btn btn-sm btn-success" @click="onRestored(item)" v-if="item.deleted_at">
+                            <i class="fas fa-redo"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                  
+                  <table-data-loading-section
+                    :self="this"/>
 
-                <table-data-not-found-section
-                  :self="this"/>
-              </table>
+                  <table-data-not-found-section
+                    :self="this"/>
+                </table>
+              </div>
               <!-- end table -->
 
               <div class="card-title border-top"  
@@ -118,13 +143,31 @@
       </div>
     </div>
 
+    <ModalDetail
+      :self="this"
+      ref="modal-detail"/>
+
     <FormInput
       :self="this"
       ref="form-input"/>
 
     <filter-section
       :self="this" 
-      ref="form-filter"/>
+      ref="form-filter">
+      <template>
+       <div class="col-md-12">
+          <div class="form-group">
+            <label for="role">By Role</label>
+            <select name="role" class="form-control"
+              v-model="parameters.params.role">
+              <option value="all" selected>Pilih</option>
+              <option value="0">SuperAdmin</option>
+              <option value="1">Manager Area</option>
+            </select>
+          </div>
+        </div>
+      </template>
+    </filter-section> 
 
   </section>
 </template>
@@ -132,19 +175,22 @@
 <script>
 import { mapActions,mapState,mapMutations} from 'vuex'
 import FormInput from "./form";
+import ModalDetail from "./detail";
 
 export default {
   created() {    
-    this.onLoad();
+    this.onLoad();  
   },
 
   mounted() {
-    this.$refs['form-option'].isFilter          = false;  
+    this.$refs["form-option"].isExport          = true;
+    this.$refs['form-option'].isFilter          = true;
+    this.$refs["form-option"].isMaintenancePage = false;  
   },
 
   data() {
     return {
-      title               : 'User',
+      title               : 'Users',
       isLoadingData       : false,
       isPaginate          : true,
       parameters : {
@@ -157,10 +203,15 @@ export default {
           sort        : 'desc',
           all         : '',
           per_page    : 10,
-          page        : '',
+          page        : 1,
+          role : 'all'
         },
         form : {
           checkboxs : []
+        },
+        loadings : {
+          isDelete  : false,
+          isRestore : false,          
         }
       }    
     }
@@ -173,6 +224,7 @@ export default {
 
   components : {
      FormInput,
+     ModalDetail
   },
 
   methods : {
@@ -180,11 +232,29 @@ export default {
 
     ...mapMutations('modulSetting',['set_data']),
 
-    async onLoad(page = 1){
+    onFormShow(){
+      this.$refs["form-input"].parameters.form = {};
+      this.$refs["form-input"].isEditable = false;
+      window.$("#modal-form").modal("show")
+      this.$refs["form-input"].$refs['form-validate'].reset();
+    },
+
+    onEdit(item){
+      this.$refs["form-input"].isEditable = true;      
+      this.$refs["form-input"].parameters.form = {...item};
+      window.$("#modal-form").modal("show");    
+      this.$refs["form-input"].$refs['form-validate'].reset();  
+    },
+
+    onDetail(item){
+      this.$refs["modal-detail"].parameters.form = {...item};
+      window.$("#modal-detail").modal("show");
+    },
+
+    async onLoad(page = 1){      
       if(this.isLoadingData) return;
 
       this.isLoadingData            = true;
-      this.active_page              = page;
       this.parameters.params.page   = page
 
       this.parameters.form.checkboxs = [];
@@ -200,33 +270,19 @@ export default {
 
       await this.getData(this.parameters);
 
-      this.isLoadingData            = false;
-
       if(this.result == true){
         loader.hide();
         this.$refs['pagination'].generatePage();        
       }else{
         this.$globalErrorToaster(this.$toaster,this.error);      
-      }
-    },
+      }  
 
-    onFormShow(){
-      // this.$refs["form-input"].$validator.reset();
-      this.$refs["form-input"].parameters.form = {};
-      this.$refs["form-input"].isEditable = false;
-      window.$("#modal-form").modal("show")
-      this.$refs["form-input"].onInitial()
-    },
-
-    onEdit(item){
-      // this.$refs["form-input"].$validator.reset();
-      this.$refs["form-input"].isEditable = true;      
-      this.$refs["form-input"].parameters.form = {...item};
-      window.$("#modal-form").modal("show");
-      this.$refs["form-input"].onInitial()
+      this.isLoadingData = false;
     },
 
     onTrashed(item){    
+      if(this.parameters.loadings.isDelete) return 
+
       this.$confirm({
         auth: false,
         message: "Data ini akan dipindahkan ke dalam Trash. Yakin ??",
@@ -236,6 +292,8 @@ export default {
         },
         callback: async confirm => {
           if (confirm) {            
+            this.parameters.loadings.isDelete = true;
+
             await this.deleteData({
               url :  this.parameters.url,
               id  :  item.id,
@@ -243,16 +301,23 @@ export default {
             });
           
             if (this.result == true){
+              this.onLoad(this.parameters.params.page)
               this.$toaster.success("Data berhasil di pindahkan ke dalam Trash!");
             }else {
               this.$globalErrorToaster(this.$toaster,this.error);      
             }
+
+            this.parameters.loadings.isDelete = false;
           }
         },
       });
     },
 
     async onRestored(item){    
+      if(this.parameters.loadings.isRestore) return 
+
+      this.parameters.loadings.isRestore = true;
+
       await this.restoreData({
         url : this.parameters.url,
         id : item.id,
@@ -260,14 +325,19 @@ export default {
       })    
 
       if(this.result == true){
+        this.onLoad(this.parameters.params.page)
         this.$toaster.success("Data berhail di restore")
       }else{
         this.$globalErrorToaster(this.$toaster,this.error);      
       }
+
+      this.parameters.loadings.isRestore = false;
     },
 
     async onRestoreAll(){
-      if(!this.parameters.form.checkboxs.length) return
+      if(!this.parameters.form.checkboxs.length || this.parameters.loadings.isRestore) return
+
+      this.parameters.loadings.isRestore = true;
 
       await this.restoreAllData({
         url : this.parameters.url,        
@@ -276,17 +346,19 @@ export default {
       })    
 
       if(this.result == true){
+        this.onLoad(this.parameters.params.page)
         this.parameters.form.checkboxs = [];
         document.getElementById("checkAll").checked = false;
         this.$toaster.success("Data berhail di restore")
       }else{
         this.$globalErrorToaster(this.$toaster,this.error);      
       }
-    
+
+      this.parameters.loadings.isRestore = false;
     },
 
     onDeleteAll(){
-      if(!this.parameters.form.checkboxs.length) return
+      if(!this.parameters.form.checkboxs.length || this.parameters.loadings.isDelete) return
 
       this.$confirm({       
         auth: false, 
@@ -296,7 +368,9 @@ export default {
           yes: 'Yes'
         },
         callback: async confirm => {
-          if (confirm) {            
+          if (confirm) {          
+            this.parameters.loadings.isDelete = true;
+            
             await this.deleteAllData({
               url :  this.parameters.url,
               checkboxs : this.parameters.form.checkboxs,              
@@ -304,12 +378,15 @@ export default {
             });
           
             if (this.result == true){
+              this.onLoad()
               this.parameters.form.checkboxs = [];
               document.getElementById("checkAll").checked = false;
               this.$toaster.success("Data berhasil di pindahkan ke dalam Trash!");
             }else {
               this.$globalErrorToaster(this.$toaster,this.error);      
             }
+
+            this.parameters.loadings.isDelete = false;
           }
         },
       });
@@ -335,7 +412,7 @@ export default {
         sort : sort
       }
       
-      this.onLoad()
+      this.onLoad(this.parameters.params.page)
     }    
   }
 }
