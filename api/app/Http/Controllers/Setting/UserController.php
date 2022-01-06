@@ -114,10 +114,13 @@ class UserController extends Controller
             \DB::beginTransaction();
             
             $payload = $request->validated();
+            
             $payload["username"] = Str::slug($payload["username"],'-');
             
             if($request->filled("password")){   
                 $payload["password"] = \Hash::make($request->password);
+            }else{
+                unset($payload["password"]);
             }
 
             $user->update($payload);
@@ -148,150 +151,146 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
-    {
-        try{    
-            \DB::beginTransaction();
+    // public function destroy(User $user)
+    // {
+    //     try{    
+    //         \DB::beginTransaction();
 
-            throw_if(
-                $user->id == auth()->user()->id,
-                new \Exception("Anda tidak dapat menghapus diri anda sendiri",422)
-            );            
+    //         throw_if(
+    //             $user->id == auth()->user()->id,
+    //             new \Exception("Anda tidak dapat menghapus diri anda sendiri",422)
+    //         );            
             
-            // RELASIONAL DELETE
+    //         // RELASIONAL DELETE
 
-            $user->delete();
+    //         $user->delete();
 
-            activity()
-                ->performedOn($user)
-                ->causedBy(auth()->user())
-                ->withProperties([
-                    'name' => $user->username,
-                    'id' => $user->id,
-                    'table' => 'users'
-                ])
-                ->log('Deleted Data');
+    //         activity()
+    //             ->performedOn($user)
+    //             ->causedBy(auth()->user())
+    //             ->withProperties([
+    //                 'name' => $user->username,
+    //                 'id' => $user->id,
+    //                 'table' => 'users'
+    //             ])
+    //             ->log('Deleted Data');
                 
-            \DB::commit();
-            return response()->json([
-                "status" => true
-            ]);
-        }catch(\Exception $e){
-            \DB::rollback();
-            return FormatResponse::failed($e);
-        }
-    }
+    //         \DB::commit();
+    //         return response()->json([
+    //             "status" => true
+    //         ]);
+    //     }catch(\Exception $e){
+    //         \DB::rollback();
+    //         return FormatResponse::failed($e);
+    //     }
+    // }
 
 
-    public function restore($id){
-        try{
-            \DB::beginTransaction(); 
+    // public function restore($id){
+    //     try{
+    //         \DB::beginTransaction(); 
                  
-            $data = User::withTrashed()->findOrFail($id);
+    //         $data = User::withTrashed()->findOrFail($id);
 
-            $data->restore();
+    //         $data->restore();
             
-            activity()
-                ->performedOn($data)
-                ->causedBy(auth()->user())
-                ->withProperties([
-                    'name' => $data->username,
-                    'id' => $data->id,
-                    'table' => 'users'
-                ])
-                ->log('Restore Data');
+    //         activity()
+    //             ->performedOn($data)
+    //             ->causedBy(auth()->user())
+    //             ->withProperties([
+    //                 'name' => $data->username,
+    //                 'id' => $data->id,
+    //                 'table' => 'users'
+    //             ])
+    //             ->log('Restore Data');
 
-            \DB::commit();
-            return response()->json([
-                "status" => true
-            ]);
-        }catch(\Exception $e){
-            \DB::rollback();
-            return FormatResponse::failed($e);
-        }
-    }
+    //         \DB::commit();
+    //         return response()->json([
+    //             "status" => true
+    //         ]);
+    //     }catch(\Exception $e){
+    //         \DB::rollback();
+    //         return FormatResponse::failed($e);
+    //     }
+    // }
 
-    public function destroyAll(CheckAllRequest $request){
-        try{
-            \DB::beginTransaction();
+    // public function destroyAll(CheckAllRequest $request){
+    //     try{
+    //         \DB::beginTransaction();
 
-            throw_if(
-                in_array(auth()->user()->id,$request->checkboxs),
-                new \Exception("Anda tidak dapat menghapus diri anda sendiri",422)
-            );
+    //         throw_if(
+    //             in_array(auth()->user()->id,$request->checkboxs),
+    //             new \Exception("Anda tidak dapat menghapus diri anda sendiri",422)
+    //         );
 
-            // RELASIONAL DELETE
+    //         // RELASIONAL DELETE
 
-            User::whereIn("id",$request->checkboxs)
-                ->delete();  
+    //         User::whereIn("id",$request->checkboxs)
+    //             ->delete();  
                 
-            activity()        
-                ->causedBy(auth()->user())
-                ->withProperties([            
-                    'id' => $request->checkboxs,  
-                    'table' => 'users'                  
-                ])
-                ->log('Deleted All Data');
+    //         activity()        
+    //             ->causedBy(auth()->user())
+    //             ->withProperties([            
+    //                 'id' => $request->checkboxs,  
+    //                 'table' => 'users'                  
+    //             ])
+    //             ->log('Deleted All Data');
 
-            \DB::commit();
-            return response()->json([
-                "status" => true
-            ]);
-        }catch(\Exception $e){
-            \DB::rollback();
-            return FormatResponse::failed($e);
-        }
-    }
+    //         \DB::commit();
+    //         return response()->json([
+    //             "status" => true
+    //         ]);
+    //     }catch(\Exception $e){
+    //         \DB::rollback();
+    //         return FormatResponse::failed($e);
+    //     }
+    // }
 
-    public function restoreAll(CheckAllRequest $request){
-        try{
-            \DB::beginTransaction();            
+    // public function restoreAll(CheckAllRequest $request){
+    //     try{
+    //         \DB::beginTransaction();            
 
-            User::withTrashed()
-                ->whereIn("id",$request->checkboxs)
-                ->restore();    
+    //         User::withTrashed()
+    //             ->whereIn("id",$request->checkboxs)
+    //             ->restore();    
 
-            activity()        
-                ->causedBy(auth()->user())
-                ->withProperties([            
-                    'id' => $request->checkboxs,  
-                    'table' => 'users'                  
-                ])
-                ->log('Restore All Data');
+    //         activity()        
+    //             ->causedBy(auth()->user())
+    //             ->withProperties([            
+    //                 'id' => $request->checkboxs,  
+    //                 'table' => 'users'                  
+    //             ])
+    //             ->log('Restore All Data');
 
-            \DB::commit();
-            return response()->json([
-                "status" => true
-            ]);
-        }catch(\Exception $e){
-            \DB::rollback();
-            return FormatResponse::failed($e);
-        }   
-    }
+    //         \DB::commit();
+    //         return response()->json([
+    //             "status" => true
+    //         ]);
+    //     }catch(\Exception $e){
+    //         \DB::rollback();
+    //         return FormatResponse::failed($e);
+    //     }   
+    // }
 
-    public function export($type){
-        $filetype = $type == 'pdf' 
-            ? 'user.pdf' 
-            : 'user.xlsx';
+    // public function export($type){
+    //     $filetype = $type == 'pdf' 
+    //         ? 'user.pdf' 
+    //         : 'user.xlsx';
 
-        $extension =  $type == "pdf" 
-            ? \Maatwebsite\Excel\Excel::DOMPDF 
-            : \Maatwebsite\Excel\Excel::XLSX;
+    //     $extension =  $type == "pdf" 
+    //         ? \Maatwebsite\Excel\Excel::DOMPDF 
+    //         : \Maatwebsite\Excel\Excel::XLSX;
 
-        return \Excel::download(new UserExport($this->indexFilter()),$filetype,$extension);        
-    }
-
-    /*
-        How to call
-        division/print?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
-    */        
-    public function print(){
-        $pdf = \PDF::loadview('exports/users',[
-              "data" => !request()->filled("all") 
-                ? $this->indexFilter()->getCollection() 
-                : $this->indexFilter()
-        ]);
+    //     return \Excel::download(new UserExport($this->indexFilter()),$filetype,$extension);        
+    // }
+ 
+    // public function print(){
+    //     $pdf = \PDF::loadview('exports/users',[
+    //           "data" => !request()->filled("all") 
+    //             ? $this->indexFilter()->getCollection() 
+    //             : $this->indexFilter()
+    //     ]);
         
-        return  $pdf->stream();
-    }
+    //     return  $pdf->stream();
+    // }
 }

@@ -32,6 +32,9 @@ class CreateUsersTable extends Migration
                 5 => Sales
                 6 => Kotele
                 7 => Tele Marketing
+                8 => Admin Nasional
+                9 => Admin Area
+                10 => Admin Kaper
             */
             $table->bigInteger("parent_id")->unsigned()->nullable();
             $table->timestamps();

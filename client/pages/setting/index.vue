@@ -62,7 +62,7 @@
             <form @submit.prevent="validate().then(onSubmit(invalid))"
               autocomplete="off">
               <div class="card-header">
-                <h4>Edit Setting</h4>
+                <h4>Edit Aplikasi</h4>
               </div>
               <div class="card-body">
                 <div class="row">
@@ -152,7 +152,7 @@ export default {
 
   head() {
     return {
-      title: 'Setting',
+      title: 'Aplkasi',
     }
   },
 

@@ -92,7 +92,7 @@ export default {
     },
 
     onReset(){
-      this.self.parameters.params = {
+      this.self.parameters.params = {      
         ... this.self.parameters.params,
         filter : ''
       }

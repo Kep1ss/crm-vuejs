@@ -73,7 +73,7 @@
                 <div class="form-group" slot-scope="{errors,valid}">
                   <label for="password">Password</label>
                   <input id="password"
-                    type="text"
+                    type="password"
                     class="form-control"
                     name="password"            
                     v-model="parameters.form.password"
@@ -82,10 +82,21 @@
                   <div class="invalid-feedback" v-if="errors[0]">
                     {{ errors[0] }}
                   </div>      
+                  <div class="text-muted" v-if="!errors[0] && isEditable">
+                    * Isi password jika ingin mengantinya
+                  </div>
                 </div>
-              </ValidationProvider>              
+              </ValidationProvider>    
+          
+              <div class="form-group"
+                v-if="!isEditable">
+                <label for="role">Role</label>
+                <select class="form-control" name="role" v-model="parameters.form.role" disabled>
+                  <option value="1" selected>Manager Area</option>
+                </select>
+              </div>                               
             </div>
-
+        
             <modal-footer-section     
               :isLoadingForm="isLoadingForm"/>
           </form>
@@ -100,7 +111,8 @@
 <script>
 import { mapActions,mapState } from 'vuex'
 
-export default {
+export default {  
+
   props: ["self"],
 
   data() {
@@ -115,7 +127,7 @@ export default {
           username : '',
           password : '',
           email    : '',
-          role     : ''
+          role     : 1
         }
       }
     };

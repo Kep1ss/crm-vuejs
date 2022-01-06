@@ -45,17 +45,17 @@ Route::group(["prefix" => $version],function() use ($version) {
 	});
 
 
-	Route::group(["middleware" => "is-login"],function(){
+	// Route::group(["middleware" => "is-login"],function(){
 		
-		/* MODULE SETTING PRINT AND EXPORT */
-		Route::group(["as" => "setting.","middleware" => "is-super-admin"],function(){
-			Route::get('/user/export/{type}', [UserController::class,"export"])->name("user.export");
-			Route::get('/user/print',[UserController::class,"print"])->name("user.print");
+	// 	/* MODULE SETTING PRINT AND EXPORT */
+	// 	Route::group(["as" => "setting.","middleware" => "is-super-admin"],function(){
+	// 		Route::get('/user/export/{type}', [UserController::class,"export"])->name("user.export");
+	// 		Route::get('/user/print',[UserController::class,"print"])->name("user.print");
 
-			Route::get('/activity/export/{type}', [ActivityController::class,"export"])->name("activity.export");
-			Route::get('/activity/print',[ActivityController::class,"print"])->name("activity.print");
-		});		
-	});
+	// 		Route::get('/activity/export/{type}', [ActivityController::class,"export"])->name("activity.export");
+	// 		Route::get('/activity/print',[ActivityController::class,"print"])->name("activity.print");
+	// 	});		
+	// });
 	
     Route::group(["middleware" => "auth:sanctum"],function(){
 		// PROFIL 
@@ -64,10 +64,10 @@ Route::group(["prefix" => $version],function() use ($version) {
 
 		/* MODULE SETTING */
 		Route::group(["as" => "setting.","middleware" => "is-super-admin"],function(){        
-			Route::post("/user/restore-all",[UserController::class,"restoreAll"])->name("user.restore-all");
-			Route::delete("/user/destroy-all",[UserController::class,"destroyAll"])->name("user.destroy-all");
-			Route::post("/user/restore/{id}",[UserController::class,"restore"])->name("user.restore");
-			Route::apiResource("user",UserController::class);
+			// Route::post("/user/restore-all",[UserController::class,"restoreAll"])->name("user.restore-all");
+			// Route::delete("/user/destroy-all",[UserController::class,"destroyAll"])->name("user.destroy-all");
+			// Route::post("/user/restore/{id}",[UserController::class,"restore"])->name("user.restore");
+			Route::apiResource("user",UserController::class)->only(["index","store","update"]);
 
 			Route::get("/activity",[ActivityController::class,"index"])->name("activity.index");
 		

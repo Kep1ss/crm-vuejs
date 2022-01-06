@@ -59,6 +59,12 @@
                     Kotele
                 @elseif($item->role === 7)
                     Tele Markerting
+                @elseif($item->role == 8)
+                    Admin Nasional 
+                @elseif($item->role == 9)
+                    Admin Area
+                @elseif($item->role == 10)
+                    Admin Kaper
                 @else
                     Tidak Diketahui
                 @endif

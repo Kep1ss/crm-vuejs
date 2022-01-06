@@ -30,7 +30,8 @@
                           class="form-control" 
                           name="email"
                           v-model="form.email"
-                          :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')"/>
+                          :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')"
+                          disabled/>
                           <div class="invalid-feedback" v-if="errors[0]">
                             {{ errors[0] }}
                           </div>   

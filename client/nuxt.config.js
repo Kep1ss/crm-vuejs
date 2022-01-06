@@ -34,7 +34,6 @@ export default {
       { src: "/js/vendor/bootstrap/bootstrap.min.js" },
       { src: "/js/vendor/jquery-nicescroll/jquery.nicescroll.min.js" },
       { src: "/js/vendor/moments/moment.min.js" },
-      { src: "/js/vendor/select2/select2.min.js" }
     ],
   },
 
@@ -49,7 +48,6 @@ export default {
     '~/assets/css/fontawesome/css/all.min.css',
     '~/assets/css/style.css',
     '~/assets/css/components.css',
-    '~/assets/css/select2.min.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins

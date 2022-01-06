@@ -41,7 +41,9 @@ class ProfilController extends Controller
                 new \Exception("Password lama salah",422)
             );
 
-            auth()->user()->update(["password" => \Hash::make($request->password)]);
+            auth()->user()->update([
+                "password" => \Hash::make($request->password)
+            ]);
 
             \DB::commit();
             return response()->json([

@@ -5,7 +5,7 @@
         <div class="col-8">
           <div class="card">
             <div class="card-header">
-              <h4>Edit Password</h4>
+              <h4>Ubah Password</h4>
             </div>        
             <div class="col-12 mt-3">
               <ValidationObserver v-slot="{invalid,validate}">  

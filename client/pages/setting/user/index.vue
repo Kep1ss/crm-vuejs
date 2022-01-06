@@ -38,7 +38,7 @@
                   ref="formContainer">
                   <thead>
                     <tr>
-                      <th><input type="checkbox" id="checkAll" @click="onCheckAll"></th>
+                      <!-- <th><input type="checkbox" id="checkAll" @click="onCheckAll"></th> -->
                       <th>No</th>
                       <th @click="onSort('username',parameters.params.sort == 'asc' ? 'desc' : 'asc')"
                         class="cursor-pointer">
@@ -99,6 +99,15 @@
                         <span v-else-if="item.role === 7" class="badge badge-info">
                           Tele Markerting
                         </span>
+                        <span v-else-if="item.role === 8" class="badge badge-warning">
+                          Admin Nasional
+                        </span>
+                        <span v-else-if="item.role === 9" class="badge badge-warning">
+                          Admin Area
+                        </span>
+                        <span v-else-if="item.role === 10" class="badge badge-warning">
+                          Admin Kaper
+                        </span>
                         <span class="badge badge-default" v-else>
                           Tidak Diketahui
                         </span>                
@@ -111,12 +120,14 @@
                           <button class="btn btn-sm btn-primary" @click="onEdit(item)">
                             <i class="fas fa-pen"></i>
                           </button>
-                          <button class="btn btn-sm btn-danger" @click="onTrashed(item)" v-if="!item.deleted_at && item.role != 0">
+                          <!-- 
+                          <button class="btn btn-sm btn-danger" @click="onTrashed(item)" v-if="!item.deleted_at">
                             <i class="fas fa-trash"></i>
                           </button>
                           <button class="btn btn-sm btn-success" @click="onRestored(item)" v-if="item.deleted_at">
                             <i class="fas fa-redo"></i>
                           </button>
+                          -->
                         </div>
                       </td>
                     </tr>
@@ -151,6 +162,7 @@
       :self="this"
       ref="form-input"/>
 
+    <!-- 
     <filter-section
       :self="this" 
       ref="form-filter">
@@ -168,6 +180,7 @@
         </div>
       </template>
     </filter-section> 
+    -->
 
   </section>
 </template>
@@ -178,19 +191,25 @@ import FormInput from "./form";
 import ModalDetail from "./detail";
 
 export default {
+  head() {
+    return {
+      title: 'Akun',
+    }
+  },
+
   created() {    
     this.onLoad();  
   },
 
   mounted() {
-    this.$refs["form-option"].isExport          = true;
-    this.$refs['form-option'].isFilter          = true;
+    this.$refs["form-option"].isExport          = false;
+    this.$refs['form-option'].isFilter          = false;
     this.$refs["form-option"].isMaintenancePage = false;  
   },
 
   data() {
     return {
-      title               : 'Users',
+      title               : 'Akun',
       isLoadingData       : false,
       isPaginate          : true,
       parameters : {
@@ -204,11 +223,11 @@ export default {
           all         : '',
           per_page    : 10,
           page        : 1,
-          role : 'all'
-        },
+          role        : 'all'
+        },        
         form : {
           checkboxs : []
-        },
+        },        
         loadings : {
           isDelete  : false,
           isRestore : false,          
@@ -233,7 +252,14 @@ export default {
     ...mapMutations('modulSetting',['set_data']),
 
     onFormShow(){
-      this.$refs["form-input"].parameters.form = {};
+      this.$refs["form-input"].parameters.form = {
+        fullname : '',
+        username : '',
+        password : '',
+        email    : '',
+        role     : 1
+      };
+
       this.$refs["form-input"].isEditable = false;
       window.$("#modal-form").modal("show")
       this.$refs["form-input"].$refs['form-validate'].reset();
@@ -280,130 +306,130 @@ export default {
       this.isLoadingData = false;
     },
 
-    onTrashed(item){    
-      if(this.parameters.loadings.isDelete) return 
+    // onTrashed(item){    
+    //   if(this.parameters.loadings.isDelete) return 
 
-      this.$confirm({
-        auth: false,
-        message: "Data ini akan dipindahkan ke dalam Trash. Yakin ??",
-        button: {
-          no: 'No',
-          yes: 'Yes'
-        },
-        callback: async confirm => {
-          if (confirm) {            
-            this.parameters.loadings.isDelete = true;
+    //   this.$confirm({
+    //     auth: false,
+    //     message: "Data ini akan dipindahkan ke dalam Trash. Yakin ??",
+    //     button: {
+    //       no: 'No',
+    //       yes: 'Yes'
+    //     },
+    //     callback: async confirm => {
+    //       if (confirm) {            
+    //         this.parameters.loadings.isDelete = true;
 
-            await this.deleteData({
-              url :  this.parameters.url,
-              id  :  item.id,
-              params : this.parameters.params
-            });
+    //         await this.deleteData({
+    //           url :  this.parameters.url,
+    //           id  :  item.id,
+    //           params : this.parameters.params
+    //         });
           
-            if (this.result == true){
-              this.onLoad(this.parameters.params.page)
-              this.$toaster.success("Data berhasil di pindahkan ke dalam Trash!");
-            }else {
-              this.$globalErrorToaster(this.$toaster,this.error);      
-            }
+    //         if (this.result == true){
+    //           this.onLoad(this.parameters.params.page)
+    //           this.$toaster.success("Data berhasil di pindahkan ke dalam Trash!");
+    //         }else {
+    //           this.$globalErrorToaster(this.$toaster,this.error);      
+    //         }
 
-            this.parameters.loadings.isDelete = false;
-          }
-        },
-      });
-    },
+    //         this.parameters.loadings.isDelete = false;
+    //       }
+    //     },
+    //   });
+    // },
 
-    async onRestored(item){    
-      if(this.parameters.loadings.isRestore) return 
+    // async onRestored(item){    
+    //   if(this.parameters.loadings.isRestore) return 
 
-      this.parameters.loadings.isRestore = true;
+    //   this.parameters.loadings.isRestore = true;
 
-      await this.restoreData({
-        url : this.parameters.url,
-        id : item.id,
-        params : this.parameters.params
-      })    
+    //   await this.restoreData({
+    //     url : this.parameters.url,
+    //     id : item.id,
+    //     params : this.parameters.params
+    //   })    
 
-      if(this.result == true){
-        this.onLoad(this.parameters.params.page)
-        this.$toaster.success("Data berhail di restore")
-      }else{
-        this.$globalErrorToaster(this.$toaster,this.error);      
-      }
+    //   if(this.result == true){
+    //     this.onLoad(this.parameters.params.page)
+    //     this.$toaster.success("Data berhail di restore")
+    //   }else{
+    //     this.$globalErrorToaster(this.$toaster,this.error);      
+    //   }
 
-      this.parameters.loadings.isRestore = false;
-    },
+    //   this.parameters.loadings.isRestore = false;
+    // },
 
-    async onRestoreAll(){
-      if(!this.parameters.form.checkboxs.length || this.parameters.loadings.isRestore) return
+    // async onRestoreAll(){
+    //   if(!this.parameters.form.checkboxs.length || this.parameters.loadings.isRestore) return
 
-      this.parameters.loadings.isRestore = true;
+    //   this.parameters.loadings.isRestore = true;
 
-      await this.restoreAllData({
-        url : this.parameters.url,        
-        checkboxs : this.parameters.form.checkboxs,
-        params : this.parameters.params
-      })    
+    //   await this.restoreAllData({
+    //     url : this.parameters.url,        
+    //     checkboxs : this.parameters.form.checkboxs,
+    //     params : this.parameters.params
+    //   })    
 
-      if(this.result == true){
-        this.onLoad(this.parameters.params.page)
-        this.parameters.form.checkboxs = [];
-        document.getElementById("checkAll").checked = false;
-        this.$toaster.success("Data berhail di restore")
-      }else{
-        this.$globalErrorToaster(this.$toaster,this.error);      
-      }
+    //   if(this.result == true){
+    //     this.onLoad(this.parameters.params.page)
+    //     this.parameters.form.checkboxs = [];
+    //     document.getElementById("checkAll").checked = false;
+    //     this.$toaster.success("Data berhail di restore")
+    //   }else{
+    //     this.$globalErrorToaster(this.$toaster,this.error);      
+    //   }
 
-      this.parameters.loadings.isRestore = false;
-    },
+    //   this.parameters.loadings.isRestore = false;
+    // },
 
-    onDeleteAll(){
-      if(!this.parameters.form.checkboxs.length || this.parameters.loadings.isDelete) return
+    // onDeleteAll(){
+    //   if(!this.parameters.form.checkboxs.length || this.parameters.loadings.isDelete) return
 
-      this.$confirm({       
-        auth: false, 
-        message: "Semua Data ini akan dipindahkan ke dalam Trash. Yakin ??",
-        button: {
-          no: 'No',
-          yes: 'Yes'
-        },
-        callback: async confirm => {
-          if (confirm) {          
-            this.parameters.loadings.isDelete = true;
+    //   this.$confirm({       
+    //     auth: false, 
+    //     message: "Semua Data ini akan dipindahkan ke dalam Trash. Yakin ??",
+    //     button: {
+    //       no: 'No',
+    //       yes: 'Yes'
+    //     },
+    //     callback: async confirm => {
+    //       if (confirm) {          
+    //         this.parameters.loadings.isDelete = true;
             
-            await this.deleteAllData({
-              url :  this.parameters.url,
-              checkboxs : this.parameters.form.checkboxs,              
-              params : this.parameters.params
-            });
+    //         await this.deleteAllData({
+    //           url :  this.parameters.url,
+    //           checkboxs : this.parameters.form.checkboxs,              
+    //           params : this.parameters.params
+    //         });
           
-            if (this.result == true){
-              this.onLoad()
-              this.parameters.form.checkboxs = [];
-              document.getElementById("checkAll").checked = false;
-              this.$toaster.success("Data berhasil di pindahkan ke dalam Trash!");
-            }else {
-              this.$globalErrorToaster(this.$toaster,this.error);      
-            }
+    //         if (this.result == true){
+    //           this.onLoad()
+    //           this.parameters.form.checkboxs = [];
+    //           document.getElementById("checkAll").checked = false;
+    //           this.$toaster.success("Data berhasil di pindahkan ke dalam Trash!");
+    //         }else {
+    //           this.$globalErrorToaster(this.$toaster,this.error);      
+    //         }
 
-            this.parameters.loadings.isDelete = false;
-          }
-        },
-      });
-    },
+    //         this.parameters.loadings.isDelete = false;
+    //       }
+    //     },
+    //   });
+    // },
 
-    onCheckAll(evt){
-      let tmpCheckboxs = [];
+    // onCheckAll(evt){
+    //   let tmpCheckboxs = [];
 
-      document.querySelectorAll("input[name='checkboxs[]']").forEach(item => {      
-        item.checked = evt.target.checked;    
-        if(evt.target.checked){      
-          tmpCheckboxs.push(item.value);
-        }
-      })
+    //   document.querySelectorAll("input[name='checkboxs[]']").forEach(item => {      
+    //     item.checked = evt.target.checked;    
+    //     if(evt.target.checked){      
+    //       tmpCheckboxs.push(item.value);
+    //     }
+    //   })
 
-      this.parameters.form.checkboxs = tmpCheckboxs
-    },
+    //   this.parameters.form.checkboxs = tmpCheckboxs
+    // },
 
     onSort(column,sort = 'asc'){
       this.parameters.params = {

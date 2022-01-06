@@ -62,6 +62,15 @@
                 <span v-else-if="parameters.form.role === 7" class="badge badge-info">
                   Tele Markerting
                 </span>
+                <span v-else-if="parameters.form.role === 8" class="badge badge-warning">
+                  Admin Nasional
+                </span>
+                <span v-else-if="parameters.form.role === 9" class="badge badge-warning">
+                  Admin Area
+                </span>
+                <span v-else-if="parameters.form.role === 10" class="badge badge-warning">
+                  Admin Kaper
+                </span>
                 <span class="badge badge-default" v-else>
                   Tidak Diketahui
                 </span>                
