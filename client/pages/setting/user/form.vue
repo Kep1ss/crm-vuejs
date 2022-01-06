@@ -92,7 +92,7 @@
                 v-if="!isEditable">
                 <label for="role">Role</label>
                 <select class="form-control" name="role" v-model="parameters.form.role" disabled>
-                  <option value="1" selected>Manager Area</option>
+                  <option value="1" selected>Manager Nasional</option>
                 </select>
               </div>                               
             </div>

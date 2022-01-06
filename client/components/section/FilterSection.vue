@@ -40,61 +40,21 @@
   </portal>
 </template>
 <script>
-import {mapState,mapActions} from 'vuex'
 export default {
   props: {
     self: Object,
     title: String,
   },
 
-  data() {
-    return {
-      filter:{
-        range    : {
-                  start_date :'',
-                  end_date   :'',
-        },
-        division : '',
-        position : '',
-        gender   : '',
-        graduate : '',
-        city     : '',
-      },
-      isDivisionFilter    : true,
-      isDaterangeFilter   : true,
-      isPositionFilter    : true,
-      isGraduationFilter  : true,
-      isGenderFilter      : true,
-      isCityFilter        : true,
-    }
-  },
-
-  computed :{
-    ... mapState('modulMaster',
-    ['result','error','lookup_division',
-    'lookup_position','lookup_cites'],{
-      lookup_division: state => state.lookup_division,
-      lookup_position: state => state.lookup_position ,
-      lookup_cites  : state => state.lookup_cites ,
-    })
-  },
-
-  methods: {
-    ... mapActions('modulMaster',['getData']),
-
-     async onFilter(){
-      this.self.parameters.params = {
-        ... this.self.parameters.params,
-        filter : this.filter
-      }
+  methods: {    
+     async onFilter(){  
       this.self.onLoad();
       window.$("#modal-filter").modal("hide")
     },
 
     onReset(){
       this.self.parameters.params = {      
-        ... this.self.parameters.params,
-        filter : ''
+        ...this.self.parameters.default_params,      
       }
       this.self.onLoad();
       window.$("#modal-filter").modal("hide")
