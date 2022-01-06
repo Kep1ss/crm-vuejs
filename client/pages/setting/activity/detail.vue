@@ -54,6 +54,8 @@
 
 <script>
 export default {
+  middleware : ["isNotAccessable"],
+  
   props: ["self"],
 
   data() {

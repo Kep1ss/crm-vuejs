@@ -141,7 +141,7 @@ export default {
       year(){    
         return new Date().getFullYear();
       },     
-      company_name(){
+      company_name(){        
         let company_name = this.$store.state.setting.settings.find(item => item.name == "company_name");
         return company_name ? company_name.value : "PT. Software Anak Bangsa";        
       }

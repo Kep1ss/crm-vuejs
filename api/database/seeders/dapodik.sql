@@ -19,10 +19,10 @@
 -- Table structure for table `cities`
 --
 
-DROP TABLE IF EXISTS `cities`;
+/* DROP TABLE IF EXISTS `cities`; */
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cities` (
+/* CREATE TABLE `cities` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `code` varchar(10) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE `cities` (
   PRIMARY KEY (`id`),
   KEY `cities_province_id_foreign` (`province_id`),
   CONSTRAINT `cities_province_id_foreign` FOREIGN KEY (`province_id`) REFERENCES `provinces` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=537 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=537 DEFAULT CHARSET=utf8mb4; */
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -52,9 +52,10 @@ UNLOCK TABLES;
 -- Table structure for table `districts`
 --
 
-DROP TABLE IF EXISTS `districts`;
+/* DROP TABLE IF EXISTS `districts`; */
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+/*
 CREATE TABLE `districts` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `code` varchar(10) DEFAULT NULL,
@@ -73,6 +74,7 @@ CREATE TABLE `districts` (
   KEY `districts_city_id_foreign` (`city_id`),
   CONSTRAINT `districts_city_id_foreign` FOREIGN KEY (`city_id`) REFERENCES `cities` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7432 DEFAULT CHARSET=utf8mb4;
+*/
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -89,10 +91,10 @@ UNLOCK TABLES;
 -- Table structure for table `provinces`
 --
 
-DROP TABLE IF EXISTS `provinces`;
+/* DROP TABLE IF EXISTS `provinces`; */
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `provinces` (
+/* CREATE TABLE `provinces` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `code` varchar(10) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -101,7 +103,7 @@ CREATE TABLE `provinces` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4; */
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -118,28 +120,28 @@ UNLOCK TABLES;
 -- Table structure for table `schools`
 --
 
-DROP TABLE IF EXISTS `schools`;
+/* DROP TABLE IF EXISTS `schools`; */
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `schools` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `code` varchar(10) DEFAULT NULL,
-  `district_id` bigint(20) unsigned DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `member` bigint(20) DEFAULT 0,
-  `level` enum('TK','SD','SMP','SMK','SMA','SLB') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'SD',
-  `is_private` boolean DEFAULT 1,
-  `address` text DEFAULT NULL,
-  `phone_headmaster` varchar(20) DEFAULT NULL,
-  `phone_teacher` varchar(20) DEFAULT NULL,
-  `phone_treasurer` varchar(20) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `schools_district_id_foreign` (`district_id`),
-  CONSTRAINT `schools_district_id_foreign` FOREIGN KEY (`district_id`) REFERENCES `districts` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- CREATE TABLE `schools` (
+--   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+--   `code` varchar(10) DEFAULT NULL,
+--   `district_id` bigint(20) unsigned DEFAULT NULL,
+--   `name` varchar(255) DEFAULT NULL,
+--   `member` bigint(20) DEFAULT 0,
+--   `level` enum('TK','SD','SMP','SMK','SMA','SLB') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'SD',
+--   `is_private` boolean DEFAULT 1,
+--   `address` text DEFAULT NULL,
+--   `phone_headmaster` varchar(20) DEFAULT NULL,
+--   `phone_teacher` varchar(20) DEFAULT NULL,
+--   `phone_treasurer` varchar(20) DEFAULT NULL,
+--   `created_at` timestamp NULL DEFAULT NULL,
+--   `updated_at` timestamp NULL DEFAULT NULL,
+--   `deleted_at` timestamp NULL DEFAULT NULL,
+--   PRIMARY KEY (`id`),
+--   KEY `schools_district_id_foreign` (`district_id`),
+--   CONSTRAINT `schools_district_id_foreign` FOREIGN KEY (`district_id`) REFERENCES `districts` (`id`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

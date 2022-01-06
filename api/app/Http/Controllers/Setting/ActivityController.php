@@ -60,30 +60,4 @@ class ActivityController extends Controller
     {
         return response()->json($this->indexFilter());             
     }
-
-    // public function export($type){
-    //     $filetype = $type == 'pdf' 
-    //         ? 'activity.pdf' 
-    //         : 'activity.xlsx';
-
-    //     $extension =  $type == "pdf" 
-    //         ? \Maatwebsite\Excel\Excel::DOMPDF 
-    //         : \Maatwebsite\Excel\Excel::XLSX;
-        
-    //     return \Excel::download(new ActivityExport($this->indexFilter()),$filetype,$extension);  
-    // }
-
-     /*
-        How to call
-        division/print?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
-    */        
-    // public function print(){
-    //     $pdf = \PDF::loadview('exports/activites',[
-    //           "data" => !request()->filled("all") 
-    //             ? $this->indexFilter()->getCollection() 
-    //             : $this->indexFilter()
-    //     ]);
-
-    //     return  $pdf->stream();
-    // }
 }

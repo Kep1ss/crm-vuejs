@@ -1,5 +1,5 @@
 const state = () => ({
-    settings : {}
+    settings : []
 })
 
 const mutations = {
@@ -15,7 +15,7 @@ const actions = {
         commit("SET_SETTINGS",response.data)
       }catch(err){
         console.log(err);
-        commit("SET_SETTINGS",{});
+        commit("SET_SETTINGS",[]);
       }
     }
 }

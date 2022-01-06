@@ -147,13 +147,14 @@
           <i class="fas fa-users-cog"></i>
           <span> Ganti Password </span>
         </nuxt-link>
-        <nuxt-link class="nav-link" to="/setting/change-password">
+        <nuxt-link class="nav-link" to="/setting/announcement">
           <i class="fas fa-scroll"></i>
           <span> Pengumuman </span>
         </nuxt-link>
-        <nuxt-link class="nav-link" to="/setting/change-password">
+        <nuxt-link class="nav-link" to="/setting/download-catalog" 
+          v-if="$auth.user.role === 0">
           <i class="fas fa-download"></i>
-          <span> Link Download </span>
+          <span> Download Catalog</span>
         </nuxt-link>
       </li>
       <!-- END PENGATURAN -->

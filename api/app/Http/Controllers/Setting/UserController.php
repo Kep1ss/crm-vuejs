@@ -78,7 +78,8 @@ class UserController extends Controller
 
             $user = User::create([
                 "password" => \Hash::make($request->password),
-                "username" => Str::slug($request->username,'-')
+                "username" => Str::slug($request->username,'-'),
+                "parent_id" => auth()->user()->id
             ] + $request->validated());
 
             activity()
@@ -114,7 +115,6 @@ class UserController extends Controller
             \DB::beginTransaction();
             
             $payload = $request->validated();
-            
             $payload["username"] = Str::slug($payload["username"],'-');
             
             if($request->filled("password")){   
@@ -190,16 +190,16 @@ class UserController extends Controller
     //     try{
     //         \DB::beginTransaction(); 
                  
-    //         $data = User::withTrashed()->findOrFail($id);
+    //         $user = User::withTrashed()->findOrFail($id);
 
-    //         $data->restore();
+    //         $user->restore();
             
     //         activity()
-    //             ->performedOn($data)
+    //             ->performedOn($user)
     //             ->causedBy(auth()->user())
     //             ->withProperties([
-    //                 'name' => $data->username,
-    //                 'id' => $data->id,
+    //                 'name' => $user->username,
+    //                 'id' => $user->id,
     //                 'table' => 'users'
     //             ])
     //             ->log('Restore Data');
