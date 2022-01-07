@@ -136,7 +136,8 @@ export default {
     }
   },
 
-  created() {    
+  created() {
+    this.set_data([]);
     this.onLoad();  
   },
 

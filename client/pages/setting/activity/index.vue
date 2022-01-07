@@ -107,6 +107,7 @@ import ModalDetail from "./detail";
 
 export default {
   created() {    
+    this.set_data([]);
     this.onLoad();  
   },
 

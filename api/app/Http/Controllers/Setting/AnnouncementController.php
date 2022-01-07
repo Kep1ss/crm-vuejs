@@ -80,15 +80,15 @@ class AnnouncementController extends Controller
         try{    
             \DB::beginTransaction();
 
-            $accouncement = Announcement::create($request->validated() + [
+            $announcement = Announcement::create($request->validated() + [
                 "user_id" => auth()->user()->id
             ]);        
 
             activity()
-                ->performedOn($accouncement)
+                ->performedOn($announcement)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'id' => $accouncement->id,
+                    'id' => $announcement->id,
                     'table' => 'announcements'
                 ])
                 ->log('Created Data');
@@ -147,7 +147,7 @@ class AnnouncementController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Announcement $accouncement)
+    public function destroy(Announcement $announcement)
     {
         try{    
             \DB::beginTransaction();

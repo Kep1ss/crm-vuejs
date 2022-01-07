@@ -198,6 +198,7 @@ export default {
   },
 
   created() {    
+    this.set_data([]);
     this.onLoad();  
   },
 

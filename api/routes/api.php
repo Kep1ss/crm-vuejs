@@ -37,7 +37,7 @@ Route::group(["prefix" => $version],function() use ($version) {
 	// GET SETTING
 	Route::get("/get-setting",[SettingController::class,"index"])->name("get-setting");
 
-	// AUTH 
+	// MODULE AUTH 
     Route::group(["namespace" => "Auth","as" => "auth."],function(){
 		Route::post('/login', [AuthController::class,"login"])->name("login");
 		Route::post("/forgot-password",[AuthController::class,"forgotPassword"])->name("forgot-password");
@@ -94,9 +94,18 @@ Route::group(["prefix" => $version],function() use ($version) {
 		});
 
 		/* MODULE MASTER DATA */
+		Route::group(["as" => "master.data."],function(){
 
-		/* MODULE ACIVITY */
-		
-		/* MODULE ANALYSIS */
+		});
+
+		/* MODULE ACTIVITY */
+		Route::group(["as" => "activity."],function(){
+
+		});
+
+		/* MODULE ANALYSIS DATA */
+		Route::group(["as" => "analysis.data"],function(){
+
+		});
     });
 });
