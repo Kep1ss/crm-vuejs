@@ -46,4 +46,12 @@ class User extends Authenticatable
     public function announcements(){
         return $this->hasMany(Announcement::class);
     }
+
+    public function district(){
+        return $this->belongsTo(District::class);
+    }
+
+    public function parent(){
+        return $this->belongsTo(User::class);
+    }
 }

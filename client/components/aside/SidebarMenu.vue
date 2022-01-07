@@ -13,62 +13,26 @@
       <li class="menu-header">MASTER DATA</li>
 
       <li class="nav-item dropdown">
-        <nuxt-link class="nav-link" to="/master/school">
+        <nuxt-link class="nav-link" to="/master/account"
+          v-if="menu_account">
           <i class="fas fa-user-circle"></i>
-          <span>Data Admin Nasional</span>
+          <span>Data Akun</span>
         </nuxt-link>   
           
-        <nuxt-link class="nav-link" to="/master/school">
-          <i class="fas fa-user"></i>
-          <span>Data Manager Area</span>
-        </nuxt-link>   
-          
-        <nuxt-link class="nav-link" to="/master/school">
-          <i class="fas fa-user-circle"></i>
-          <span>Data Admin Area</span>
-        </nuxt-link>  
-        
-        <nuxt-link class="nav-link" to="/master/school">
-          <i class="fas fa-user-friends"></i>      
-          <span>Data Kaper</span>
-        </nuxt-link>  
-
-        <nuxt-link class="nav-link" to="/master/school">
-          <i class="fas fa-user-circle"></i>      
-          <span>Data Admin Kaper</span>
-        </nuxt-link>  
-
-        <nuxt-link class="nav-link" to="/master/school">
-          <i class="fas fa-user-tie"></i>
-          <span>Data Spv</span>
-        </nuxt-link>  
-
-        <nuxt-link class="nav-link" to="/master/school">
-          <i class="fas fa-users"></i>
-          <span>Data Sales</span>
-        </nuxt-link>  
-        
-        <nuxt-link class="nav-link" to="/master/school">
-          <i class="fas fa-phone"></i>
-          <span>Data Kotele</span>
-        </nuxt-link>  
-
-        <nuxt-link class="nav-link" to="/master/school">
-          <i class="far fa-id-card"></i>          
-          <span>Data Telemarketing</span>
-        </nuxt-link>  
-
-        <nuxt-link class="nav-link" to="/master/school">
+        <nuxt-link class="nav-link" to="/master/school"
+          v-if="menu_province">
           <i class="fas fa-map"></i>
           <span>Data Provinsi</span>
         </nuxt-link>      
 
-        <nuxt-link class="nav-link" to="/master/school">
+        <nuxt-link class="nav-link" to="/master/school"
+          v-if="menu_city">
           <i class="fas fa-route"></i>
           <span>Data Kaputen/Kota</span>
         </nuxt-link>      
 
-        <nuxt-link class="nav-link" to="/master/school">
+        <nuxt-link class="nav-link" to="/master/school"
+         v-if="menu_district">
           <i class="fas fa-location-arrow"></i>
           <span>Data Kecamatan</span>
         </nuxt-link>      
@@ -83,30 +47,36 @@
       <!-- ACIVITY -->
       <li class="menu-header">Aktifitas</li>
       <li class="nav-item dropdown">
-        <nuxt-link class="nav-link" to="/setting/user">
+        <nuxt-link class="nav-link" to="/setting/user"
+          v-if="menu_set_area_sales">
           <i class="fas fa-chart-area"></i>
           <span> Set Area Sales </span>
         </nuxt-link>
-        <nuxt-link class="nav-link" to="/setting/user">
+        <nuxt-link class="nav-link" to="/setting/user"
+          v-if="menu_set_target_customer">
           <i class="fas fa-chart-pie"></i>
           <span> Set Target Pelanggan </span>
         </nuxt-link>
-        <nuxt-link class="nav-link" to="/setting/user">
+        <nuxt-link class="nav-link" to="/setting/user"
+          v-if="menu_set_target_eksemplar">
           <i class="far fa-chart-bar"></i>
           <span> Set Target Eksemplar</span>
         </nuxt-link>  
-        <nuxt-link class="nav-link" to="/setting/user">
+        <nuxt-link class="nav-link" to="/setting/user"
+          v-if="menu_set_target_telemaraketing">
           <i class="fas fa-chart-line"></i>
           <span> Set Target Telemarketing </span>
         </nuxt-link>
-        <nuxt-link class="nav-link" to="/setting/user">
+        <nuxt-link class="nav-link" to="/setting/user"
+          v-if="menu_input_visit">
           <i class="fas fa-keyboard"></i>
           <span> Input Visit</span>
         </nuxt-link>
-        <nuxt-link class="nav-link" to="/setting/user">
+        <nuxt-link class="nav-link" to="/setting/user"
+          v-if="menu_input_activity_telemarketing">
           <i class="far fa-keyboard"></i>
           <!-- Input Aktivitas Telemarketing -->
-          <span> Input Aktivitas </span>
+          <span> Input Aktivitas Tele</span>
         </nuxt-link>
       </li> 
       <!-- ACIVITY -->
@@ -129,17 +99,17 @@
       <li class="menu-header">PENGATURAN</li>
       <li class="nav-item dropdown">
         <nuxt-link class="nav-link" to="/setting/user"
-          v-if="$auth.user.role === 0">
+          v-if="$auth.user.role === roles.superadmin">
           <i class="fas fa-users-cog"></i>
           <span> Akun </span>
         </nuxt-link>
         <nuxt-link class="nav-link" to="/setting"
-          v-if="$auth.user.role === 0">
+          v-if="$auth.user.role === roles.superadmin">
           <i class="fas fa-cogs"></i>
           <span> Aplikasi</span>
         </nuxt-link>
         <nuxt-link class="nav-link" to="/setting/activity"
-          v-if="$auth.user.role === 0">
+          v-if="$auth.user.role === roles.superadmin">
           <i class="fas fa-users-cog"></i>
           <span> Aktifitas </span>
         </nuxt-link>
@@ -147,12 +117,13 @@
           <i class="fas fa-users-cog"></i>
           <span> Ganti Password </span>
         </nuxt-link>
-        <nuxt-link class="nav-link" to="/setting/announcement">
+        <nuxt-link class="nav-link" to="/setting/announcement"
+          v-if="menu_announcement">
           <i class="fas fa-scroll"></i>
           <span> Pengumuman </span>
         </nuxt-link>
         <nuxt-link class="nav-link" to="/setting/download-catalog" 
-          v-if="$auth.user.role === 0">
+          v-if="$auth.user.role === roles.superadmin">
           <i class="fas fa-download"></i>
           <span> Download Catalog</span>
         </nuxt-link>
@@ -161,9 +132,135 @@
     </ul>
   </div>
 </template>
+
 <script>
 export default {
+  computed: {
+    roles(){
+      return this.$store.state.setting.roles
+    },
 
+    /* MODULE SETTING */
+      menu_announcement(){
+        let roles = this.$store.state.setting.roles;
+
+        return [
+          roles.manager_nasional,
+          roles.manager_area,
+          roles.admin_nasional,
+          roles.admin_area,
+
+          roles.superadmin
+        ].includes(this.$auth.user.role)
+      },
+    /* MODULE SETTING */
+
+    /* MODULE MASTER DATA */
+      menu_account(){
+        let roles = this.$store.state.setting.roles;
+
+        return ![
+          roles.sales,
+          roles.telemarketing,
+        ].includes(this.$auth.user.role)
+      },
+
+      menu_province(){
+        let roles = this.$store.state.setting.roles;
+
+        return [    
+          roles.kotele,
+          roles.manager_nasional,
+          roles.admin_nasional,
+          
+          roles.superadmin
+        ].includes(this.$auth.user.role)
+      },
+
+      menu_city(){
+        let roles = this.$store.state.setting.roles;
+    
+        return ![    
+          roles.sales,
+          roles.manager_nasional,
+          roles.admin_nasional,
+          roles.kotele,
+          roles.telemarketing,
+        ].includes(this.$auth.user.role)
+      },
+
+      menu_district(){
+        let roles = this.$store.state.setting.roles;
+    
+        return ![    
+          roles.sales,
+          roles.manager_nasional,
+          roles.admin_nasional,
+          roles.kotele,
+          roles.telemarketing,
+        ].includes(this.$auth.user.role)
+      },
+    /* MODULE MASTER DATA */
+
+    /* MODULE ACITVITY */
+      menu_set_area_sales(){
+        let roles = this.$store.state.setting.roles;
+    
+        return [    
+          roles.spv,
+          roles.superadmin
+        ].includes(this.$auth.user.role)
+      },
+
+      menu_set_target_customer(){
+        let roles = this.$store.state.setting.roles;
+    
+        return [    
+          roles.spv,
+          roles.superadmin
+        ].includes(this.$auth.user.role)
+      },
+
+      menu_set_target_eksemplar(){
+        let roles = this.$store.state.setting.roles;
+    
+        return ![                
+          roles.sales,
+          roles.kotele,
+          roles.telemarketing,
+        ].includes(this.$auth.user.role)
+      },
+
+      menu_set_target_telemaraketing(){
+        let roles = this.$store.state.setting.roles;
+    
+        return [    
+          roles.kotele,
+          roles.superadmin
+        ].includes(this.$auth.user.role)
+      },
+
+      menu_input_visit(){
+        let roles = this.$store.state.setting.roles;
+    
+        return ![            
+          roles.manager_nasional,
+          roles.admin_nasional,
+          roles.kotele,
+          roles.telemarketing,          
+        ].includes(this.$auth.user.role)
+      },
+
+      menu_input_activity_telemarketing(){
+        let roles = this.$store.state.setting.roles;
+    
+        return [    
+          roles.telemarketing,
+          roles.superadmin
+        ].includes(this.$auth.user.role)
+      }
+    /* MODULE ACTIVITY */
+  }
 }
 </script>
 

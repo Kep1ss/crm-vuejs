@@ -3,6 +3,11 @@
 namespace App\Helpers;
 
 class FormatResponse{
+	/**
+     * Handle Custom Error
+     *     
+     * @return \Illuminate\Http\Response
+     */   
 	public static function failed($error){		
 		if($error->getCode() != 422){
 			$errorDataJson = [

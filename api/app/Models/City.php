@@ -11,4 +11,8 @@ class City extends Model
     use HasFactory,SoftDeletes;
     
     protected $guarded = [];
+
+    public function province(){
+        return $this->belongsto(Province::class);
+    }
 }

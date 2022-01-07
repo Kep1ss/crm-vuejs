@@ -11,7 +11,9 @@ use App\Http\Controllers\Setting\{
 	DownloadCatalogController,
 	AnnouncementController
 };
-
+use App\Http\Controllers\MasterData\{
+	AccountController
+};
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -95,7 +97,10 @@ Route::group(["prefix" => $version],function() use ($version) {
 
 		/* MODULE MASTER DATA */
 		Route::group(["as" => "master.data."],function(){
-
+			// Route::post("/account/restore-all",[AccountController::class,"restoreAll"])->name("account.restore-all");
+			// Route::delete("/account/destroy-all",[AccountController::class,"destroyAll"])->name("account.destroy-all");
+			// Route::post("/account/restore/{id}",[AccountController::class,"restore"])->name("account.restore");		
+			Route::apiResource("account",AccountController::class);
 		});
 
 		/* MODULE ACTIVITY */

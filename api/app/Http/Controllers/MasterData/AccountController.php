@@ -1,21 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Setting;
+namespace App\Http\Controllers\MasterData;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{
-    Announcement,
-    User 
-};
+use App\Models\User;
+// use App\Exports\AccountExport;
 use App\Helpers\FormatResponse;
 use App\Http\Requests\{
-    AnnouncementRequest,
+    UserRequest,
     CheckAllRequest 
 };
 use Illuminate\Support\Str;
 
-class AnnouncementController extends Controller
+class AccountController extends Controller
 {
     /**
      * Display a listing of the resource Index And Export
@@ -26,11 +24,19 @@ class AnnouncementController extends Controller
     public function indexFilter(){
         $request = request();
 
-        $data = Announcement::query();
-        
-        $data->select("id","content","user_id","deleted_at")
-            ->with(["user" => function($q){
-                $q->select("id","username");
+        $data = User::query();
+
+        $data->select("id","username","fullname","email","parent_id","district_id","deleted_at")
+            ->with(["district" => function($q){
+                $q->select("id","name")
+                    ->with(["city" => function($qcity){
+                        $qcity->select("id","name")  
+                            ->with(["province" => function($qprovince){
+                                $qprovince->select("id","name");
+                            }]);
+                    }]);
+            },"parent" => function($q){
+                $q->select("id","username","role");
             }]);
 
         if($request->filled("soft_deleted")){
@@ -41,15 +47,15 @@ class AnnouncementController extends Controller
             }          
         }        
 
-        if(auth()->user()->role !== USER::ROLE_SUPERADMIN){
-            $data->where("user_id",auth()->user()->id);
-        }
-
         if($request->filled("search")){
             $data->where(function($q) use ($request) {
-                $q->orWhere("content","like","%".$request->search."%");
+                $q->orWhere("username","like","%".$request->search."%")
+                    ->orWhere("fullname","like","%".$request->search."%")
+                    ->orWhere("email","like","%".$request->search."%");
             });
-        }
+        }    
+
+        $data->where("parent_id",auth()->user()->id);
 
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
 
@@ -78,21 +84,24 @@ class AnnouncementController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AnnouncementRequest $request)
+    public function store(UserRequest $request)
     {
         try{    
             \DB::beginTransaction();
 
-            $announcement = Announcement::create($request->validated() + [
-                "user_id" => auth()->user()->id
-            ]);        
+            $user = User::create([
+                "password" => \Hash::make($request->password),
+                "username" => Str::slug($request->username,'-'),
+                "parent_id" => auth()->user()->id
+            ] + $request->validated());
 
             activity()
-                ->performedOn($announcement)
+                ->performedOn($user)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'id' => $announcement->id,
-                    'table' => 'announcements'
+                    'name' => $user->username,
+                    'id' => $user->id,
+                    'table' => 'users'
                 ])
                 ->log('Created Data');
 
@@ -113,24 +122,29 @@ class AnnouncementController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(AnnouncementRequest $request,Announcement $announcement)
+    public function update(UserRequest $request,User $user)
     {
         try{    
             \DB::beginTransaction();
             
-            throw_if(
-                $announcement->user_id != auth()->user()->id,
-                new \Exception("Anda tidak punya hak akses",422)
-            );
+            $payload = $request->validated();
+            $payload["username"] = Str::slug($payload["username"],'-');
+            
+            if($request->filled("password")){   
+                $payload["password"] = \Hash::make($request->password);
+            }else{
+                unset($payload["password"]);
+            }
 
-            $announcement->update($request->validated());
+            $user->update($payload);
 
             activity()
-                ->performedOn($announcement)
+                ->performedOn($user)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'id' => $announcement->id,
-                    'table' => 'announcements'
+                    'name' => $user->username,
+                    'id' => $user->id,
+                    'table' => 'users'
                 ])
                 ->log('Upadated Data');
 
@@ -150,24 +164,27 @@ class AnnouncementController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Announcement $announcement)
+    public function destroy(User $user)
     {
         try{    
             \DB::beginTransaction();
 
             throw_if(
-                $announcement->user_id != auth()->user()->id,
-                new \Exception("Anda tidak punya hak akses",422)
-            );
-                    
-            $announcement->delete();
+                $user->id == auth()->user()->id,
+                new \Exception("Anda tidak dapat menghapus diri anda sendiri",422)
+            );            
+            
+            // RELASIONAL DELETE
+
+            $user->delete();
 
             activity()
-                ->performedOn($announcement)
+                ->performedOn($user)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'id' => $announcement->id,
-                    'table' => 'announcements'
+                    'name' => $user->username,
+                    'id' => $user->id,
+                    'table' => 'users'
                 ])
                 ->log('Deleted Data');
                 
@@ -190,20 +207,18 @@ class AnnouncementController extends Controller
     public function restore($id){
         try{
             \DB::beginTransaction(); 
-                  
-            $announcement = Announcement::withTrashed()
-                ->where("id",$id)
-                ->where("user_id",auth()->user()->id)
-                ->firstOrFail();            
-                        
-            $announcement->restore();
+                 
+            $user = User::withTrashed()->findOrFail($id);
+
+            $user->restore();
             
             activity()
-                ->performedOn($announcement)
+                ->performedOn($user)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'id' => $announcement->id,
-                    'table' => 'announcements'
+                    'name' => $user->username,
+                    'id' => $user->id,
+                    'table' => 'users'
                 ])
                 ->log('Restore Data');
 
@@ -226,17 +241,22 @@ class AnnouncementController extends Controller
     public function destroyAll(CheckAllRequest $request){
         try{
             \DB::beginTransaction();
-        
-            auth()->user()
-                ->announcements()
-                ->whereIn("id",$request->checkboxs)
+
+            throw_if(
+                in_array(auth()->user()->id,$request->checkboxs),
+                new \Exception("Anda tidak dapat menghapus diri anda sendiri",422)
+            );
+
+            // RELASIONAL DELETE
+
+            User::whereIn("id",$request->checkboxs)
                 ->delete();  
                 
             activity()        
                 ->causedBy(auth()->user())
                 ->withProperties([            
                     'id' => $request->checkboxs,  
-                    'table' => 'announcements'                  
+                    'table' => 'users'                  
                 ])
                 ->log('Deleted All Data');
 
@@ -260,9 +280,7 @@ class AnnouncementController extends Controller
         try{
             \DB::beginTransaction();            
 
-            auth()->user()
-                ->announcements()
-                ->withTrashed()
+            User::withTrashed()
                 ->whereIn("id",$request->checkboxs)
                 ->restore();    
 
@@ -270,7 +288,7 @@ class AnnouncementController extends Controller
                 ->causedBy(auth()->user())
                 ->withProperties([            
                     'id' => $request->checkboxs,  
-                    'table' => 'announcements'                  
+                    'table' => 'users'                  
                 ])
                 ->log('Restore All Data');
 
@@ -283,4 +301,37 @@ class AnnouncementController extends Controller
             return FormatResponse::failed($e);
         }   
     }
+
+    /**
+     * Export the listing of the resource 
+     *
+     * @param  $type excel | pdf
+     * @return \Illuminate\Http\Response
+     */   
+    // public function export($type){
+    //     $filetype = $type == 'pdf' 
+    //         ? 'user.pdf' 
+    //         : 'user.xlsx';
+
+    //     $extension =  $type == "pdf" 
+    //         ? \Maatwebsite\Excel\Excel::DOMPDF 
+    //         : \Maatwebsite\Excel\Excel::XLSX;
+
+    //     return \Excel::download(new UserExport($this->indexFilter()),$filetype,$extension);        
+    // }
+ 
+    /**
+     * Print the listing of the resource 
+     *     
+     * @return \Illuminate\Http\Response
+     */   
+    // public function print(){
+    //     $pdf = \PDF::loadview('exports/users',[
+    //           "data" => !request()->filled("all") 
+    //             ? $this->indexFilter()->getCollection() 
+    //             : $this->indexFilter()
+    //     ]);
+        
+    //     return  $pdf->stream();
+    // }
 }

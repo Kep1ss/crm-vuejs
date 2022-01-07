@@ -1,0 +1,126 @@
+master data => 
+ - data akun 
+  - only :
+   - superadmin (readonly)
+   - manager nasional 
+   - manager area 
+   - kaper 
+   - spv 
+   - kotele 
+   - admin nasional 
+   - admin area 
+   - admin kaper 
+
+  - danied :
+    - sales 
+    - tele marketing
+
+ - province
+   - only :
+    - super admin (readonly)
+    - manager nasional
+    - admin nasional
+    - kotele 
+   - danied : 
+    - manager area 
+    - kaper 
+    - spv 
+    - sales 
+    - admin area 
+    - admin kaper 
+    - telemarkeing 
+
+ - city 
+  - only : 
+    - super admin (readonly)
+    - manager area 
+    - kaper 
+    - spv 
+    - admin area 
+    - admin kaper     
+  - danied :
+    - sales 
+    - manager nasional
+    - admin nasional 
+    - kotele
+    - telemarkeing
+
+ - district
+   - only :
+    - super admin (readonly)
+    - manager area 
+    - kaper 
+    - spv 
+    - admin area 
+    - admin kaper 
+   - danied :
+    - sales 
+    - manager nasional 
+    - admin nasional
+    - kotele
+    - telemarkeing
+
+ - scholl
+  - only :
+   - super admin (readonly)
+   - ALL
+
+aktiftas =>
+ - set area sales
+   - only :
+    - super admin (readonly)
+    - spv       
+   
+ - set target pelanggan 
+  - only :
+    - super admin (readonly)
+    - spv
+
+ - set target exmplar 
+   - only :
+     - super admin (readonly)
+     - manager nasional
+     - manager area 
+     - kaper 
+     - spv 
+     - admin nasional
+     - admin area 
+     - admin kaper     
+   - danied :
+     - sales 
+     - telemarkeing
+     - kotele
+     
+ - set target telemarkeing
+    - only :
+     - super admin (readonly)
+     - kotele
+     
+ - input viist 
+   - only : 
+     - super admin (readonly)
+     - manager area 
+     - kaper 
+     - spv 
+     - sales 
+     - admin area 
+     - admin kaper
+   - danied :
+     - admin nasional
+     - manager nasional 
+     - kotele 
+     - telemarkeing
+
+ - input aktiftas telemarkeing 
+  - only : 
+    - super admin (readonly)
+    - telemarkeing
+
+setting => 
+ - accouncemnt 
+  - only :
+    - super admin (readonly)
+    - manager nasional 
+    - manager area 
+    - admin nasional
+    - admin area 

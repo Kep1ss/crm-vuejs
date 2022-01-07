@@ -11,4 +11,8 @@ class Disrtrict extends Model
     use HasFactory,SoftDeletes;
     
     protected $guarded = [];
+
+    public function city(){
+        return $this->belongsto(City::class);
+    }
 }
