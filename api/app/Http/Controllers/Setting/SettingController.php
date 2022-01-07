@@ -13,6 +13,12 @@ use App\Http\Requests\{
 
 class SettingController extends Controller
 {
+    /**
+     * Display a listing of the resource 
+     *
+     * @return \Iluminate\Http\Response
+     *
+    */
     public function index(){
         return response()->json(
             Setting::select("name","value")
@@ -21,6 +27,12 @@ class SettingController extends Controller
         );
     }
 
+    /**
+     *  Update all data setting resource
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function update(SettingRequest $request){
         try{
             \DB::beginTransaction();
@@ -49,6 +61,12 @@ class SettingController extends Controller
         }
     }
 
+    /**
+     *  Update logo setting resource
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function updateLogo(SettingLogoRequest $request){
        try{
             \DB::beginTransaction();

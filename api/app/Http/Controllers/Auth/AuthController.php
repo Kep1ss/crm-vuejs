@@ -14,6 +14,12 @@ use App\Http\Requests\{
 
 class AuthController extends Controller
 {
+    /**
+     *  Login user
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function login(LoginRequest $request)
     {
         $field = filter_var($request->email, FILTER_VALIDATE_EMAIL) ? "email" : "username";
@@ -35,7 +41,7 @@ class AuthController extends Controller
     /**
      * Get the authenticated User.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Response
      */
     public function me()
     {
@@ -45,7 +51,7 @@ class AuthController extends Controller
     /**
      * Log the user out (Invalidate the token).
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Response
      */
     public function logout()
     {
@@ -56,6 +62,12 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     *  Forgot password user
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function forgotPassword(ForgotPasswordRequest $request){
         try{
             \DB::beginTransaction();
@@ -78,6 +90,12 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     *  Reset password user
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function resetPassword(ResetPasswordRequest $request){
         try{
             \DB::beginTransaction();

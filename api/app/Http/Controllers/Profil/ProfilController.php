@@ -13,6 +13,12 @@ use Illuminate\Support\Str;
 
 class ProfilController extends Controller
 {
+    /**
+     *  Update data user login
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function update(ProfilRequest $request){
     	try{
     		\DB::beginTransaction();
@@ -32,6 +38,12 @@ class ProfilController extends Controller
     	}
     }
 
+    /**
+     *  Update password user login
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function password(ProfilPasswordRequest $request){
         try{
             \DB::beginTransaction();

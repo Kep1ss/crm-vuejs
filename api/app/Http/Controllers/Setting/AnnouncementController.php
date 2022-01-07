@@ -178,7 +178,12 @@ class AnnouncementController extends Controller
         }
     }
 
-
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function restore($id){
         try{
             \DB::beginTransaction(); 
@@ -209,6 +214,12 @@ class AnnouncementController extends Controller
         }
     }
 
+    /**
+     * Remove all listing of the resource 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function destroyAll(CheckAllRequest $request){
         try{
             \DB::beginTransaction();
@@ -236,6 +247,12 @@ class AnnouncementController extends Controller
         }
     }
 
+    /**
+     * Restore all listing of the resource 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function restoreAll(CheckAllRequest $request){
         try{
             \DB::beginTransaction();            

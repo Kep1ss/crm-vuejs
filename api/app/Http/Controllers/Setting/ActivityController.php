@@ -9,7 +9,7 @@ use Spatie\Activitylog\Models\Activity;
 
 class ActivityController extends Controller
 {
-      /**
+    /**
      * Display a listing of the resource Index And Export
      *
      * @return \Iluminate\Http\Response

@@ -185,7 +185,12 @@ class UserController extends Controller
     //     }
     // }
 
-
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     // public function restore($id){
     //     try{
     //         \DB::beginTransaction(); 
@@ -214,6 +219,12 @@ class UserController extends Controller
     //     }
     // }
 
+    /**
+     * Remove all listing of the resource 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     // public function destroyAll(CheckAllRequest $request){
     //     try{
     //         \DB::beginTransaction();
@@ -246,6 +257,12 @@ class UserController extends Controller
     //     }
     // }
 
+    /**
+     * Restore all listing of the resource 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     // public function restoreAll(CheckAllRequest $request){
     //     try{
     //         \DB::beginTransaction();            
@@ -272,6 +289,12 @@ class UserController extends Controller
     //     }   
     // }
 
+    /**
+     * Export the listing of the resource 
+     *
+     * @param  $type excel | pdf
+     * @return \Illuminate\Http\Response
+     */   
     // public function export($type){
     //     $filetype = $type == 'pdf' 
     //         ? 'user.pdf' 
@@ -284,6 +307,11 @@ class UserController extends Controller
     //     return \Excel::download(new UserExport($this->indexFilter()),$filetype,$extension);        
     // }
  
+    /**
+     * Print the listing of the resource 
+     *     
+     * @return \Illuminate\Http\Response
+     */   
     // public function print(){
     //     $pdf = \PDF::loadview('exports/users',[
     //           "data" => !request()->filled("all") 
