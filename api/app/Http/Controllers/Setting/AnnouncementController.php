@@ -18,6 +18,13 @@ use Illuminate\Support\Str;
 class AnnouncementController extends Controller
 {
     /**
+     * Superadmin only allow to readonly
+    */
+    public function __construct() {
+        $this->middleware('is-not-super-admin')->except('index');
+    }    
+
+    /**
      * Display a listing of the resource Index And Export
      *
      * @return \Iluminate\Http\Response

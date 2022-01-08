@@ -126,7 +126,7 @@
           v-if="$auth.user.role === roles.superadmin">
           <i class="fas fa-download"></i>
           <span> Download Catalog</span>
-        </nuxt-link>
+        </nuxt-link>      
       </li>
       <!-- END PENGATURAN -->
     </ul>

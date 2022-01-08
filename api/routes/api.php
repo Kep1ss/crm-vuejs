@@ -63,7 +63,7 @@ Route::group(["prefix" => $version],function() use ($version) {
 	// 	});		
 	// });
 	
-    Route::group(["middleware" => "auth:sanctum"],function(){
+    Route::group(["middleware" => ["auth:sanctum","is-check-role"]],function(){
 		// DASHBOARD
 
 		// PROFIL 
@@ -72,12 +72,10 @@ Route::group(["prefix" => $version],function() use ($version) {
 
 		/* MODULE SETTING */
 		Route::group(["as" => "setting."],function(){     
-			Route::group(["middlware" => "is-not-super-admin"],function(){   
-				Route::post("/announcement/restore-all",[AnnouncementController::class,"restoreAll"])->name("announcement.restore-all");
-				Route::delete("/announcement/destroy-all",[AnnouncementController::class,"destroyAll"])->name("announcement.destroy-all");
-				Route::post("/announcement/restore/{id}",[AnnouncementController::class,"restore"])->name("announcement.restore");		
-				Route::apiResource("announcement",AnnouncementController::class);
-			});
+			Route::post("/announcement/restore-all",[AnnouncementController::class,"restoreAll"])->name("announcement.restore-all");
+			Route::delete("/announcement/destroy-all",[AnnouncementController::class,"destroyAll"])->name("announcement.destroy-all");
+			Route::post("/announcement/restore/{id}",[AnnouncementController::class,"restore"])->name("announcement.restore");		
+			Route::apiResource("announcement",AnnouncementController::class);			
 			
 			Route::group(["middleware" => "is-super-admin"],function(){
 				Route::apiResource("user",UserController::class)->only(["index","store","update"]);
@@ -100,7 +98,7 @@ Route::group(["prefix" => $version],function() use ($version) {
 			// Route::post("/account/restore-all",[AccountController::class,"restoreAll"])->name("account.restore-all");
 			// Route::delete("/account/destroy-all",[AccountController::class,"destroyAll"])->name("account.destroy-all");
 			// Route::post("/account/restore/{id}",[AccountController::class,"restore"])->name("account.restore");		
-			Route::apiResource("account",AccountController::class);
+			// Route::apiResource("account",AccountController::class);
 		});
 
 		/* MODULE ACTIVITY */

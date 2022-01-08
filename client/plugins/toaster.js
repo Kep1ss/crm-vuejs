@@ -8,11 +8,14 @@ Vue.prototype.$globalErrorToaster = function($toaster,$err){
     }else if($err.response && $err.response.status === 500){
       $toaster.error($err.response.data.message || 'Terjadi Kesalahan');
     }else if($err.response && $err.response.status === 503){
-       $toaster.error("Maintenance");
+      $toaster.error("Maintenance");
     }else if($err.response && $err.response.status === 401){
-       $toaster.error($err.response.data.message || 'Terjadi Kesalahan');
+      $toaster.error($err.response.data.message || 'Terjadi Kesalahan');
+      this.$auth.logout().then(() => {
+         window.location = "/";
+      })
     }else{
-       $toaster.error('Terjadi Kesalahan');
+      $toaster.error('Terjadi Kesalahan');
     }
 }
 

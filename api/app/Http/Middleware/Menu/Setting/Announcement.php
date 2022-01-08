@@ -4,6 +4,7 @@ namespace App\Http\Middleware\Menu\Setting;
 
 use Closure;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class Announcement
 {
@@ -16,6 +17,19 @@ class Announcement
      */
     public function handle(Request $request, Closure $next)
     {
+        if(!in_array(auth()->user()->role,[
+            User::ROLE_MANAGER_NASIONAL,
+            User::ROLE_MANAGER_AREA,
+            User::ROLE_ADMIN_NASIONAL,
+            User::ROLE_ADMIN_AREA,
+
+            User::ROLE_SUPERADMIN
+        ])){
+            return response()->json([
+                "message" => "Unauthorized"
+            ],401);
+        }
+        
         return $next($request);
     }
 }

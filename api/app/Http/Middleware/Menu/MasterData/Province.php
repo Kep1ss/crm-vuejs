@@ -4,6 +4,7 @@ namespace App\Http\Middleware\Menu\MasterData;
 
 use Closure;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class Province
 {
@@ -15,7 +16,19 @@ class Province
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
-    {
+    {        
+        if(!in_array(auth()->user()->role,[
+            User::ROLE_KOTELE,
+            User::ROLE_MANAGER_NASIONAL,
+            User::ROLE_ADMIN_NASIONAL,
+
+            User::ROLE_SUPERADMIN
+        ])){
+            return response()->json([
+                "message" => "Unauthorized"
+            ],401);
+        }
+        
         return $next($request);
     }
 }
