@@ -1,0 +1,11 @@
+manager area 
+ - province 
+
+kaper 
+ - city
+
+spv 
+ - city
+
+sales 
+ - district

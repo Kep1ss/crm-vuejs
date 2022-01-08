@@ -1,0 +1,244 @@
+<template>
+  <portal to="modal">
+    <div class="modal fade" 
+      aria-hidden="true" 
+      id="modal-form">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+        <modal-header-section
+          :self="this"/>
+
+        <ValidationObserver
+          v-slot="{invalid,validate}"
+          ref="form-validate">
+            <form @submit.prevent="validate().then(onSubmit(invalid))"
+              autocomplete="off">
+
+            <div class="modal-body">
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="fullname">Nama Lengkap</label>
+                    <input id="fullname"
+                      type="text"
+                      class="form-control"
+                      name="fullname"
+                      v-model="parameters.form.fullname"/>               
+                  </div>
+                </div>
+
+                <div class="col">
+                  <ValidationProvider
+                    name="username"
+                    rules="required">
+                    <div class="form-group" slot-scope="{errors,valid}">
+                      <label for="uername">Username</label>
+                      <input id="username"
+                        type="text"
+                        class="form-control"
+                        name="username"
+                        v-model="parameters.form.username"
+                        :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')">
+
+                      <div class="invalid-feedback" v-if="errors[0]">
+                        {{ errors[0] }}
+                      </div>      
+                    </div>
+                  </ValidationProvider>
+                </div>
+              </div>
+
+              <ValidationProvider
+                name="email"
+                rules="required|email">
+                <div class="form-group" slot-scope="{errors,valid}">
+                  <label for="email">Email</label>
+                  <input id="email"
+                    type="text"
+                    class="form-control"
+                    name="email"            
+                    v-model="parameters.form.email"
+                    :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')">
+
+                  <div class="invalid-feedback" v-if="errors[0]">
+                    {{ errors[0] }}
+                  </div>      
+                </div>
+              </ValidationProvider>
+              
+              <ValidationProvider
+                name="password"
+                :rules="isEditable ? 'min:8' : 'required|min:8'">
+                <div class="form-group" slot-scope="{errors,valid}">
+                  <label for="password">Password</label>
+                  <input id="password"
+                    type="password"
+                    class="form-control"
+                    name="password"            
+                    v-model="parameters.form.password"
+                    :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')">
+
+                  <div class="invalid-feedback" v-if="errors[0]">
+                    {{ errors[0] }}
+                  </div>      
+                  <div class="text-muted" v-if="!errors[0] && isEditable">
+                    * Isi password jika ingin mengantinya
+                  </div>
+                </div>
+              </ValidationProvider>    
+          
+              <div class="form-group"
+                v-if="!isEditable">
+                <label for="role">Role</label>
+                <select class="form-control" name="role" v-model="parameters.form.role">
+                  <option value="">Pilih</option>
+                  <option v-for="item,index in Object.keys(roles)"
+                    :value="roles[item]"
+                    :key="index">
+                    {{item.split("_").join(" ").toUpperCase()}}
+                  </option>                  
+                </select>
+              </div>                               
+
+              <!-- <ValidationProvider 
+                name="province_id"
+                rules="required">                        
+                <div class="form-group" slot-scope="{errors,valid}">             
+                  <label for="reseller_id">Province</label>                        
+                  <input type="hidden"
+                    id="province_id" 
+                    class="form-control" 
+                    name="province_id"                      
+                    v-model="form.province_id"
+                    :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')"/> 
+                                    
+                    <v-select                           
+                      :class="errors[0] ? 'border rounded-lg border-danger' : (valid ? 'border rounded-lg border-success' : '')"                         
+                      label="reseller_name"   
+                      :loading="isLoadingGetProvince"
+                      :options="provinces"
+                      :filterable="false"
+                      @search="onGetProvince"
+                      v-model="form.province">              
+                      <li slot-scope="{search}" slot="list-footer"
+                        class="d-flex justify-content-between"
+                        v-if="resellers.length || search">
+                        <a v-if="resellers_pagination.current_page > 1" 
+                          @click="onGetReseller(search,false)"
+                          class="flex-fill bg-primary text-white text-center"
+                          href="#">Sebelumnya</a>
+                        <a v-if="resellers_pagination.last_page > resellers_pagination.current_page" 
+                          @click="onGetReseller(search,true)"
+                          class="flex-fill bg-primary text-white text-center"
+                          href="#">Selanjutnya</a>
+                      </li> 
+                    </v-select>
+
+                    <div class="invalid-feedback" v-if="errors[0]">
+                      {{ errors[0] }}
+                    </div>      
+
+                    <div class="text-help pt-2" style="font-size:11px"
+                      v-if="!errors[0]">                         
+                      <nuxt-link to="/master/resellers" target="_blank">Tambahkan Reseller</nuxt-link>
+                    </div>                                               
+                </div>                           
+              </ValidationProvider> -->
+            </div>
+        
+            <modal-footer-section     
+              :isLoadingForm="isLoadingForm"/>
+          </form>
+        </ValidationObserver>
+
+        </div>
+      </div>
+    </div>
+  </portal>
+</template>
+
+<script>
+import { mapActions,mapState } from 'vuex'
+
+export default {  
+  middleware : ["isNotAccessable"],
+
+  props: ["self"],
+
+  data() {
+    return {
+      isEditable  : false,
+      isLoadingForm : false,
+      title: 'Akun',      
+      parameters : {
+        url : 'account',
+        form : {
+          fullname : '',
+          username : '',
+          password : '',
+          email    : '',
+          role     : ''
+        }
+      }
+    };
+  },
+
+  computed :{
+     ...mapState('modulMaster',['error','result']),
+     
+     roles(){
+      if(!this.$auth.loggedIn) return {};
+      
+      let roles = this.$store.state.setting.roles
+      
+      switch(this.$auth.user.role){            
+          case roles.superadmin:                         
+            return this.$store.state.setting.getRoles([roles.manager_nasional,roles.kotele],roles);                    
+          case roles.manager_nasional:
+            return this.$store.state.setting.getRoles([roles.admin_nasional,roles.manager_area],roles);
+          case roles.manager_area:
+            return this.$store.state.setting.getRoles([roles.admin_area,roles.kaper],roles);
+          case roles.kaper:
+            return this.$store.state.setting.getRoles([roles.admin_kaper,roles.spv],roles);
+          case roles.spv:
+            return this.$store.state.setting.getRoles([roles.sales],roles);
+          case roles.kotele:
+            return this.$store.state.setting.getRoles([roles.tele_marketing],roles);
+          case roles.admin_nasional:
+            return this.$store.state.setting.getRoles([roles.manager_area],roles);
+          case roles.admin_area:
+            return this.$store.state.setting.getRoles([roles.kaper],roles);
+          case roles.admin_kaper:
+            return this.$store.state.setting.getRoles([roles.spv],roles);
+      }        
+     }
+  },
+
+  methods: {    
+     ...mapActions('modulMaster',['addData','updateData']),
+
+     async onSubmit(isInvalid){       
+      if(isInvalid || this.isLoadingForm) return;            
+      
+      this.isLoadingForm = true;
+
+      if(this.isEditable){
+        await this.updateData(this.parameters)
+      }else{ 
+        await this.addData(this.parameters)
+      }
+
+      if (this.result == true) {      
+        this.self.onLoad(this.self.parameters.params.page);  
+        this.$toaster.success('Data berhasil di '+ (this.isEditable == true ? 'Diedit': 'Tambah'));
+        window.$("#modal-form").modal("hide");
+      }else {
+        this.$globalErrorToaster(this.$toaster,this.error);      
+      }
+
+      this.isLoadingForm = false;
+     }
+  },
+};
+</script>

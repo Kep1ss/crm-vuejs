@@ -1,0 +1,6 @@
+jika ingin menambah menu baru yang perlu di edit/tambahkan di file 
+ - nuxt 
+  - components/aside/SiderbarMenu.vue
+
+ - laravel 
+  - app/http/middleware/IsCheckRole.php
