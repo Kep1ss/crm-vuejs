@@ -8,13 +8,19 @@ use App\Models\User;
 // use App\Exports\AccountExport;
 use App\Helpers\FormatResponse;
 use App\Http\Requests\{
-    UserRequest,
+    AccountRequest,
     CheckAllRequest 
 };
 use Illuminate\Support\Str;
+use App\Traits\{
+    RoleControllerAdminTrait,
+    ConstructControllerSuperAdminTrait
+};
 
 class AccountController extends Controller
 {
+    use RoleControllerAdminTrait,ConstructControllerSuperAdminTrait;
+
     /**
      * Display a listing of the resource Index And Export
      *
@@ -26,8 +32,9 @@ class AccountController extends Controller
 
         $data = User::query();
 
-        $data->select("id","username","fullname","email","parent_id","district_id","deleted_at")
-            ->with(["district" => function($q){
+        $data->select("id","username","fullname","email","role","parent_id","district_id","deleted_at");
+
+        $data->with(["district" => function($q){
                 $q->select("id","name")
                     ->with(["city" => function($qcity){
                         $qcity->select("id","name")  
@@ -55,7 +62,14 @@ class AccountController extends Controller
             });
         }    
 
-        $data->where("parent_id",auth()->user()->id);
+        if(auth()->user()->role !== User::ROLE_SUPERADMIN){
+            if(in_array(auth()->user()->role,$this->role_admins)){
+                $data->where("parent_id",auth()->user()->parent_id)
+                    ->whereNotIn("role",$this->role_admins);
+            }else{
+                $data->where("parent_id",auth()->user()->id);
+            }
+        }
 
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
 
@@ -84,15 +98,15 @@ class AccountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserRequest $request)
+    public function store(AccountRequest $request)
     {
         try{    
             \DB::beginTransaction();
-
+    
             $user = User::create([
                 "password" => \Hash::make($request->password),
                 "username" => Str::slug($request->username,'-'),
-                "parent_id" => auth()->user()->id
+                "parent_id" => $this->getCurrentUserId()
             ] + $request->validated());
 
             activity()
@@ -122,7 +136,7 @@ class AccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserRequest $request,User $user)
+    public function update(AccountRequest $request,User $account)
     {
         try{    
             \DB::beginTransaction();
@@ -136,14 +150,14 @@ class AccountController extends Controller
                 unset($payload["password"]);
             }
 
-            $user->update($payload);
+            $account->update($payload);
 
             activity()
-                ->performedOn($user)
+                ->performedOn($account)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'name' => $user->username,
-                    'id' => $user->id,
+                    'name' => $account->username,
+                    'id' => $account->id,
                     'table' => 'users'
                 ])
                 ->log('Upadated Data');
@@ -164,39 +178,39 @@ class AccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
-    {
-        try{    
-            \DB::beginTransaction();
+    // public function destroy(User $account)
+    // {
+    //     try{    
+    //         \DB::beginTransaction();
 
-            throw_if(
-                $user->id == auth()->user()->id,
-                new \Exception("Anda tidak dapat menghapus diri anda sendiri",422)
-            );            
+    //         throw_if(
+    //             $account->id == auth()->user()->id,
+    //             new \Exception("Anda tidak dapat menghapus diri anda sendiri",422)
+    //         );            
             
-            // RELASIONAL DELETE
+    //         // RELASIONAL DELETE
 
-            $user->delete();
+    //         $account->delete();
 
-            activity()
-                ->performedOn($user)
-                ->causedBy(auth()->user())
-                ->withProperties([
-                    'name' => $user->username,
-                    'id' => $user->id,
-                    'table' => 'users'
-                ])
-                ->log('Deleted Data');
+    //         activity()
+    //             ->performedOn($user)
+    //             ->causedBy(auth()->user())
+    //             ->withProperties([
+    //                 'name' => $user->username,
+    //                 'id' => $user->id,
+    //                 'table' => 'users'
+    //             ])
+    //             ->log('Deleted Data');
                 
-            \DB::commit();
-            return response()->json([
-                "status" => true
-            ]);
-        }catch(\Exception $e){
-            \DB::rollback();
-            return FormatResponse::failed($e);
-        }
-    }
+    //         \DB::commit();
+    //         return response()->json([
+    //             "status" => true
+    //         ]);
+    //     }catch(\Exception $e){
+    //         \DB::rollback();
+    //         return FormatResponse::failed($e);
+    //     }
+    // }
 
     /**
      * Restore the specified resource from storage.
@@ -204,33 +218,33 @@ class AccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function restore($id){
-        try{
-            \DB::beginTransaction(); 
+    // public function restore($id){
+    //     try{
+    //         \DB::beginTransaction(); 
                  
-            $user = User::withTrashed()->findOrFail($id);
+    //         $user = User::withTrashed()->findOrFail($id);
 
-            $user->restore();
+    //         $user->restore();
             
-            activity()
-                ->performedOn($user)
-                ->causedBy(auth()->user())
-                ->withProperties([
-                    'name' => $user->username,
-                    'id' => $user->id,
-                    'table' => 'users'
-                ])
-                ->log('Restore Data');
+    //         activity()
+    //             ->performedOn($user)
+    //             ->causedBy(auth()->user())
+    //             ->withProperties([
+    //                 'name' => $user->username,
+    //                 'id' => $user->id,
+    //                 'table' => 'users'
+    //             ])
+    //             ->log('Restore Data');
 
-            \DB::commit();
-            return response()->json([
-                "status" => true
-            ]);
-        }catch(\Exception $e){
-            \DB::rollback();
-            return FormatResponse::failed($e);
-        }
-    }
+    //         \DB::commit();
+    //         return response()->json([
+    //             "status" => true
+    //         ]);
+    //     }catch(\Exception $e){
+    //         \DB::rollback();
+    //         return FormatResponse::failed($e);
+    //     }
+    // }
 
     /**
      * Remove all listing of the resource 
@@ -238,37 +252,37 @@ class AccountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroyAll(CheckAllRequest $request){
-        try{
-            \DB::beginTransaction();
+    // public function destroyAll(CheckAllRequest $request){
+    //     try{
+    //         \DB::beginTransaction();
 
-            throw_if(
-                in_array(auth()->user()->id,$request->checkboxs),
-                new \Exception("Anda tidak dapat menghapus diri anda sendiri",422)
-            );
+    //         throw_if(
+    //             in_array(auth()->user()->id,$request->checkboxs),
+    //             new \Exception("Anda tidak dapat menghapus diri anda sendiri",422)
+    //         );
 
-            // RELASIONAL DELETE
+    //         // RELASIONAL DELETE
 
-            User::whereIn("id",$request->checkboxs)
-                ->delete();  
+    //         User::whereIn("id",$request->checkboxs)
+    //             ->delete();  
                 
-            activity()        
-                ->causedBy(auth()->user())
-                ->withProperties([            
-                    'id' => $request->checkboxs,  
-                    'table' => 'users'                  
-                ])
-                ->log('Deleted All Data');
+    //         activity()        
+    //             ->causedBy(auth()->user())
+    //             ->withProperties([            
+    //                 'id' => $request->checkboxs,  
+    //                 'table' => 'users'                  
+    //             ])
+    //             ->log('Deleted All Data');
 
-            \DB::commit();
-            return response()->json([
-                "status" => true
-            ]);
-        }catch(\Exception $e){
-            \DB::rollback();
-            return FormatResponse::failed($e);
-        }
-    }
+    //         \DB::commit();
+    //         return response()->json([
+    //             "status" => true
+    //         ]);
+    //     }catch(\Exception $e){
+    //         \DB::rollback();
+    //         return FormatResponse::failed($e);
+    //     }
+    // }
 
     /**
      * Restore all listing of the resource 
@@ -276,31 +290,31 @@ class AccountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function restoreAll(CheckAllRequest $request){
-        try{
-            \DB::beginTransaction();            
+    // public function restoreAll(CheckAllRequest $request){
+    //     try{
+    //         \DB::beginTransaction();            
 
-            User::withTrashed()
-                ->whereIn("id",$request->checkboxs)
-                ->restore();    
+    //         User::withTrashed()
+    //             ->whereIn("id",$request->checkboxs)
+    //             ->restore();    
 
-            activity()        
-                ->causedBy(auth()->user())
-                ->withProperties([            
-                    'id' => $request->checkboxs,  
-                    'table' => 'users'                  
-                ])
-                ->log('Restore All Data');
+    //         activity()        
+    //             ->causedBy(auth()->user())
+    //             ->withProperties([            
+    //                 'id' => $request->checkboxs,  
+    //                 'table' => 'users'                  
+    //             ])
+    //             ->log('Restore All Data');
 
-            \DB::commit();
-            return response()->json([
-                "status" => true
-            ]);
-        }catch(\Exception $e){
-            \DB::rollback();
-            return FormatResponse::failed($e);
-        }   
-    }
+    //         \DB::commit();
+    //         return response()->json([
+    //             "status" => true
+    //         ]);
+    //     }catch(\Exception $e){
+    //         \DB::rollback();
+    //         return FormatResponse::failed($e);
+    //     }   
+    // }
 
     /**
      * Export the listing of the resource 

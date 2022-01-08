@@ -11,9 +11,11 @@ Vue.prototype.$globalErrorToaster = function($toaster,$err){
       $toaster.error("Maintenance");
     }else if($err.response && $err.response.status === 401){
       $toaster.error($err.response.data.message || 'Terjadi Kesalahan');
-      this.$auth.logout().then(() => {
-         window.location = "/";
-      })
+      if($err.response.data.message == "Unauthorized"){
+        this.$auth.logout().then(() => {
+          window.location = "/";
+        })
+      }
     }else{
       $toaster.error('Terjadi Kesalahan');
     }

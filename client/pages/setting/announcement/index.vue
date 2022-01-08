@@ -184,7 +184,7 @@ export default {
     ...mapState('modulSetting',['data','error','result']),
 
     isSuperAdmin(){
-      return this.$auth.user.role === 0
+      return this.$auth.user.role === this.$store.state.setting.roles.superadmin
     }
   },
 

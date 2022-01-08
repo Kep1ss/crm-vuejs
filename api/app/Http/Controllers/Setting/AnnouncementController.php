@@ -14,15 +14,14 @@ use App\Http\Requests\{
     CheckAllRequest 
 };
 use Illuminate\Support\Str;
+use App\Traits\{
+    RoleControllerAdminTrait,
+    ConstructControllerSuperAdminTrait 
+};
 
 class AnnouncementController extends Controller
-{
-    /**
-     * Superadmin only allow to readonly
-    */
-    public function __construct() {
-        $this->middleware('is-not-super-admin')->except('index');
-    }    
+{    
+    use RoleControllerAdminTrait,ConstructControllerSuperAdminTrait;
 
     /**
      * Display a listing of the resource Index And Export
@@ -46,15 +45,24 @@ class AnnouncementController extends Controller
             }else if($request->soft_deleted == "all"){
                 $data->withTrashed();
             }          
-        }        
+        }               
 
         if(auth()->user()->role !== USER::ROLE_SUPERADMIN){
-            $data->where("user_id",auth()->user()->id);
+            if(in_array(auth()->user()->role,$this->role_admins)){
+                $data->where("user_id",auth()->user()->parent_id)
+                    ->orWhere("user_id",auth()->user()->id);
+            }else{
+                $data->where("user_id",auth()->user()->id);
+            }            
         }
 
         if($request->filled("search")){
             $data->where(function($q) use ($request) {
                 $q->orWhere("content","like","%".$request->search."%");
+            });
+
+            $data->orWhereHas("user",function($q) use ($request){
+                $q->where("username","like","%".$request->search."%");
             });
         }
 
@@ -91,7 +99,7 @@ class AnnouncementController extends Controller
             \DB::beginTransaction();
 
             $announcement = Announcement::create($request->validated() + [
-                "user_id" => auth()->user()->id
+                "user_id" => $this->getCurrentUserId()
             ]);        
 
             activity()
@@ -123,10 +131,10 @@ class AnnouncementController extends Controller
     public function update(AnnouncementRequest $request,Announcement $announcement)
     {
         try{    
-            \DB::beginTransaction();
-            
+            \DB::beginTransaction();      
+
             throw_if(
-                $announcement->user_id != auth()->user()->id,
+                $announcement->user_id !== $this->getCurrentUserId(),
                 new \Exception("Anda tidak punya hak akses",422)
             );
 
@@ -160,10 +168,10 @@ class AnnouncementController extends Controller
     public function destroy(Announcement $announcement)
     {
         try{    
-            \DB::beginTransaction();
+            \DB::beginTransaction();            
 
             throw_if(
-                $announcement->user_id != auth()->user()->id,
+                $announcement->user_id !== $this->getCurrentUserId(),
                 new \Exception("Anda tidak punya hak akses",422)
             );
                     
@@ -197,10 +205,10 @@ class AnnouncementController extends Controller
     public function restore($id){
         try{
             \DB::beginTransaction(); 
-                  
+                            
             $announcement = Announcement::withTrashed()
                 ->where("id",$id)
-                ->where("user_id",auth()->user()->id)
+                ->where("user_id",$this->getCurrentUserId())
                 ->firstOrFail();            
                         
             $announcement->restore();
@@ -233,9 +241,8 @@ class AnnouncementController extends Controller
     public function destroyAll(CheckAllRequest $request){
         try{
             \DB::beginTransaction();
-        
-            auth()->user()
-                ->announcements()
+    
+            Announcement::where("user_id",$this->getCurrentUserId())        
                 ->whereIn("id",$request->checkboxs)
                 ->delete();  
                 
@@ -266,10 +273,9 @@ class AnnouncementController extends Controller
     public function restoreAll(CheckAllRequest $request){
         try{
             \DB::beginTransaction();            
-
-            auth()->user()
-                ->announcements()
-                ->withTrashed()
+            
+            Announcement::withTrashed()
+                ->where("user_id",$this->getCurrentUserId())
                 ->whereIn("id",$request->checkboxs)
                 ->restore();    
 

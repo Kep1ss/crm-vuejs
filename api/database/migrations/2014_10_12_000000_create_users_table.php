@@ -37,10 +37,14 @@ class CreateUsersTable extends Migration
                 10 => Admin Kaper
             */
             $table->bigInteger("parent_id")->unsigned()->nullable();
+            $table->bigInteger("province_id")->unsigned()->nullable();
+            $table->bigInteger("city_id")->unsigned()->nullable();
             $table->bigInteger("district_id")->unsigned()->nullable();
             $table->timestamps();
             $table->softDeletes();
 
+            $table->foreign("province_id")->references("id")->on("provinces");
+            $table->foreign("city_id")->references("id")->on("cities");
             $table->foreign("district_id")->references("id")->on("districts");
             $table->foreign('parent_id')->references('id')->on('users');         
         });

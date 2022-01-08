@@ -19,7 +19,7 @@
           <span>Data Akun</span>
         </nuxt-link>   
           
-        <nuxt-link class="nav-link" to="/master/school"
+        <nuxt-link class="nav-link" to="/master/province"
           v-if="menu_province">
           <i class="fas fa-map"></i>
           <span>Data Provinsi</span>
@@ -65,7 +65,7 @@
         <nuxt-link class="nav-link" to="/setting/user"
           v-if="menu_set_target_telemaraketing">
           <i class="fas fa-chart-line"></i>
-          <span> Set Target Telemarketing </span>
+          <span> Set Target tele_marketing </span>
         </nuxt-link>
         <nuxt-link class="nav-link" to="/setting/user"
           v-if="menu_input_visit">
@@ -73,9 +73,9 @@
           <span> Input Visit</span>
         </nuxt-link>
         <nuxt-link class="nav-link" to="/setting/user"
-          v-if="menu_input_activity_telemarketing">
+          v-if="menu_input_activity_tele_marketing">
           <i class="far fa-keyboard"></i>
-          <!-- Input Aktivitas Telemarketing -->
+          <!-- Input Aktivitas tele_marketing -->
           <span> Input Aktivitas Tele</span>
         </nuxt-link>
       </li> 
@@ -161,7 +161,7 @@ export default {
 
         return ![
           roles.sales,
-          roles.telemarketing,
+          roles.tele_marketing,
         ].includes(this.$auth.user.role)
       },
 
@@ -185,7 +185,7 @@ export default {
           roles.manager_nasional,
           roles.admin_nasional,
           roles.kotele,
-          roles.telemarketing,
+          roles.tele_marketing,
         ].includes(this.$auth.user.role)
       },
 
@@ -197,7 +197,7 @@ export default {
           roles.manager_nasional,
           roles.admin_nasional,
           roles.kotele,
-          roles.telemarketing,
+          roles.tele_marketing,
         ].includes(this.$auth.user.role)
       },
     /* MODULE MASTER DATA */
@@ -227,7 +227,7 @@ export default {
         return ![                
           roles.sales,
           roles.kotele,
-          roles.telemarketing,
+          roles.tele_marketing,
         ].includes(this.$auth.user.role)
       },
 
@@ -247,15 +247,15 @@ export default {
           roles.manager_nasional,
           roles.admin_nasional,
           roles.kotele,
-          roles.telemarketing,          
+          roles.tele_marketing,          
         ].includes(this.$auth.user.role)
       },
 
-      menu_input_activity_telemarketing(){
+      menu_input_activity_tele_marketing(){
         let roles = this.$store.state.setting.roles;
     
         return [    
-          roles.telemarketing,
+          roles.tele_marketing,
           roles.superadmin
         ].includes(this.$auth.user.role)
       }

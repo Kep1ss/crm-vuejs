@@ -92,6 +92,7 @@
                 v-if="!isEditable">
                 <label for="role">Role</label>
                 <select class="form-control" name="role" v-model="parameters.form.role">
+                  <option value="">Pilih</option>
                   <option v-for="item,index in Object.keys(roles)"
                     :value="roles[item]"
                     :key="index">
@@ -99,6 +100,51 @@
                   </option>                  
                 </select>
               </div>                               
+
+              <!-- <ValidationProvider 
+                name="province_id"
+                rules="required">                        
+                <div class="form-group" slot-scope="{errors,valid}">             
+                  <label for="reseller_id">Province</label>                        
+                  <input type="hidden"
+                    id="province_id" 
+                    class="form-control" 
+                    name="province_id"                      
+                    v-model="form.province_id"
+                    :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')"/> 
+                                    
+                    <v-select                           
+                      :class="errors[0] ? 'border rounded-lg border-danger' : (valid ? 'border rounded-lg border-success' : '')"                         
+                      label="reseller_name"   
+                      :loading="isLoadingGetProvince"
+                      :options="provinces"
+                      :filterable="false"
+                      @search="onGetProvince"
+                      v-model="form.province">              
+                      <li slot-scope="{search}" slot="list-footer"
+                        class="d-flex justify-content-between"
+                        v-if="resellers.length || search">
+                        <a v-if="resellers_pagination.current_page > 1" 
+                          @click="onGetReseller(search,false)"
+                          class="flex-fill bg-primary text-white text-center"
+                          href="#">Sebelumnya</a>
+                        <a v-if="resellers_pagination.last_page > resellers_pagination.current_page" 
+                          @click="onGetReseller(search,true)"
+                          class="flex-fill bg-primary text-white text-center"
+                          href="#">Selanjutnya</a>
+                      </li> 
+                    </v-select>
+
+                    <div class="invalid-feedback" v-if="errors[0]">
+                      {{ errors[0] }}
+                    </div>      
+
+                    <div class="text-help pt-2" style="font-size:11px"
+                      v-if="!errors[0]">                         
+                      <nuxt-link to="/master/resellers" target="_blank">Tambahkan Reseller</nuxt-link>
+                    </div>                                               
+                </div>                           
+              </ValidationProvider> -->
             </div>
         
             <modal-footer-section     
@@ -124,15 +170,15 @@ export default {
     return {
       isEditable  : false,
       isLoadingForm : false,
-      title: 'User',      
+      title: 'Akun',      
       parameters : {
-        url : 'user',
+        url : 'account',
         form : {
           fullname : '',
           username : '',
           password : '',
           email    : '',
-          role     : 1
+          role     : ''
         }
       }
     };

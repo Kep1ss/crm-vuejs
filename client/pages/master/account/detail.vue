@@ -81,8 +81,6 @@
 </template>
 
 <script>
-import { mapActions,mapState } from 'vuex'
-
 export default {
   middleware : ["isNotAccessable"],
   
@@ -102,12 +100,9 @@ export default {
   },
 
   computed: {
-    roles(){
-      if(!this.$auth.loggedIn) return {};
-      
-      return this.$store.state.setting.roles             
+    roles(){      
+      return this.$store.state.setting.roles     
      }
   }
-
 };
 </script>
