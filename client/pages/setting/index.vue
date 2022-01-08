@@ -21,7 +21,7 @@
 
       <div class="row mt-sm-4"
         v-if="!isLoadingPage">
-        <div class="col-4">
+        <div class="col-12 col-lg-4">
           <div class="card text-center p-3">
             <div class="card-header">
               <h4>Edit Logo</h4>
@@ -54,7 +54,7 @@
           </div>
         </div>
 
-        <div class="col-8">
+        <div class="col-12 col-lg-8">
           <div class="card">
             <ValidationObserver
               v-slot="{invalid,validate}"

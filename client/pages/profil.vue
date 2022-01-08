@@ -2,7 +2,7 @@
   <section class="section">
     <div class="section-body">
       <div class="row mt-sm-4">
-        <div class="col-8">
+        <div class="col-12 col-lg-8">
           <div class="card">
             <ValidationObserver
               v-slot="{invalid,validate}"

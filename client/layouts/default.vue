@@ -76,13 +76,13 @@ export default {
     }
   },
 
-  watch : {
-    '$route'(newValue){
-      if(this.$nuxt.isOffline){
-        this.$toaster.warning("Anda sedang offline");
-      }
-    }
-  }
+  // watch : {
+  //   '$route'(newValue){
+  //     if(this.$nuxt.isOffline){
+  //       this.$toaster.warning("Anda sedang offline");
+  //     }
+  //   }
+  // }
 };
 </script>
 

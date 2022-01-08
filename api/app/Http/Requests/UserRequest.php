@@ -22,7 +22,7 @@ class UserRequest extends FormRequest
             "fullname" => "nullable|max:255",
             "email" => "required|max:255|unique:users",
             "password" => "required|min:8",
-            "role" => "nullable|integer"
+            "role" => "required|integer"
         ];
 
         $role = "";

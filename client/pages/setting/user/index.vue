@@ -75,42 +75,39 @@
                       <td>{{ item.username }}</td>
                       <td>{{ item.email }}</td>
                       <td>
-                        <span v-if="item.role === 0" class="badge badge-danger">
+                        <span v-if="item.role === roles.superadmin" class="badge badge-danger">
                           Super Admin
                         </span>      
-                        <span v-else-if="item.role === 1" class="badge badge-success">
+                        <span v-else-if="item.role === roles.manager_nasional" class="badge badge-success">
                           Manager Nasional
                         </span>          
-                        <span v-else-if="item.role === 2" class="badge badge-success">
+                        <span v-else-if="item.role === roles.manager_area" class="badge badge-success">
                           Manager Area
                         </span>
-                        <span v-else-if="item.role === 3" class="badge badge-primary">
+                        <span v-else-if="item.role === roles.kaper" class="badge badge-primary">
                           Kaper
                         </span>
-                        <span v-else-if="item.role === 4" class="badge badge-primary">
+                        <span v-else-if="item.role === roles.spv" class="badge badge-primary">
                           Spv
                         </span>
-                        <span v-else-if="item.role === 5" class="badge badge-info">
+                        <span v-else-if="item.role === roles.sales" class="badge badge-info">
                           Sales
                         </span>
-                        <span v-else-if="item.role === 6" class="badge badge-info">
+                        <span v-else-if="item.role === roles.kotele" class="badge badge-info">
                           Kotele
                         </span>
-                        <span v-else-if="item.role === 7" class="badge badge-info">
+                        <span v-else-if="item.role === roles.tele_marketing" class="badge badge-info">
                           Tele Markerting
                         </span>
-                        <span v-else-if="item.role === 8" class="badge badge-warning">
+                        <span v-else-if="item.role === roles.admin_nasional" class="badge badge-warning">
                           Admin Nasional
                         </span>
-                        <span v-else-if="item.role === 9" class="badge badge-warning">
+                        <span v-else-if="item.role === roles.admin_area" class="badge badge-warning">
                           Admin Area
                         </span>
-                        <span v-else-if="item.role === 10" class="badge badge-warning">
+                        <span v-else-if="item.role === roles.admin_kaper" class="badge badge-warning">
                           Admin Kaper
-                        </span>
-                        <span class="badge badge-default" v-else>
-                          Tidak Diketahui
-                        </span>                
+                        </span>                                                               
                       </td>
                       <td class="text-center">
                         <div class="btn-group">
@@ -224,7 +221,6 @@ export default {
           all         : '',
           per_page    : 10,
           page        : 1,
-          role        : 'all'
         },        
         form : {
           checkboxs : []
@@ -240,6 +236,9 @@ export default {
 
   computed : {
     ...mapState('modulSetting',['data','error','result']),
+     roles(){  
+      return this.$store.state.setting.roles     
+     }
   },
 
   components : {
@@ -258,7 +257,7 @@ export default {
         username : '',
         password : '',
         email    : '',
-        role     : 1
+        role     : ''
       };
 
       this.$refs["form-input"].isEditable = false;
@@ -446,9 +445,11 @@ export default {
 </script>
 
 <style scoped>
+/* 
 select.form-control:not([size]):not([multiple]) {
   height: calc(1.5em + .5rem + 2px);
   padding-top: 5px;
   padding-bottom: 5px;
 }
+*/
 </style>

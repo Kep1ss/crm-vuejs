@@ -3012,6 +3012,12 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     max-width: 100%;
 }
 }
+
+@media (max-width: 422px){
+  .modal.right-modal .modal-dialog {
+    width: 80%;
+  }
+}
 .modal.left-modal .modal-content,
 .modal.right-modal .modal-content {
   overflow-y: auto;

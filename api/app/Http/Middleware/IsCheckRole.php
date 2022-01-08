@@ -42,7 +42,7 @@ class IsCheckRole
             if(in_array("account",$routeName)){
                 if(in_array(auth()->user()->role,[
                     User::ROLE_SALES,
-                    User::ROLE_TELEMARKETING,
+                    User::ROLE_TELE_MARKETING,
                 ])){
                     return response()->json([
                         "message" => "Unauthorized"
@@ -70,7 +70,7 @@ class IsCheckRole
                     User::ROLE_MANAGER_NASIONAL,
                     User::ROLE_ADMIN_NASIONAL,
                     User::ROLE_KOTELE,
-                    User::ROLE_TELEMARKETING
+                    User::ROLE_TELE_MARKETING
                 ])){
                     return response()->json([
                         "message" => "Unauthorized"
@@ -84,7 +84,7 @@ class IsCheckRole
                     User::ROLE_MANAGER_NASIONAL,
                     User::ROLE_ADMIN_NASIONAL,
                     User::ROLE_KOTELE,
-                    User::ROLE_TELEMARKETING
+                    User::ROLE_TELE_MARKETING
                 ])){
                     return response()->json([
                         "message" => "Unauthorized"
@@ -123,7 +123,7 @@ class IsCheckRole
                 if(in_array(auth()->user()->role,[
                     User::ROLE_SALES,
                     User::ROLE_KOTELE,
-                    User::ROLE_TELEMARKETING
+                    User::ROLE_TELE_MARKETING
                 ])){
                     return response()->json([
                         "message" => "Unauthorized"
@@ -148,7 +148,7 @@ class IsCheckRole
                     User::ROLE_MANAGER_NASIONAL,
                     User::ROLE_ADMIN_NASIONAL,
                     User::ROLE_KOTELE,
-                    User::ROLE_TELEMARKETING        
+                    User::ROLE_TELE_MARKETING
                 ])){
                     return response()->json([
                         "message" => "Unauthorized"
@@ -158,7 +158,7 @@ class IsCheckRole
 
             if(in_array("input-activity-telemarketing",$routeName)){
                 if(!in_array(auth()->user()->role,[        
-                    User::ROLE_TELEMARKETING,
+                    User::ROLE_TELE_MARKETING,
                     User::ROLE_SUPERADMIN 
                 ])){
                     return response()->json([

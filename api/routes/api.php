@@ -98,7 +98,7 @@ Route::group(["prefix" => $version],function() use ($version) {
 			// Route::post("/account/restore-all",[AccountController::class,"restoreAll"])->name("account.restore-all");
 			// Route::delete("/account/destroy-all",[AccountController::class,"destroyAll"])->name("account.destroy-all");
 			// Route::post("/account/restore/{id}",[AccountController::class,"restore"])->name("account.restore");		
-			// Route::apiResource("account",AccountController::class);
+			Route::apiResource("account",AccountController::class);
 		});
 
 		/* MODULE ACTIVITY */

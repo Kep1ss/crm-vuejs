@@ -33,7 +33,6 @@
                 </div>
               </div> 
             </div>
-
         </div>
       </div>
     </div>
@@ -63,7 +62,9 @@ export default {
 };
 </script>
 <style scoped>
+/*
 select.form-control:not([size]):not([multiple]) {
   height: calc(2.25rem + -5px);
 }
+*/
 </style>

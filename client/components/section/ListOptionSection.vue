@@ -10,7 +10,7 @@
         <div class="col-md-1 mt-2"
           v-if="isShowingPage">
             <select class="form-control form-control-sm"
-              style="padding-left:2px;padding-right:0px;"
+              style="height:calc(1.5em + .5rem + 2px);padding:0px;padding-left:2px;padding-right:0px;"
               v-model="self.parameters.params.per_page"
               @change="self.parameters.params.page = 1;self.onLoad()">
               <option value="10">10</option>

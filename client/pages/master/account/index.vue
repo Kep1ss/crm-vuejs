@@ -197,7 +197,7 @@ export default {
     }
   },
 
-  created() {     
+  created() {    
     this.set_data([]);
     this.onLoad();  
   },
@@ -239,7 +239,12 @@ export default {
 
 
   computed : {
-    ...mapState('modulSetting',['data','error','result']),
+    ...mapState('modulSetting',['data','error','result']),  
+    roles(){
+      if(!this.$auth.loggedIn) return {};
+      
+      return this.$store.state.setting.roles             
+    }  
   },
 
   components : {

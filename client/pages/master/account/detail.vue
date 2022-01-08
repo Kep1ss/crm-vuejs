@@ -37,43 +37,40 @@
 
              <div class="form-group">
               <label for="role">Role</label>
-              <div>
-                <span v-if="parameters.form.role === 0" class="badge badge-danger">
+              <div>              
+                <span v-if="parameters.form.role === roles.superadmin" class="badge badge-danger">
                   Super Admin
                 </span>      
-                <span v-else-if="parameters.form.role === 1" class="badge badge-success">
+                <span v-else-if="parameters.form.role === roles.manager_nasional" class="badge badge-success">
                   Manager Nasional
                 </span>          
-                <span v-else-if="parameters.form.role === 2" class="badge badge-success">
+                <span v-else-if="parameters.form.role === roles.manager_area" class="badge badge-success">
                   Manager Area
                 </span>
-                <span v-else-if="parameters.form.role === 3" class="badge badge-primary">
+                <span v-else-if="parameters.form.role === roles.kaper" class="badge badge-primary">
                   Kaper
                 </span>
-                <span v-else-if="parameters.form.role === 4" class="badge badge-primary">
+                <span v-else-if="parameters.form.role === roles.spv" class="badge badge-primary">
                   Spv
                 </span>
-                <span v-else-if="parameters.form.role === 5" class="badge badge-info">
+                <span v-else-if="parameters.form.role === roles.sales" class="badge badge-info">
                   Sales
                 </span>
-                <span v-else-if="parameters.form.role === 6" class="badge badge-info">
+                <span v-else-if="parameters.form.role === roles.kotele" class="badge badge-info">
                   Kotele
                 </span>
-                <span v-else-if="parameters.form.role === 7" class="badge badge-info">
+                <span v-else-if="parameters.form.role === roles.tele_marketing" class="badge badge-info">
                   Tele Markerting
                 </span>
-                <span v-else-if="parameters.form.role === 8" class="badge badge-warning">
+                <span v-else-if="parameters.form.role === roles.admin_nasional" class="badge badge-warning">
                   Admin Nasional
                 </span>
-                <span v-else-if="parameters.form.role === 9" class="badge badge-warning">
+                <span v-else-if="parameters.form.role === roles.admin_area" class="badge badge-warning">
                   Admin Area
                 </span>
-                <span v-else-if="parameters.form.role === 10" class="badge badge-warning">
+                <span v-else-if="parameters.form.role === roles.admin_kaper" class="badge badge-warning">
                   Admin Kaper
-                </span>
-                <span class="badge badge-default" v-else>
-                  Tidak Diketahui
-                </span>                
+                </span>              
               </div>
              </div>
             </div>            
@@ -103,6 +100,14 @@ export default {
       }
     };
   },
+
+  computed: {
+    roles(){
+      if(!this.$auth.loggedIn) return {};
+      
+      return this.$store.state.setting.roles             
+     }
+  }
 
 };
 </script>

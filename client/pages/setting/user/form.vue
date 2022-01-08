@@ -92,6 +92,7 @@
                 v-if="!isEditable">
                 <label for="role">Role</label>
                 <select class="form-control" name="role" v-model="parameters.form.role">
+                  <option value="">Pilih</option>
                   <option v-for="item,index in Object.keys(roles)"
                     :value="roles[item]"
                     :key="index">
@@ -132,7 +133,7 @@ export default {
           username : '',
           password : '',
           email    : '',
-          role     : 1
+          role     : ''
         }
       }
     };
@@ -150,7 +151,7 @@ export default {
           case roles.superadmin:                         
             return this.$store.state.setting.getRoles([roles.manager_nasional,roles.kotele],roles);                    
           case roles.manager_nasional:
-            return this.$store.state.setting.getRoles([roles.admin_nasional,manager_area],roles);
+            return this.$store.state.setting.getRoles([roles.admin_nasional,roles.manager_area],roles);
           case roles.manager_area:
             return this.$store.state.setting.getRoles([roles.admin_area,roles.kaper],roles);
           case roles.kaper:

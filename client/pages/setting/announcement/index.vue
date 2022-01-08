@@ -388,9 +388,11 @@ export default {
 </script>
 
 <style scoped>
+/* 
 select.form-control:not([size]):not([multiple]) {
   height: calc(1.5em + .5rem + 2px);
   padding-top: 5px;
   padding-bottom: 5px;
 }
+*/
 </style>

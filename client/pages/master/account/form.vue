@@ -92,16 +92,11 @@
                 v-if="!isEditable">
                 <label for="role">Role</label>
                 <select class="form-control" name="role" v-model="parameters.form.role">
-                  <option value="1" selected>Manager Nasional</option>                  
-                  <option value="2">Manager Area</option>
-                  <option value="3">Kaper</option> 
-                  <option value="4">Spv</option>
-                  <option value="5">Sales</option>
-                  <option value="6">Kotele</option>
-                  <option value="7">Telemarketing</option>
-                  <option value="8">Admin Nasional</option> 
-                  <option value="9">Admin Area</option>
-                  <option value="10">Admin Kaper</option>
+                  <option v-for="item,index in Object.keys(roles)"
+                    :value="roles[item]"
+                    :key="index">
+                    {{item.split("_").join(" ").toUpperCase()}}
+                  </option>                  
                 </select>
               </div>                               
             </div>
@@ -131,7 +126,7 @@ export default {
       isLoadingForm : false,
       title: 'User',      
       parameters : {
-        url : 'account',
+        url : 'user',
         form : {
           fullname : '',
           username : '',
@@ -144,10 +139,37 @@ export default {
   },
 
   computed :{
-     ...mapState('modulSetting',['error','result'])
+     ...mapState('modulSetting',['error','result']),
+     
+     roles(){
+      if(!this.$auth.loggedIn) return {};
+      
+      let roles = this.$store.state.setting.roles
+      
+      switch(this.$auth.user.role){            
+          case roles.superadmin:                         
+            return this.$store.state.setting.getRoles([roles.manager_nasional,roles.kotele],roles);                    
+          case roles.manager_nasional:
+            return this.$store.state.setting.getRoles([roles.admin_nasional,roles.manager_area],roles);
+          case roles.manager_area:
+            return this.$store.state.setting.getRoles([roles.admin_area,roles.kaper],roles);
+          case roles.kaper:
+            return this.$store.state.setting.getRoles([roles.admin_kaper,roles.spv],roles);
+          case roles.spv:
+            return this.$store.state.setting.getRoles([roles.sales],roles);
+          case roles.kotele:
+            return this.$store.state.setting.getRoles([roles.tele_marketing],roles);
+          case roles.admin_nasional:
+            return this.$store.state.setting.getRoles([roles.manager_area],roles);
+          case roles.admin_area:
+            return this.$store.state.setting.getRoles([roles.kaper],roles);
+          case roles.admin_kaper:
+            return this.$store.state.setting.getRoles([roles.spv],roles);
+      }        
+     }
   },
 
-  methods: {
+  methods: {    
      ...mapActions('modulSetting',['addData','updateData']),
 
      async onSubmit(isInvalid){       

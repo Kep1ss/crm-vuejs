@@ -81,8 +81,6 @@
 </template>
 
 <script>
-import { mapActions,mapState } from 'vuex'
-
 export default {
   middleware : ["isNotAccessable"],
   
@@ -102,33 +100,9 @@ export default {
   },
 
   computed: {
-    roles(){
-      if(!this.$auth.loggedIn) return {};
-      
-      let roles = this.$store.state.setting.roles
-      
-      switch(this.$auth.user.role){            
-          case roles.superadmin:                         
-            return this.$store.state.setting.getRoles([roles.manager_nasional,roles.kotele],roles);                    
-          case roles.manager_nasional:
-            return this.$store.state.setting.getRoles([roles.admin_nasional,manager_area],roles);
-          case roles.manager_area:
-            return this.$store.state.setting.getRoles([roles.admin_area,roles.kaper],roles);
-          case roles.kaper:
-            return this.$store.state.setting.getRoles([roles.admin_kaper,roles.spv],roles);
-          case roles.spv:
-            return this.$store.state.setting.getRoles([roles.sales],roles);
-          case roles.kotele:
-            return this.$store.state.setting.getRoles([roles.tele_marketing],roles);
-          case roles.admin_nasional:
-            return this.$store.state.setting.getRoles([roles.manager_area],roles);
-          case roles.admin_area:
-            return this.$store.state.setting.getRoles([roles.kaper],roles);
-          case roles.admin_kaper:
-            return this.$store.state.setting.getRoles([roles.spv],roles);
-      }        
+    roles(){      
+      return this.$store.state.setting.roles     
      }
   }
-
 };
 </script>
