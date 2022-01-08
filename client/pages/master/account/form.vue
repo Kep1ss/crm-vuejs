@@ -185,7 +185,7 @@ export default {
   },
 
   computed :{
-     ...mapState('modulSetting',['error','result']),
+     ...mapState('modulMaster',['error','result']),
      
      roles(){
       if(!this.$auth.loggedIn) return {};
@@ -216,7 +216,7 @@ export default {
   },
 
   methods: {    
-     ...mapActions('modulSetting',['addData','updateData']),
+     ...mapActions('modulMaster',['addData','updateData']),
 
      async onSubmit(isInvalid){       
       if(isInvalid || this.isLoadingForm) return;            

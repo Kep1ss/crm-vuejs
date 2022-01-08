@@ -103,6 +103,8 @@ Route::group(["prefix" => $version],function() use ($version) {
 			Route::apiResource("account",AccountController::class);
 
 			Route::apiResource("province",ProvinceController::class)->only("index","store","update");
+
+			Route::get("/city/province",[ProvinceController::class,"index"])->name("city.get-province");
 			Route::apiResource("city",CityController::class)->only("index","store","update");
 		});
 

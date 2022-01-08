@@ -139,7 +139,7 @@ export default {
 
 
   computed : {
-    ...mapState('modulSetting',['data','error','result']),
+    ...mapState('modulMaster',['data','error','result']),
 
     roles(){  
       return this.$store.state.setting.roles     
@@ -156,9 +156,9 @@ export default {
   },
 
   methods : {
-    ...mapActions('modulSetting',['getData']),
+    ...mapActions('modulMaster',['getData']),
 
-    ...mapMutations('modulSetting',['set_data']),
+    ...mapMutations('modulMaster',['set_data']),
 
     onFormShow(){
       this.$refs["form-input"].parameters.form = {

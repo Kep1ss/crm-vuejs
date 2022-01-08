@@ -244,10 +244,12 @@ export default {
 
 
   computed : {
-    ...mapState('modulSetting',['data','error','result']),
+    ...mapState('modulMaster',['data','error','result']),
+    
     roles(){  
       return this.$store.state.setting.roles     
     },
+
     isSuperAdmin(){
       return this.$auth.user.role === this.$store.state.setting.roles.superadmin
     },    
@@ -259,9 +261,9 @@ export default {
   },
 
   methods : {
-    ...mapActions('modulSetting',['getData','deleteData','restoreData','deleteAllData','restoreAllData']),
+    ...mapActions('modulMaster',['getData','deleteData','restoreData','deleteAllData','restoreAllData']),
 
-    ...mapMutations('modulSetting',['set_data']),
+    ...mapMutations('modulMaster',['set_data']),
 
     onFormShow(){
       this.$refs["form-input"].parameters.form = {

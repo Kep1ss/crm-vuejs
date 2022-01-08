@@ -70,11 +70,11 @@ export default {
   },
 
   computed :{
-     ...mapState('modulSetting',['error','result']),
+     ...mapState('modulMaster',['error','result']),
   },
 
   methods: {    
-     ...mapActions('modulSetting',['addData','updateData']),
+     ...mapActions('modulMaster',['addData','updateData']),
 
      async onSubmit(isInvalid){       
       if(isInvalid || this.isLoadingForm) return;            

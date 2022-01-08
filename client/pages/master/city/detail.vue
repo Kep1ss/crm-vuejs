@@ -34,15 +34,14 @@
                     </div>
                   </div>
                 </div>
-                <div class="col">
+                </div>
+
                   <div class="form-group">
                     <label for="province_id">Province</label> 
                     <div>
                       {{parameters.form.province ? parameters.form.province.name : '-'}}
                     </div>
                   </div>
-                </div>
-              </div>                         
             </div>            
         </div>
       </div>

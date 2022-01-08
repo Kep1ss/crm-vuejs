@@ -44,13 +44,26 @@
                   <option value="1">Kota</option>
                 </select>
               </div>
+
+              <div class="form-group">
+                <label for="province_id">Province</label>
+                <select name="province_id"
+                  id="province_id"
+                  class="form-control"
+                  v-model="parameters.form.province_id">
+                  <option v-for="item in lookup_province"
+                    :key="item.id">
+                    {{item.name}}
+                  </option>
+                </select>
+              </div>
             </div>
 
             <modal-footer-section     
               :isLoadingForm="isLoadingForm"/>
           </form>
         </ValidationObserver>
-
+          <button @click="klikChek">asd</button>
         </div>
       </div>
     </div>
@@ -64,6 +77,12 @@ export default {
   middleware : ["isNotAccessable"],
 
   props: ["self"],
+
+  mounted(){
+    this.lookUp({    
+      url : "city/province",      
+    })
+  },
 
   data() {
     return {
@@ -82,11 +101,11 @@ export default {
   },
 
   computed :{
-     ...mapState('modulSetting',['error','result']),
+     ...mapState('modulMaster',['error','result','lookup_province']),     
   },
 
   methods: {    
-     ...mapActions('modulSetting',['addData','updateData']),
+     ...mapActions('modulMaster',['addData','updateData','lookUp']),
 
      async onSubmit(isInvalid){       
       if(isInvalid || this.isLoadingForm) return;            
@@ -108,6 +127,10 @@ export default {
       }
 
       this.isLoadingForm = false;
+     },
+
+     klikChek(){
+       console.log(this.lookup_province);
      }
   },
 };
