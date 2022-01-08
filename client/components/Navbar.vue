@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="navbar-bg bg-warning"></div>
+    <div class="navbar-bg" :style="header_color"></div>
     <nav class="navbar navbar-expand-lg main-navbar">
 
       <form class="form-inline mr-auto">      
@@ -33,6 +33,12 @@ export default {
     'app-messages' : Messages,
     'app-notifications' : Notifications,
     'app-user-options' : UserOptions,
+  },
+  computed: {
+    header_color(){
+      let header_color = this.$store.state.setting.settings.find(item => item.name == "header_color");
+      return header_color ? "background:"+header_color.value : "";
+    }
   }
 }
 </script>

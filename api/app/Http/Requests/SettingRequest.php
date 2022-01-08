@@ -21,6 +21,7 @@ class SettingRequest extends FormRequest
             "email" => "required|email",
             "phone" => "required",
             "address" => "required",
+            "header_color" => "required"
         ];
     }
 }

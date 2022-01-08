@@ -38,5 +38,10 @@ class SettingSeeder extends Seeder
             "name" => "logo",
             "value" => "defualt.jpeg"
         ]);
+        
+        Setting::create([
+            "name" => "header_color",
+            "value" => "lightblue"
+        ]);
     }
 }

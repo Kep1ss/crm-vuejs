@@ -202,7 +202,7 @@ export default {
       },
     /* MODULE MASTER DATA */
 
-    /* MODULE ACITVITY */
+    /* MODULE ACTIVITY */
       menu_set_area_sales(){
         let roles = this.$store.state.setting.roles;
     

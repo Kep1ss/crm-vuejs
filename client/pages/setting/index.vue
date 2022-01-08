@@ -125,6 +125,10 @@
                   </textarea>
                 </div>
 
+                <div class="form-group col-12">
+                  <label for="header_color">Warna Header</label>
+                  <input type="color" class="form-control" v-model="form.header_color"/>
+                </div>
 
               </div>
               <div class="card-footer text-right">
@@ -148,11 +152,13 @@
 </template>
 
 <script>
+import {mapMutations} from "vuex";
+
 export default {
 
   head() {
     return {
-      title: 'Aplkasi',
+      title: 'Aplikasi',
     }
   },
 
@@ -164,6 +170,7 @@ export default {
         email : '',
         phone : '',
         logo : '',
+        header_color : ''
       },
 
       isLoadingForm : false,
@@ -190,6 +197,8 @@ export default {
   },
 
   methods : {
+    ...mapMutations('setting',['SET_SETTINGS']),
+
     onSubmit(isInvalid){
       if(isInvalid || this.isLoadingForm) return;
 
@@ -197,7 +206,11 @@ export default {
 
       this.$axios.put("/setting",this.form)
       .then(() => {
-        this.$toaster.success("Berhasil update data");
+        return this.$axios.get("/setting");
+      })      
+      .then((res) => {      
+        this.SET_SETTINGS(res.data);
+        this.$toaster.success("Berhasil update data");      
       })
       .catch(err => {
         console.log(err);
