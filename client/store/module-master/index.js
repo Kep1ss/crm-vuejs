@@ -7,9 +7,9 @@ const defaultState = {
   code                     : '',
   error                    : '',
   result                   : '',
-  lookup_province          : [],
-  lookup_city              : [],
-  lookup_district          : [],
+  lookup_province          : {},
+  lookup_city              : {},
+  lookup_district          : {},
 }
 
 const state = defaultState;

@@ -51,10 +51,10 @@
                   id="province_id"
                   class="form-control"
                   v-model="parameters.form.province_id">
-                  <option v-for="item in lookup_province"
+                 <option v-for="item in lookup_province.data"
                     :key="item.id">
                     {{item.name}}
-                  </option>
+                  </option> 
                 </select>
               </div>
             </div>
@@ -78,12 +78,6 @@ export default {
 
   props: ["self"],
 
-  mounted(){
-    this.lookUp({    
-      url : "city/province",      
-    })
-  },
-
   data() {
     return {
       isEditable  : false,
@@ -105,7 +99,7 @@ export default {
   },
 
   methods: {    
-     ...mapActions('modulMaster',['addData','updateData','lookUp']),
+     ...mapActions('modulMaster',['addData','updateData']),
 
      async onSubmit(isInvalid){       
       if(isInvalid || this.isLoadingForm) return;            

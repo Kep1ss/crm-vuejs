@@ -90,6 +90,24 @@
     <FormInput
       :self="this"
       ref="form-input"/>
+
+    <filter-section
+      :self="this" 
+      ref="form-filter">
+      <template>
+       <div class="col-md-12">
+          <div class="form-group">
+            <label for="is_city">Status</label>        
+            <select name="is_city" v-model="parameters.params.is_city" class="form-control">
+              <option value="">Pilih</option>
+              <option value="0">Kabupaten</option> 
+              <option value="1">Kota</option>
+            </select>
+          </div>
+        </div>
+      </template>
+    </filter-section> 
+
   </section>
 </template>
 
@@ -107,12 +125,16 @@ export default {
 
   created() {    
     this.set_data([]);
-    this.onLoad();  
+    this.onLoad();
+    this.lookUp({    
+      url : "city/province",      
+      lookup  : 'province'
+    })
   },
 
   mounted() {
     this.$refs["form-option"].isExport          = false;
-    this.$refs['form-option'].isFilter          = false;
+    this.$refs['form-option'].isFilter          = true;
     this.$refs["form-option"].isMaintenancePage = false;
       
     if(this.isSuperAdmin){
@@ -136,7 +158,18 @@ export default {
           all         : '',
           per_page    : 10,
           page        : 1,
+          is_city     : ""
         },        
+        default_params :  {
+          soft_deleted : '',
+          search      : '',
+          order       : 'id',
+          sort        : 'desc',
+          all         : '',
+          per_page    : 10,
+          page        : 1,
+          is_city     : ""
+        },
         form : {
           checkboxs : []
         },        
@@ -167,7 +200,7 @@ export default {
   },
 
   methods : {
-    ...mapActions('modulMaster',['getData']),
+    ...mapActions('modulMaster',['getData','lookUp']),
 
     ...mapMutations('modulMaster',['set_data']),
 
