@@ -43,12 +43,16 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function announcements(){
-        return $this->hasMany(Announcement::class);
-    }
-
     public function district(){
         return $this->belongsTo(District::class);
+    }
+
+    public function province(){
+        return $this->belongsTo(Province::class);
+    }
+
+    public function city(){
+        return $this->belongsTo(City::class);
     }
 
     public function parent(){

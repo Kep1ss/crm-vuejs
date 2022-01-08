@@ -4,7 +4,7 @@ namespace App\Http\Controllers\MasterData;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Province;
+use App\Models\City;
 use App\Helpers\FormatResponse;
 use App\Http\Requests\ProvinceRequest;
 use App\Traits\{

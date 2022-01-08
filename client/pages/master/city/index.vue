@@ -29,14 +29,25 @@
                               :class="parameters.params.order == 'name' && parameters.params.sort == 'desc' ? '' : 'light-gray'"></i>
                           </div>
                         </div>
-                      </th>                     
+                      </th>       
+                      <th>Status</th>              
+                      <th>Province</th>
                       <th class="text-center">Options</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(item,i) in data" :key="i">                  
                       <td>{{ i + 1 }}</td>
-                      <td>{{item.name}}</td>                   
+                      <td>{{item.name}}</td>  
+                      <td>
+                        <span class="badge badge-danger" v-if="item.is_city">
+                          Kota
+                        </span>
+                        <span class="badge badge-success" v-else>
+                          Kabupaten
+                        </span>                         
+                      </td>
+                      <td>{{item.province ? item.province.name : '-'}}                 
                       <td class="text-center">
                         <div class="btn-group">
                           <button class="btn btn-sm btn-success" @click="onDetail(item)">
@@ -90,7 +101,7 @@ import ModalDetail from "./detail";
 export default {
   head() {
     return {
-      title: 'Provinsi',
+      title: 'Kota',
     }
   },
 
@@ -111,11 +122,11 @@ export default {
 
   data() {
     return {
-      title               : 'Provinsi',
+      title               : 'Kota',
       isLoadingData       : false,
       isPaginate          : true,
       parameters : {
-        url : 'province',
+        url : 'city',
         type : 'pdf',
         params :{
           soft_deleted : '',
@@ -162,7 +173,8 @@ export default {
 
     onFormShow(){
       this.$refs["form-input"].parameters.form = {
-       name : ''
+        name : '',
+        province_id : ''
       };
 
       this.$refs["form-input"].isEditable = false;

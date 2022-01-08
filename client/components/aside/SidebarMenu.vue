@@ -25,7 +25,7 @@
           <span>Data Provinsi</span>
         </nuxt-link>      
 
-        <nuxt-link class="nav-link" to="/master/school"
+        <nuxt-link class="nav-link" to="/master/city"
           v-if="menu_city">
           <i class="fas fa-route"></i>
           <span>Data Kaputen/Kota</span>

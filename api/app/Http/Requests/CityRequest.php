@@ -17,7 +17,8 @@ class CityRequest extends FormRequest
     public function rules()
     {
         return [
-            "name" => "required|max:50"
+            "name" => "required|max:50",
+            "province_id" => "required|integer|exists:provinces,id"
         ];
     }
 }
