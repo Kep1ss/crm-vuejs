@@ -215,7 +215,10 @@ export default {
 
     onEdit(item){
       this.$refs["form-input"].isEditable = true;      
-      this.$refs["form-input"].parameters.form = {...item};
+      this.$refs["form-input"].parameters.form = {
+        ...item,
+        province_id : item.province,
+      };
       window.$("#modal-form").modal("show");    
       this.$refs["form-input"].$refs['form-validate'].reset();  
     },
