@@ -94,7 +94,7 @@ export default {
     return this.$axios.get('/'+url)
     .then(response => {      
       commit('set_result',true)
-      switch(payload.url) {
+      switch(payload.lookup) {
         case 'province':
           commit('set_lookup_province',response.data)
           break;        

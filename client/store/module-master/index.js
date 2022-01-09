@@ -7,9 +7,15 @@ const defaultState = {
   code                     : '',
   error                    : '',
   result                   : '',
-  lookup_province          : [],
-  lookup_city              : [],
-  lookup_district          : [],
+  lookup_province          : {
+    data : []
+  },
+  lookup_city              : {
+    data : []
+  },
+  lookup_district          : {
+    data : []
+  },
 }
 
 const state = defaultState;

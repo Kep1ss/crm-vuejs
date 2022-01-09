@@ -65,7 +65,7 @@
         <nuxt-link class="nav-link" to="/setting/user"
           v-if="menu_set_target_telemaraketing">
           <i class="fas fa-chart-line"></i>
-          <span> Set Target tele_marketing </span>
+          <span> Set Target Tele </span>
         </nuxt-link>
         <nuxt-link class="nav-link" to="/setting/user"
           v-if="menu_input_visit">

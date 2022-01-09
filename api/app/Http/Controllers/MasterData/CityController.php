@@ -49,7 +49,11 @@ class CityController extends Controller
                 $q->where("name","like","%".$request->search."%");
             });
         }    
-    
+        
+        if($request->filled("is_city")){
+            $data->where("is_city",intval($request->is_city));
+        }
+
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
 
         if(!$request->filled("all")){
