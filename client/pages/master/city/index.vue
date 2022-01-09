@@ -125,11 +125,7 @@ export default {
 
   created() {    
     this.set_data([]);
-    this.onLoad();
-    this.lookUp({    
-      url : "city/province",      
-      lookup  : 'province'
-    })
+    this.onLoad();    
   },
 
   mounted() {
@@ -200,7 +196,7 @@ export default {
   },
 
   methods : {
-    ...mapActions('modulMaster',['getData','lookUp']),
+    ...mapActions('modulMaster',['getData']),
 
     ...mapMutations('modulMaster',['set_data']),
 
@@ -208,6 +204,7 @@ export default {
       this.$refs["form-input"].parameters.form = {
         name : '',
         is_city : 0,
+        province : '',
         province_id : ''
       };
 
