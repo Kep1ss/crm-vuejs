@@ -109,6 +109,7 @@ Route::group(["prefix" => $version],function() use ($version) {
 			Route::get("/district/city",[CityController::class,"index"])->name("district.get-city");
 			Route::apiResource("district",DistrictController::class)->only("index","store","update");	
 
+			Route::post("/school/get/dapodik",[SchoolController::class,"getSchool"])->name("school.get-dapodik");
 			Route::get("/school/district",[DistrictController::class,"index"])->name("school.get-district");
 			Route::apiResource("school",SchoolController::class)->only("index","store","update");	
 		});

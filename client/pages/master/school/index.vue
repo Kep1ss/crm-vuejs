@@ -10,10 +10,10 @@
                   :self="this" 
                   ref="form-option">
                   <template>
-                    <button class="btn btn-primary btn-sm">
+                    <nuxt-link to="/master/school/download" class="btn btn-primary btn-sm">
                       <i class="fas fa-download"></i>
                       Download Data Sekolah Dari Dapodik
-                    </button>
+                    </nuxt-link>
                   </template>
                 </list-option-section>                
               </div>

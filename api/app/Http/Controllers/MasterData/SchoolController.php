@@ -4,12 +4,18 @@ namespace App\Http\Controllers\MasterData;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\School;
-use App\Helpers\FormatResponse;
-use App\Http\Requests\SchoolRequest;
-use App\Traits\{
-    ConstructControllerSuperAdminTrait
+use App\Models\{
+    School,
+    Setting,
+    District
 };
+use App\Helpers\FormatResponse;
+use App\Http\Requests\{
+    SchoolRequest,
+    SchoolGetRequest
+};
+use App\Traits\ConstructControllerSuperAdminTrait;
+use Illuminate\Support\Facades\Http;
 
 class SchoolController extends Controller
 {
@@ -149,6 +155,51 @@ class SchoolController extends Controller
             ]);
         }catch(\Exception $e){
             \DB::rollback();
+            return FormatResponse::failed($e);
+        }
+    }
+
+    /**
+     * Get Data School From Dapodik
+     */
+    public function getSchool(SchoolGetRequest $request){
+        try{            
+            $dapodik_url = Setting::query()
+                ->select("value")
+                ->where("name","dapodik_url")
+                ->first()
+                ->value;
+
+            $dapodik_school_id =  Setting::query()
+                ->select("value")
+                ->where("name","dapodik_school_id")
+                ->first()
+                ->value;
+
+            $district_code = District::query()
+                ->select("code")
+                ->where("id",$request->district_id)
+                ->first()
+                ->code;
+            
+            $queryDapodik = [
+                "kode_wilayah" => $district_code,
+                "bentuk_pendidikan_id" => strtolower($request->level),
+                "semester_id" => $request->year . $request->semester,
+                "id_level_wilayah" => $dapodik_school_id 
+            ];
+        
+            $compelete_url = $dapodik_url . "?" . http_build_query($queryDapodik);           
+            
+            $response = Http::get($compelete_url);
+
+            throw_if(
+                !$response->ok(),
+                new \Exception("Terjadi Kesalahan Saat Mengambil Data",422)
+            );
+
+            return $response->json();
+        }catch(\Exception $e){
             return FormatResponse::failed($e);
         }
     }

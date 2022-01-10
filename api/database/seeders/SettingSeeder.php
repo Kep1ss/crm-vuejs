@@ -43,5 +43,15 @@ class SettingSeeder extends Seeder
             "name" => "header_color",
             "value" => "lightblue"
         ]);
+
+        Setting::create([
+            "name" => "dapodik_url",
+            "value" => "https://dapo.kemdikbud.go.id/rekap/progresSP"
+        ]);
+
+        Setting::create([
+            "name" => "dapodik_school_id",
+            "value" => "3"
+        ]);
     }
 }

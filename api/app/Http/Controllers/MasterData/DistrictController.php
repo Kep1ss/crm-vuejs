@@ -48,14 +48,21 @@ class DistrictController extends Controller
                 $q->orWhere("name","like","%".$request->search."%");                
             });
 
-            $data->orWhereHas("city",function($q) use ($request){
-                $q->where("name","like","%".$request->search."%");
-            });            
+            if(!$request->filled("city_id")){
+                $data->orWhereHas("city",function($q) use ($request){
+                    $q->where("name","like","%".$request->search."%");
+                });            
 
-            $data->orWhereHas("city.province",function($q) use ($request){
-                $q->where("name","like","%".$request->search."%");
-            });
+                $data->orWhereHas("city.province",function($q) use ($request){
+                    $q->where("name","like","%".$request->search."%");
+                });
+            }
         }    
+
+        if($request->filled("city_id")){
+            $data->where("city_id",$request->city_id)
+                ->whereNotNull("code");
+        }
 
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
 

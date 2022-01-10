@@ -37,19 +37,26 @@ class CityController extends Controller
                 $data->withTrashed();
             }          
         }        
-
+            
         if($request->filled("search")){
             $data->where(function($q) use ($request) {
                 $q->orWhere("name","like","%".$request->search."%");                
             });
 
-            $data->orWhereHas("province",function($q) use ($request){
-                $q->where("name","like","%".$request->search."%");
-            });
-        }    
+            if(!$request->filled("province_id")){
+                $data->orWhereHas("province",function($q) use ($request){        
+                    $q->where("name","like","%".$request->search."%");                   
+                });
+            }
+        }   
         
         if($request->filled("is_city")){
             $data->where("is_city",intval($request->is_city));
+        }
+
+        if($request->filled("province_id")){
+            $data->where("province_id",$request->province_id)
+                ->whereNotNull("code");
         }
 
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");

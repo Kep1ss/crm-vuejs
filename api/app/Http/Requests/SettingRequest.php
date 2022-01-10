@@ -21,7 +21,8 @@ class SettingRequest extends FormRequest
             "email" => "required|email",
             "phone" => "required",
             "address" => "required",
-            "header_color" => "required"
+            "header_color" => "required",
+            "dapodik_url" => "required|url"
         ];
     }
 }
