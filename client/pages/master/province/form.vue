@@ -63,7 +63,6 @@ export default {
         url : 'province',
         form : {
          name : '',
-         code : ''
         }
       }
     };

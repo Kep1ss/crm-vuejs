@@ -31,7 +31,7 @@
           <span>Data Kaputen/Kota</span>
         </nuxt-link>      
 
-        <nuxt-link class="nav-link" to="/master/school"
+        <nuxt-link class="nav-link" to="/master/district"
          v-if="menu_district">
           <i class="fas fa-location-arrow"></i>
           <span>Data Kecamatan</span>

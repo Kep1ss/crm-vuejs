@@ -4,14 +4,14 @@ namespace App\Http\Controllers\MasterData;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\City;
+use App\Models\District;
 use App\Helpers\FormatResponse;
-use App\Http\Requests\CityRequest;
+use App\Http\Requests\DistrictRequest;
 use App\Traits\{
     ConstructControllerSuperAdminTrait
 };
 
-class CityController extends Controller
+class DistrictController extends Controller
 {
     use ConstructControllerSuperAdminTrait;
 
@@ -24,12 +24,15 @@ class CityController extends Controller
     public function indexFilter(){
         $request = request();
 
-        $data = City::query();
+        $data = District::query();
 
-        $data->select("id","name","is_city","province_id");
+        $data->select("id","name","city_id");
 
-        $data->with(["province" => function($q){
-            $q->select("id","name");
+        $data->with(["city" => function($q){
+            $q->select("id","name","is_city","province_id") 
+                ->with(["province" => function($qp){
+                    $qp->select("id","name");
+                }]);
         }]);
 
         if($request->filled("soft_deleted")){
@@ -45,14 +48,14 @@ class CityController extends Controller
                 $q->orWhere("name","like","%".$request->search."%");                
             });
 
-            $data->orWhereHas("province",function($q) use ($request){
+            $data->orWhereHas("city",function($q) use ($request){
+                $q->where("name","like","%".$request->search."%");
+            });            
+
+            $data->orWhereHas("city.province",function($q) use ($request){
                 $q->where("name","like","%".$request->search."%");
             });
         }    
-        
-        if($request->filled("is_city")){
-            $data->where("is_city",intval($request->is_city));
-        }
 
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
 
@@ -82,20 +85,20 @@ class CityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CityRequest $request)
+    public function store(DistrictRequest $request)
     {
         try{    
             \DB::beginTransaction();
             
-            $city = City::create($request->validated());
+            $district = District::create($request->validated());
 
             activity()
-                ->performedOn($city)
+                ->performedOn($district)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'name' => $city->name,
-                    'id' => $city->id,
-                    'table' => 'cities'
+                    'name' => $district->name,
+                    'id' => $district->id,
+                    'table' => 'districts'
                 ])
                 ->log('Created Data');
 
@@ -116,20 +119,20 @@ class CityController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CityRequest $request, City $city)
+    public function update(DistrictRequest $request, District $district)
     {
         try{    
             \DB::beginTransaction();
                         
-            $city->update($request->validated());
+            $district->update($request->validated());
 
             activity()
-                ->performedOn($city)
+                ->performedOn($district)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'name' => $city->name,
-                    'id' => $city->id,
-                    'table' => 'cities'
+                    'name' => $district->name,
+                    'id' => $district->id,
+                    'table' => 'districts'
                 ])
                 ->log('Upadated Data');
 

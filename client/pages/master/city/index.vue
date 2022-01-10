@@ -31,7 +31,7 @@
                         </div>
                       </th>       
                       <th>Status</th>              
-                      <th>Province</th>
+                      <th>Provinsi</th>
                       <th class="text-center">Options</th>
                     </tr>
                   </thead>
@@ -145,7 +145,6 @@ export default {
       isPaginate          : true,
       parameters : {
         url : 'city',
-        type : 'pdf',
         params :{
           soft_deleted : '',
           search      : '',
@@ -165,14 +164,7 @@ export default {
           per_page    : 10,
           page        : 1,
           is_city     : ""
-        },
-        form : {
-          checkboxs : []
-        },        
-        loadings : {
-          isDelete  : false,
-          isRestore : false,          
-        }
+        }       
       }    
     }
   },
@@ -180,10 +172,6 @@ export default {
 
   computed : {
     ...mapState('modulMaster',['data','error','result']),
-
-    roles(){  
-      return this.$store.state.setting.roles     
-    },
 
     isSuperAdmin(){
       return this.$auth.user.role === this.$store.state.setting.roles.superadmin
@@ -224,7 +212,9 @@ export default {
     },
 
     onDetail(item){
-      this.$refs["modal-detail"].parameters.form = {...item};
+      this.$refs["modal-detail"].parameters.form = {
+        ...item
+      };
       window.$("#modal-detail").modal("show");
     },
 

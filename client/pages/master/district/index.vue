@@ -29,14 +29,18 @@
                               :class="parameters.params.order == 'name' && parameters.params.sort == 'desc' ? '' : 'light-gray'"></i>
                           </div>
                         </div>
-                      </th>                     
+                      </th>                   
+                      <th>Kota</th>
+                      <th>Provinsi</th>
                       <th class="text-center">Options</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(item,i) in data" :key="i">                  
                       <td>{{ i + 1 }}</td>
-                      <td>{{item.name}}</td>                   
+                      <td>{{item.name}}</td>                      
+                      <td>{{item.city ? item.city.name : '-'}}</td>
+                      <td>{{item.city ? (item.city.province ? item.city.province.name : '-') : '-'}}                 
                       <td class="text-center">
                         <div class="btn-group">
                           <button class="btn btn-sm btn-success" @click="onDetail(item)">
@@ -79,6 +83,7 @@
     <FormInput
       :self="this"
       ref="form-input"/>
+
   </section>
 </template>
 
@@ -90,13 +95,13 @@ import ModalDetail from "./detail";
 export default {
   head() {
     return {
-      title: 'Provinsi',
+      title: 'Kota',
     }
   },
 
   created() {    
     this.set_data([]);
-    this.onLoad();  
+    this.onLoad();    
   },
 
   mounted() {
@@ -111,11 +116,11 @@ export default {
 
   data() {
     return {
-      title               : 'Provinsi',
+      title               : 'Kecamatan',
       isLoadingData       : false,
       isPaginate          : true,
       parameters : {
-        url : 'province',    
+        url : 'district',
         params :{
           soft_deleted : '',
           search      : '',
@@ -124,7 +129,7 @@ export default {
           all         : '',
           per_page    : 10,
           page        : 1,
-        }             
+        }
       }    
     }
   },
@@ -150,7 +155,9 @@ export default {
 
     onFormShow(){
       this.$refs["form-input"].parameters.form = {
-       name : ''
+        name : '',
+        city : '',
+        city_id : ''
       };
 
       this.$refs["form-input"].isEditable = false;
@@ -161,7 +168,8 @@ export default {
     onEdit(item){
       this.$refs["form-input"].isEditable = true;      
       this.$refs["form-input"].parameters.form = {
-        ...item
+        ...item,
+        city_id : item.city,
       };
       window.$("#modal-form").modal("show");    
       this.$refs["form-input"].$refs['form-validate'].reset();  

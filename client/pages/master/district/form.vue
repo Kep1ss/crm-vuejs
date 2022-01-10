@@ -32,48 +32,37 @@
                     {{ errors[0] }}
                   </div>      
                 </div>
-              </ValidationProvider>                                            
-
-              <div class="form-group">
-                <label for="is_city">Status</label> 
-                <select name="is_city"
-                  id="is_city"
-                  class="form-control"
-                  v-model="parameters.form.is_city">
-                  <option value="0">Kabupaten</option>
-                  <option value="1">Kota</option>
-                </select>
-              </div>
+              </ValidationProvider>                                                         
 
               <ValidationProvider 
-                name="province_id"
+                name="city_id"
                 rules="required">                        
                 <div class="form-group" slot-scope="{errors,valid}">             
-                  <label for="province_id">Province</label>                        
+                  <label for="city_id">Kota</label>                        
                   <input type="hidden"
-                    id="province_id" 
+                    id="city_id" 
                     class="form-control" 
-                    name="province_id"                      
-                    v-model="parameters.form.province_id"
+                    name="city_id"                      
+                    v-model="parameters.form.city_id"
                     :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')"/> 
                                     
                     <v-select                           
                       :class="errors[0] ? 'border rounded-lg border-danger' : (valid ? 'border rounded-lg border-success' : '')"                         
                       label="name"   
-                      :loading="isLoadingGetProvince"
-                      :options="lookup_province.data"
+                      :loading="isLoadingGetCity"
+                      :options="lookup_city.data"
                       :filterable="false"
-                      @search="onGetProvince"
-                      v-model="parameters.form.province_id">              
+                      @search="onGetCity"
+                      v-model="parameters.form.city_id">              
                       <li slot-scope="{search}" slot="list-footer"
                         class="d-flex justify-content-between"
-                        v-if="lookup_province.data.length || search">
-                        <a v-if="lookup_province.current_page > 1" 
-                          @click="onGetProvince(search,false)"
+                        v-if="lookup_city.data.length || search">
+                        <a v-if="lookup_city.current_page > 1" 
+                          @click="onGetCity(search,false)"
                           class="flex-fill bg-primary text-white text-center"
                           href="#">Sebelumnya</a>
-                        <a v-if="lookup_province.last_page > lookup_province.current_page" 
-                          @click="onGetProvince(search,true)"
+                        <a v-if="lookup_city.last_page > lookup_city.current_page" 
+                          @click="onGetCity(search,true)"
                           class="flex-fill bg-primary text-white text-center"
                           href="#">Selanjutnya</a>
                       </li> 
@@ -102,9 +91,9 @@ import { mapActions,mapState } from 'vuex'
 export default {  
   mounted(){
     this.lookUp({    
-      url : "city/province",      
-      lookup  : 'province',
-      query : "?per_page=20"
+      url : "district/city",      
+      lookup  : 'city',
+      query : "?per_page=50"
     })
   },
 
@@ -116,24 +105,23 @@ export default {
     return {
       isEditable  : false,
       isLoadingForm : false,
-      isStopSearchProvince : false,
-      isLoadingGetProvince :  false,
-      province_search : '',
-      title: 'Kota',      
+      isStopSearchCity : false,
+      isLoadingGetCity :  false,
+      city_search : '',
+      title: 'Kecamatan',      
       parameters : {
-        url : 'city',
+        url : 'district',
         form : {
          name : '',      
-         province : '',
-         province_id : '',
-         is_city : 0
-        } 
+         city : '',
+         city_id : '',      
+        }
       }
     };
   },
 
   computed :{
-     ...mapState('modulMaster',['error','result','lookup_province']),     
+     ...mapState('modulMaster',['error','result','lookup_city']),     
   },
 
   methods: {    
@@ -146,9 +134,9 @@ export default {
         ...this.parameters,
         form : {
           ...this.parameters.form,
-          province_id : typeof this.parameters.form.province_id  === 'object' 
-            ? this.parameters.form.province_id.id  
-            : this.parameters.form.province_id
+          city_id : typeof this.parameters.form.city_id  === 'object' 
+            ? this.parameters.form.city_id.id  
+            : this.parameters.form.city_id
         }
       }
 
@@ -171,37 +159,37 @@ export default {
       this.isLoadingForm = false;
      },
 
-     onGetProvince(search,isNext){      
+     onGetCity(search,isNext){      
       if(!search.length && typeof isNext === "function") return false;             
 
-      clearTimeout(this.isStopSearchProvince);
+      clearTimeout(this.isStopSearchCity);
       
-      this.isStopSearchProvince = setTimeout(() => {
-        this.province_search = search;
+      this.isStopSearchCity = setTimeout(() => {
+        this.city_search = search;
 
         if(typeof isNext !== "function"){
-          this.lookup_province.current_page = isNext 
-            ? this.lookup_province.current_page + 1 
-            : this.lookup_province.current_page - 1;        
+          this.lookup_city.current_page = isNext 
+            ? this.lookup_city.current_page + 1 
+            : this.lookup_city.current_page - 1;        
         }else{
-          this.lookup_province.current_page = 1;
+          this.lookup_city.current_page = 1;
         }
 
-        this.onSearchProvince();
+        this.onSearchCity();
       },600);        
     },
 
-    async onSearchProvince(){
-      if(!this.isLoadingGetProvince){
-        this.isLoadingGetProvince = true;
+    async onSearchCity(){
+      if(!this.isLoadingGetCity){
+        this.isLoadingGetCity = true;
                 
         await this.lookUp({    
-          url : "city/province",      
-          lookup  : 'province',
-          query : "?search="+this.province_search+"&page="+this.lookup_province.current_page+"&per_page=20"
+          url : "district/city",      
+          lookup  : 'city',
+          query : "?search="+this.city_search+"&page="+this.lookup_city.current_page+"&per_page=20"
         })
 
-        this.isLoadingGetProvince = false;      
+        this.isLoadingGetCity = false;      
       }
     }
   },

@@ -14,7 +14,8 @@ use App\Http\Controllers\Setting\{
 use App\Http\Controllers\MasterData\{
 	AccountController,
 	ProvinceController,
-	CityController
+	CityController,
+	DistrictController
 };
 /*
 |--------------------------------------------------------------------------
@@ -97,15 +98,15 @@ Route::group(["prefix" => $version],function() use ($version) {
 
 		/* MODULE MASTER DATA */
 		Route::group(["as" => "master.data."],function(){
-			// Route::post("/account/restore-all",[AccountController::class,"restoreAll"])->name("account.restore-all");
-			// Route::delete("/account/destroy-all",[AccountController::class,"destroyAll"])->name("account.destroy-all");
-			// Route::post("/account/restore/{id}",[AccountController::class,"restore"])->name("account.restore");		
 			Route::apiResource("account",AccountController::class);
 
 			Route::apiResource("province",ProvinceController::class)->only("index","store","update");
 
 			Route::get("/city/province",[ProvinceController::class,"index"])->name("city.get-province");
 			Route::apiResource("city",CityController::class)->only("index","store","update");
+
+			Route::get("/district/city",[CityController::class,"index"])->name("district.get-city");
+			Route::apiResource("district",DistrictController::class)->only("index","store","update");	
 		});
 
 		/* MODULE ACTIVITY */
