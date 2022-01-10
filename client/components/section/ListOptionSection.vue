@@ -87,6 +87,9 @@
             </button>
           </div>
 
+          <!-- SLOT FOR DOWNLOD DATA SCHOOL DAPODIK -->
+          <slot></slot>
+          
           <!-- Export (Excel, Pdf, Print) -->
           <div class="btn-group float-right" v-if="isExport">
             <button class="btn btn-sm btn-info" 
@@ -112,6 +115,7 @@
               <i class="fas fa-print"></i> Print
             </button>
           </div>
+
         </div>
       </div>
     </div>

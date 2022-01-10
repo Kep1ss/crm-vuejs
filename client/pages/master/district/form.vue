@@ -186,7 +186,7 @@ export default {
         await this.lookUp({    
           url : "district/city",      
           lookup  : 'city',
-          query : "?search="+this.city_search+"&page="+this.lookup_city.current_page+"&per_page=20"
+          query : "?search="+this.city_search+"&page="+this.lookup_city.current_page+"&per_page=50"
         })
 
         this.isLoadingGetCity = false;      

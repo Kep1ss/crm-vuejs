@@ -38,7 +38,7 @@ class AccountRequest extends FormRequest
                 $role = "|in:".User::ROLE_ADMIN_AREA.",".User::ROLE_KAPER;
                 break;        
             case User::ROLE_KAPER:
-                $role = "|in:".User::ROLE_ADMIN_KAPER.",".User::SPV;
+                $role = "|in:".User::ROLE_ADMIN_KAPER.",".User::ROLE_SPV;
                 break;            
             case User::ROLE_SPV:
                 $role = "|in:".User::ROLE_SALES;

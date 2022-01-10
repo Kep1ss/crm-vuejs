@@ -4,12 +4,14 @@ namespace App\Http\Controllers\MasterData;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\City;
+use App\Models\School;
 use App\Helpers\FormatResponse;
-use App\Http\Requests\CityRequest;
-use App\Traits\ConstructControllerSuperAdminTrait;
+use App\Http\Requests\SchoolRequest;
+use App\Traits\{
+    ConstructControllerSuperAdminTrait
+};
 
-class CityController extends Controller
+class SchoolController extends Controller
 {
     use ConstructControllerSuperAdminTrait;
 
@@ -22,12 +24,18 @@ class CityController extends Controller
     public function indexFilter(){
         $request = request();
 
-        $data = City::query();
+        $data = School::query();
 
-        $data->select("id","name","is_city","province_id");
+        $data->select("id","name","district_id","level","member","is_private","address","phone_headmaster","phone_teacher","phone_treasurer");
 
-        $data->with(["province" => function($q){
-            $q->select("id","name");
+        $data->with(["district" => function($q){
+            $q->select("id","name","city_id")
+             ->with(["city" => function($qc){
+                 $qc->select("id","name","is_city","province_id")
+                 ->with(["province" => function($qp){
+                     $qp->select("id","name");
+                 }]);
+             }]);
         }]);
 
         if($request->filled("soft_deleted")){
@@ -43,13 +51,17 @@ class CityController extends Controller
                 $q->orWhere("name","like","%".$request->search."%");                
             });
 
-            $data->orWhereHas("province",function($q) use ($request){
+            $data->orWhereHas("district",function($q) use ($request){
                 $q->where("name","like","%".$request->search."%");
-            });
+            });                
         }    
-        
-        if($request->filled("is_city")){
-            $data->where("is_city",intval($request->is_city));
+
+        if($request->filled("level")){
+            $data->where("level",$request->level);
+        }
+
+        if($request->filled("is_private")){
+            $data->where("is_private",intval($request->is_private));
         }
 
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
@@ -80,20 +92,20 @@ class CityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CityRequest $request)
+    public function store(SchoolRequest $request)
     {
         try{    
             \DB::beginTransaction();
             
-            $city = City::create($request->validated());
+            $school = School::create($request->validated());
 
             activity()
-                ->performedOn($city)
+                ->performedOn($school)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'name' => $city->name,
-                    'id' => $city->id,
-                    'table' => 'cities'
+                    'name' => $school->name,
+                    'id' => $school->id,
+                    'table' => 'schools'
                 ])
                 ->log('Created Data');
 
@@ -114,20 +126,20 @@ class CityController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CityRequest $request, City $city)
+    public function update(SchoolRequest $request, School $school)
     {
         try{    
             \DB::beginTransaction();
                         
-            $city->update($request->validated());
+            $school->update($request->validated());
 
             activity()
-                ->performedOn($city)
+                ->performedOn($school)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'name' => $city->name,
-                    'id' => $city->id,
-                    'table' => 'cities'
+                    'name' => $school->name,
+                    'id' => $school->id,
+                    'table' => 'schools'
                 ])
                 ->log('Upadated Data');
 

@@ -15,7 +15,8 @@ use App\Http\Controllers\MasterData\{
 	AccountController,
 	ProvinceController,
 	CityController,
-	DistrictController
+	DistrictController,
+	SchoolController
 };
 /*
 |--------------------------------------------------------------------------
@@ -107,6 +108,9 @@ Route::group(["prefix" => $version],function() use ($version) {
 
 			Route::get("/district/city",[CityController::class,"index"])->name("district.get-city");
 			Route::apiResource("district",DistrictController::class)->only("index","store","update");	
+
+			Route::get("/school/district",[DistrictController::class,"index"])->name("school.get-district");
+			Route::apiResource("school",SchoolController::class)->only("index","store","update");	
 		});
 
 		/* MODULE ACTIVITY */

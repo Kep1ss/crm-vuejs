@@ -18,7 +18,7 @@ class CreateSchoolsTable extends Migration
             $table->string("code",25)->nullable();
             $table->bigInteger("district_id")->unsigned()->nullable();
             $table->string("name",255)->nullable();
-            $table->bigInteger("memeber")->default(0);
+            $table->bigInteger("member")->default(0);
             $table->enum("level",["TK","SD","SMP","SMK","SMA","SLB"])->default("SD");
             $table->boolean("is_private")->default(1);
             $table->text("address")->nullable();
