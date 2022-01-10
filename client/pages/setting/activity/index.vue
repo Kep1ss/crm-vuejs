@@ -6,11 +6,11 @@
           <div class="card">
             <div class="card-body">
               <div class="card-title">
-                <list-option-section 
-                  :self="this" 
+                <list-option-section
+                  :self="this"
                   ref="form-option"/>
               </div>
-        
+
               <!-- start table -->
               <div class="table-responsive">
                 <table class="table table-striped table-sm vld-parent"
@@ -32,7 +32,7 @@
                       <td>{{ item.description }}</td>
                       <td>
                         Table : {{ item.properties ? item.properties.table : '-'}}   <br/>
-                        Nama : {{ item.properties ? item.properties.name : '-' }}                        
+                        Nama : {{ item.properties ? item.properties.name : '-' }}
                       </td>
                       <td>
                         {{onHumanReadAble(item.created_at)}}
@@ -41,12 +41,12 @@
                         <div class="btn-group">
                           <button class="btn btn-sm btn-success" @click="onDetail(item)">
                             <i class="fas fa-info-circle"></i>
-                          </button>                                                            
+                          </button>
                         </div>
                       </td>
                     </tr>
                   </tbody>
-                  
+
                   <table-data-loading-section
                     :self="this"/>
 
@@ -56,10 +56,10 @@
               </div>
               <!-- end table -->
 
-              <div class="card-title border-top"  
+              <div class="card-title border-top"
                 style="padding-bottom: -100px !important">
-                <pagination-section 
-                  :self="this" 
+                <pagination-section
+                  :self="this"
                   ref="pagination"/>
               </div>
             </div>
@@ -73,16 +73,16 @@
     ref="modal-detail"/>
 
     <filter-section
-      :self="this" 
+      :self="this"
       ref="form-filter">
       <template>
        <div class="col-md-12">
           <div class="form-group">
-            <label for="created_at">Dibuat Pada</label>        
+            <label for="created_at">Dibuat Pada</label>
             <div class="row">
               <div class="col">
-                <div class="form-group">                  
-                  <label for="start_date">Awal</label> 
+                <div class="form-group">
+                  <label for="start_date">Awal</label>
                   <input type="date" class="form-control" v-model="parameters.params.start_date">
                 </div>
               </div>
@@ -96,7 +96,7 @@
           </div>
         </div>
       </template>
-    </filter-section> 
+    </filter-section>
 
   </section>
 </template>
@@ -106,14 +106,14 @@ import { mapActions,mapState,mapMutations} from 'vuex'
 import ModalDetail from "./detail";
 
 export default {
-  created() {    
+  created() {
     this.set_data([]);
-    this.onLoad();  
+    this.onLoad();
   },
 
   mounted() {
     this.$refs["form-option"].isExport          = false;
-    this.$refs['form-option'].isFilter          = true;  
+    this.$refs['form-option'].isFilter          = true;
     this.$refs["form-option"].isAddData         = false;
     this.$refs["form-option"].isMaintenancePage = false;
   },
@@ -151,9 +151,9 @@ export default {
         },
         loadings : {
           isDelete  : false,
-          isRestore : false,          
+          isRestore : false,
         }
-      }    
+      }
     }
   },
 
@@ -161,7 +161,7 @@ export default {
     ...mapState('modulSetting',['data','error','result']),
   },
 
-  components : {    
+  components : {
      ModalDetail
   },
 
@@ -175,7 +175,7 @@ export default {
       window.$("#modal-detail").modal("show");
     },
 
-    async onLoad(page = 1){      
+    async onLoad(page = 1){
       if(this.isLoadingData) return;
 
       this.isLoadingData            = true;
@@ -196,10 +196,10 @@ export default {
 
       if(this.result == true){
         loader.hide();
-        this.$refs['pagination'].generatePage();        
+        this.$refs['pagination'].active_page = this.parameters.params.page;
       }else{
-        this.$globalErrorToaster(this.$toaster,this.error);      
-      }  
+        this.$globalErrorToaster(this.$toaster,this.error);
+      }
 
       this.isLoadingData = false;
     },
@@ -210,11 +210,11 @@ export default {
         order : column,
         sort : sort
       }
-      
+
       this.onLoad(this.parameters.params.page)
     },
-    
-    onHumanReadAble(date){            
+
+    onHumanReadAble(date){
       return moment(date).locale("id").format("LLLL")
     },
 
@@ -224,7 +224,7 @@ export default {
 </script>
 
 <style scoped>
-/* 
+/*
 select.form-control:not([size]):not([multiple]) {
   height: calc(1.5em + .5rem + 2px);
   padding-top: 5px;

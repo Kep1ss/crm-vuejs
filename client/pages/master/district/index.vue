@@ -198,7 +198,11 @@ export default {
 
       if(this.result == true){
         loader.hide();
-        this.$refs['pagination'].generatePage();        
+
+        if (page == 1) {
+            this.$refs['pagination'].generatePage();
+        }
+        this.$refs['pagination'].active_page = this.parameters.params.page;    
       }else{
         this.$globalErrorToaster(this.$toaster,this.error);      
       }  

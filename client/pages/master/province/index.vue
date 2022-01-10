@@ -6,11 +6,11 @@
           <div class="card">
             <div class="card-body">
               <div class="card-title">
-                <list-option-section 
-                  :self="this" 
+                <list-option-section
+                  :self="this"
                   ref="form-option"/>
               </div>
-                                  
+
               <!-- start table -->
               <div class="table-responsive">
                 <table class="table table-striped table-sm vld-parent"
@@ -29,14 +29,14 @@
                               :class="parameters.params.order == 'name' && parameters.params.sort == 'desc' ? '' : 'light-gray'"></i>
                           </div>
                         </div>
-                      </th>                     
+                      </th>
                       <th class="text-center">Options</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(item,i) in data" :key="i">                  
+                    <tr v-for="(item,i) in data" :key="i">
                       <td>{{ i + 1 }}</td>
-                      <td>{{item.name}}</td>                   
+                      <td>{{item.name}}</td>
                       <td class="text-center">
                         <div class="btn-group">
                           <button class="btn btn-sm btn-success" @click="onDetail(item)">
@@ -45,12 +45,12 @@
                           <button class="btn btn-sm btn-primary" @click="onEdit(item)"
                             :disabled="isSuperAdmin">
                             <i class="fas fa-pen"></i>
-                          </button>                        
+                          </button>
                         </div>
                       </td>
                     </tr>
                   </tbody>
-                  
+
                   <table-data-loading-section
                     :self="this"/>
 
@@ -60,10 +60,10 @@
               </div>
               <!-- end table -->
 
-              <div class="card-title border-top"  
+              <div class="card-title border-top"
                 style="padding-bottom: -100px !important">
-                <pagination-section 
-                  :self="this" 
+                <pagination-section
+                  :self="this"
                   ref="pagination"/>
               </div>
             </div>
@@ -94,16 +94,17 @@ export default {
     }
   },
 
-  created() {    
+  created() {
     this.set_data([]);
-    this.onLoad();  
+    this.onLoad();
   },
 
   mounted() {
+
     this.$refs["form-option"].isExport          = false;
     this.$refs['form-option'].isFilter          = false;
     this.$refs["form-option"].isMaintenancePage = false;
-      
+
     if(this.isSuperAdmin){
       this.$refs["form-option"].isAddData = false;
     }
@@ -135,7 +136,7 @@ export default {
 
     isSuperAdmin(){
       return this.$auth.user.role === this.$store.state.setting.roles.superadmin
-    },    
+    },
   },
 
   components : {
@@ -174,7 +175,7 @@ export default {
       window.$("#modal-detail").modal("show");
     },
 
-    async onLoad(page = 1){      
+    async onLoad(page = 1){
       if(this.isLoadingData) return;
 
       this.isLoadingData            = true;
@@ -190,10 +191,14 @@ export default {
 
       if(this.result == true){
         loader.hide();
-        this.$refs['pagination'].generatePage();        
+
+        if (page == 1) {
+            this.$refs['pagination'].generatePage();
+        }
+        this.$refs['pagination'].active_page = this.parameters.params.page;
       }else{
-        this.$globalErrorToaster(this.$toaster,this.error);      
-      }  
+        this.$globalErrorToaster(this.$toaster,this.error);
+      }
 
       this.isLoadingData = false;
     },
@@ -204,15 +209,15 @@ export default {
         order : column,
         sort : sort
       }
-      
+
       this.onLoad(this.parameters.params.page)
-    }    
+    }
   }
 }
 </script>
 
 <style scoped>
-/* 
+/*
 select.form-control:not([size]):not([multiple]) {
   height: calc(1.5em + .5rem + 2px);
   padding-top: 5px;

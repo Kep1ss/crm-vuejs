@@ -48,7 +48,7 @@ export default {
   deleteAllData({commit,dispatch},payload){
     return this.$axios.delete("/"+payload.url+"/destroy-all",{
         data : {
-          checkboxs : payload.checkboxs, 
+          checkboxs : payload.checkboxs,
         }
       }).then(response => {
         commit('set_result',true)
@@ -79,7 +79,7 @@ export default {
       commit('set_error',error)
     })
   },
-  
+
   genCode({commit},payload){
     return this.$axios.get('/'+payload.url+'/getcode')
       .then(response => {
@@ -90,21 +90,21 @@ export default {
   },
 
   lookUp({commit},payload){
-    let url = payload.url + (payload.query || "");  
+    let url = payload.url + (payload.query || "");
     return this.$axios.get('/'+url)
-    .then(response => {      
+    .then(response => {
       commit('set_result',true)
       switch(payload.lookup) {
         case 'province':
           commit('set_lookup_province',response.data)
-          break;        
+          break;
         case 'city':
           commit('set_lookup_city',response.data)
           break;
         case 'district':
           commit('set_lookup_district',response.data)
           break;
-      }      
+      }
     }).catch(error => {
       commit('set_result',false)
       commit('set_error', error.response)
