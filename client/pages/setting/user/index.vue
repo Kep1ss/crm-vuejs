@@ -6,24 +6,24 @@
           <div class="card">
             <div class="card-body">
               <div class="card-title">
-                <list-option-section 
-                  :self="this" 
+                <list-option-section
+                  :self="this"
                   ref="form-option"/>
               </div>
 
-              <!-- 
+              <!--
                 <div v-if="parameters.form.checkboxs.length">
-                <button class="btn btn-sm btn-danger" 
-                  data-toggle="tooltip" 
-                  data-placement="top" 
+                <button class="btn btn-sm btn-danger"
+                  data-toggle="tooltip"
+                  data-placement="top"
                   data-original-title="Hapus Semua Data"
                   @click="onDeleteAll()"
                   v-if="parameters.params.soft_deleted != 'deleted'">
                   <i class="fas fa-trash"></i>
                 </button>
-                <button class="btn btn-sm btn-success" 
-                  data-toggle="tooltip" 
-                  data-placement="top" 
+                <button class="btn btn-sm btn-success"
+                  data-toggle="tooltip"
+                  data-placement="top"
                   data-original-title="Restore Semua Data"
                   @click="onRestoreAll()"
                   v-if="parameters.params.soft_deleted">
@@ -77,10 +77,10 @@
                       <td>
                         <span v-if="item.role === roles.superadmin" class="badge badge-danger">
                           Super Admin
-                        </span>      
+                        </span>
                         <span v-else-if="item.role === roles.manager_nasional" class="badge badge-success">
                           Manager Nasional
-                        </span>          
+                        </span>
                         <span v-else-if="item.role === roles.manager_area" class="badge badge-success">
                           Manager Area
                         </span>
@@ -107,7 +107,7 @@
                         </span>
                         <span v-else-if="item.role === roles.admin_kaper" class="badge badge-warning">
                           Admin Kaper
-                        </span>                                                               
+                        </span>
                       </td>
                       <td class="text-center">
                         <div class="btn-group">
@@ -117,7 +117,7 @@
                           <button class="btn btn-sm btn-primary" @click="onEdit(item)">
                             <i class="fas fa-pen"></i>
                           </button>
-                          <!-- 
+                          <!--
                           <button class="btn btn-sm btn-danger" @click="onTrashed(item)" v-if="!item.deleted_at">
                             <i class="fas fa-trash"></i>
                           </button>
@@ -129,7 +129,7 @@
                       </td>
                     </tr>
                   </tbody>
-                  
+
                   <table-data-loading-section
                     :self="this"/>
 
@@ -139,10 +139,10 @@
               </div>
               <!-- end table -->
 
-              <div class="card-title border-top"  
+              <div class="card-title border-top"
                 style="padding-bottom: -100px !important">
-                <pagination-section 
-                  :self="this" 
+                <pagination-section
+                  :self="this"
                   ref="pagination"/>
               </div>
             </div>
@@ -159,9 +159,9 @@
       :self="this"
       ref="form-input"/>
 
-    <!-- 
+    <!--
     <filter-section
-      :self="this" 
+      :self="this"
       ref="form-filter">
       <template>
        <div class="col-md-12">
@@ -176,7 +176,7 @@
           </div>
         </div>
       </template>
-    </filter-section> 
+    </filter-section>
     -->
 
   </section>
@@ -194,15 +194,15 @@ export default {
     }
   },
 
-  created() {    
+  created() {
     this.set_data([]);
-    this.onLoad();  
+    this.onLoad();
   },
 
   mounted() {
     this.$refs["form-option"].isExport          = false;
     this.$refs['form-option'].isFilter          = false;
-    this.$refs["form-option"].isMaintenancePage = false;  
+    this.$refs["form-option"].isMaintenancePage = false;
   },
 
   data() {
@@ -221,23 +221,23 @@ export default {
           all         : '',
           per_page    : 10,
           page        : 1,
-        },        
+        },
         form : {
           checkboxs : []
-        },        
+        },
         loadings : {
           isDelete  : false,
-          isRestore : false,          
+          isRestore : false,
         }
-      }    
+      }
     }
   },
 
 
   computed : {
     ...mapState('modulSetting',['data','error','result']),
-     roles(){  
-      return this.$store.state.setting.roles     
+     roles(){
+      return this.$store.state.setting.roles
      }
   },
 
@@ -266,10 +266,10 @@ export default {
     },
 
     onEdit(item){
-      this.$refs["form-input"].isEditable = true;      
+      this.$refs["form-input"].isEditable = true;
       this.$refs["form-input"].parameters.form = {...item};
-      window.$("#modal-form").modal("show");    
-      this.$refs["form-input"].$refs['form-validate'].reset();  
+      window.$("#modal-form").modal("show");
+      this.$refs["form-input"].$refs['form-validate'].reset();
     },
 
     onDetail(item){
@@ -277,7 +277,7 @@ export default {
       window.$("#modal-detail").modal("show");
     },
 
-    async onLoad(page = 1){      
+    async onLoad(page = 1){
       if(this.isLoadingData) return;
 
       this.isLoadingData            = true;
@@ -298,16 +298,16 @@ export default {
 
       if(this.result == true){
         loader.hide();
-        this.$refs['pagination'].generatePage();        
+        this.$refs['pagination'].active_page = this.parameters.params.page;
       }else{
-        this.$globalErrorToaster(this.$toaster,this.error);      
-      }  
+        this.$globalErrorToaster(this.$toaster,this.error);
+      }
 
       this.isLoadingData = false;
     },
 
-    // onTrashed(item){    
-    //   if(this.parameters.loadings.isDelete) return 
+    // onTrashed(item){
+    //   if(this.parameters.loadings.isDelete) return
 
     //   this.$confirm({
     //     auth: false,
@@ -317,7 +317,7 @@ export default {
     //       yes: 'Yes'
     //     },
     //     callback: async confirm => {
-    //       if (confirm) {            
+    //       if (confirm) {
     //         this.parameters.loadings.isDelete = true;
 
     //         await this.deleteData({
@@ -325,12 +325,12 @@ export default {
     //           id  :  item.id,
     //           params : this.parameters.params
     //         });
-          
+
     //         if (this.result == true){
     //           this.onLoad(this.parameters.params.page)
     //           this.$toaster.success("Data berhasil di pindahkan ke dalam Trash!");
     //         }else {
-    //           this.$globalErrorToaster(this.$toaster,this.error);      
+    //           this.$globalErrorToaster(this.$toaster,this.error);
     //         }
 
     //         this.parameters.loadings.isDelete = false;
@@ -339,8 +339,8 @@ export default {
     //   });
     // },
 
-    // async onRestored(item){    
-    //   if(this.parameters.loadings.isRestore) return 
+    // async onRestored(item){
+    //   if(this.parameters.loadings.isRestore) return
 
     //   this.parameters.loadings.isRestore = true;
 
@@ -348,13 +348,13 @@ export default {
     //     url : this.parameters.url,
     //     id : item.id,
     //     params : this.parameters.params
-    //   })    
+    //   })
 
     //   if(this.result == true){
     //     this.onLoad(this.parameters.params.page)
     //     this.$toaster.success("Data berhail di restore")
     //   }else{
-    //     this.$globalErrorToaster(this.$toaster,this.error);      
+    //     this.$globalErrorToaster(this.$toaster,this.error);
     //   }
 
     //   this.parameters.loadings.isRestore = false;
@@ -366,10 +366,10 @@ export default {
     //   this.parameters.loadings.isRestore = true;
 
     //   await this.restoreAllData({
-    //     url : this.parameters.url,        
+    //     url : this.parameters.url,
     //     checkboxs : this.parameters.form.checkboxs,
     //     params : this.parameters.params
-    //   })    
+    //   })
 
     //   if(this.result == true){
     //     this.onLoad(this.parameters.params.page)
@@ -377,7 +377,7 @@ export default {
     //     document.getElementById("checkAll").checked = false;
     //     this.$toaster.success("Data berhail di restore")
     //   }else{
-    //     this.$globalErrorToaster(this.$toaster,this.error);      
+    //     this.$globalErrorToaster(this.$toaster,this.error);
     //   }
 
     //   this.parameters.loadings.isRestore = false;
@@ -386,30 +386,30 @@ export default {
     // onDeleteAll(){
     //   if(!this.parameters.form.checkboxs.length || this.parameters.loadings.isDelete) return
 
-    //   this.$confirm({       
-    //     auth: false, 
+    //   this.$confirm({
+    //     auth: false,
     //     message: "Semua Data ini akan dipindahkan ke dalam Trash. Yakin ??",
     //     button: {
     //       no: 'No',
     //       yes: 'Yes'
     //     },
     //     callback: async confirm => {
-    //       if (confirm) {          
+    //       if (confirm) {
     //         this.parameters.loadings.isDelete = true;
-            
+
     //         await this.deleteAllData({
     //           url :  this.parameters.url,
-    //           checkboxs : this.parameters.form.checkboxs,              
+    //           checkboxs : this.parameters.form.checkboxs,
     //           params : this.parameters.params
     //         });
-          
+
     //         if (this.result == true){
     //           this.onLoad()
     //           this.parameters.form.checkboxs = [];
     //           document.getElementById("checkAll").checked = false;
     //           this.$toaster.success("Data berhasil di pindahkan ke dalam Trash!");
     //         }else {
-    //           this.$globalErrorToaster(this.$toaster,this.error);      
+    //           this.$globalErrorToaster(this.$toaster,this.error);
     //         }
 
     //         this.parameters.loadings.isDelete = false;
@@ -421,9 +421,9 @@ export default {
     // onCheckAll(evt){
     //   let tmpCheckboxs = [];
 
-    //   document.querySelectorAll("input[name='checkboxs[]']").forEach(item => {      
-    //     item.checked = evt.target.checked;    
-    //     if(evt.target.checked){      
+    //   document.querySelectorAll("input[name='checkboxs[]']").forEach(item => {
+    //     item.checked = evt.target.checked;
+    //     if(evt.target.checked){
     //       tmpCheckboxs.push(item.value);
     //     }
     //   })
@@ -437,15 +437,15 @@ export default {
         order : column,
         sort : sort
       }
-      
+
       this.onLoad(this.parameters.params.page)
-    }    
+    }
   }
 }
 </script>
 
 <style scoped>
-/* 
+/*
 select.form-control:not([size]):not([multiple]) {
   height: calc(1.5em + .5rem + 2px);
   padding-top: 5px;
