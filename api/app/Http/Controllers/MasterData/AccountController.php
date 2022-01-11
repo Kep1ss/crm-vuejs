@@ -9,9 +9,10 @@ use App\Models\User;
 use App\Helpers\FormatResponse;
 use App\Http\Requests\{
     AccountRequest,
-    CheckAllRequest 
+    CheckAllRequest
 };
 use Illuminate\Support\Str;
+
 use App\Traits\{
     RoleControllerAdminTrait,
     ConstructControllerSuperAdminTrait
@@ -37,7 +38,7 @@ class AccountController extends Controller
         $data->with(["district" => function($q){
                 $q->select("id","name")
                     ->with(["city" => function($qcity){
-                        $qcity->select("id","name")  
+                        $qcity->select("id","name")
                             ->with(["province" => function($qprovince){
                                 $qprovince->select("id","name");
                             }]);
@@ -51,8 +52,8 @@ class AccountController extends Controller
                 $data->onlyTrashed();
             }else if($request->soft_deleted == "all"){
                 $data->withTrashed();
-            }          
-        }        
+            }
+        }
 
         if($request->filled("search")){
             $data->where(function($q) use ($request) {
@@ -60,7 +61,7 @@ class AccountController extends Controller
                     ->orWhere("fullname","like","%".$request->search."%")
                     ->orWhere("email","like","%".$request->search."%");
             });
-        }    
+        }
 
         if(auth()->user()->role !== User::ROLE_SUPERADMIN){
             if(in_array(auth()->user()->role,$this->role_admins)){
@@ -77,8 +78,8 @@ class AccountController extends Controller
             $data = $data->paginate($request->per_page ?? 10);
         }else{
             $data = $data->get();
-        }                   
-    
+        }
+
         return $data;
     }
 
@@ -89,7 +90,7 @@ class AccountController extends Controller
      */
     public function index(Request $request)
     {
-        return response()->json($this->indexFilter());                
+        return response()->json($this->indexFilter());
     }
 
     /**
@@ -100,9 +101,9 @@ class AccountController extends Controller
      */
     public function store(AccountRequest $request)
     {
-        try{    
+        try{
             \DB::beginTransaction();
-    
+
             $user = User::create([
                 "password" => \Hash::make($request->password),
                 "username" => Str::slug($request->username,'-'),
@@ -138,13 +139,13 @@ class AccountController extends Controller
      */
     public function update(AccountRequest $request,User $account)
     {
-        try{    
+        try{
             \DB::beginTransaction();
-            
+
             $payload = $request->validated();
             $payload["username"] = Str::slug($payload["username"],'-');
-            
-            if($request->filled("password")){   
+
+            if($request->filled("password")){
                 $payload["password"] = \Hash::make($request->password);
             }else{
                 unset($payload["password"]);
@@ -180,14 +181,14 @@ class AccountController extends Controller
      */
     // public function destroy(User $account)
     // {
-    //     try{    
+    //     try{
     //         \DB::beginTransaction();
 
     //         throw_if(
     //             $account->id == auth()->user()->id,
     //             new \Exception("Anda tidak dapat menghapus diri anda sendiri",422)
-    //         );            
-            
+    //         );
+
     //         // RELASIONAL DELETE
 
     //         $account->delete();
@@ -201,7 +202,7 @@ class AccountController extends Controller
     //                 'table' => 'users'
     //             ])
     //             ->log('Deleted Data');
-                
+
     //         \DB::commit();
     //         return response()->json([
     //             "status" => true
@@ -220,12 +221,12 @@ class AccountController extends Controller
      */
     // public function restore($id){
     //     try{
-    //         \DB::beginTransaction(); 
-                 
+    //         \DB::beginTransaction();
+
     //         $user = User::withTrashed()->findOrFail($id);
 
     //         $user->restore();
-            
+
     //         activity()
     //             ->performedOn($user)
     //             ->causedBy(auth()->user())
@@ -247,7 +248,7 @@ class AccountController extends Controller
     // }
 
     /**
-     * Remove all listing of the resource 
+     * Remove all listing of the resource
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -264,13 +265,13 @@ class AccountController extends Controller
     //         // RELASIONAL DELETE
 
     //         User::whereIn("id",$request->checkboxs)
-    //             ->delete();  
-                
-    //         activity()        
+    //             ->delete();
+
+    //         activity()
     //             ->causedBy(auth()->user())
-    //             ->withProperties([            
-    //                 'id' => $request->checkboxs,  
-    //                 'table' => 'users'                  
+    //             ->withProperties([
+    //                 'id' => $request->checkboxs,
+    //                 'table' => 'users'
     //             ])
     //             ->log('Deleted All Data');
 
@@ -285,24 +286,24 @@ class AccountController extends Controller
     // }
 
     /**
-     * Restore all listing of the resource 
+     * Restore all listing of the resource
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     // public function restoreAll(CheckAllRequest $request){
     //     try{
-    //         \DB::beginTransaction();            
+    //         \DB::beginTransaction();
 
     //         User::withTrashed()
     //             ->whereIn("id",$request->checkboxs)
-    //             ->restore();    
+    //             ->restore();
 
-    //         activity()        
+    //         activity()
     //             ->causedBy(auth()->user())
-    //             ->withProperties([            
-    //                 'id' => $request->checkboxs,  
-    //                 'table' => 'users'                  
+    //             ->withProperties([
+    //                 'id' => $request->checkboxs,
+    //                 'table' => 'users'
     //             ])
     //             ->log('Restore All Data');
 
@@ -313,39 +314,39 @@ class AccountController extends Controller
     //     }catch(\Exception $e){
     //         \DB::rollback();
     //         return FormatResponse::failed($e);
-    //     }   
+    //     }
     // }
 
     /**
-     * Export the listing of the resource 
+     * Export the listing of the resource
      *
      * @param  $type excel | pdf
      * @return \Illuminate\Http\Response
-     */   
+     */
     // public function export($type){
-    //     $filetype = $type == 'pdf' 
-    //         ? 'user.pdf' 
+    //     $filetype = $type == 'pdf'
+    //         ? 'user.pdf'
     //         : 'user.xlsx';
 
-    //     $extension =  $type == "pdf" 
-    //         ? \Maatwebsite\Excel\Excel::DOMPDF 
+    //     $extension =  $type == "pdf"
+    //         ? \Maatwebsite\Excel\Excel::DOMPDF
     //         : \Maatwebsite\Excel\Excel::XLSX;
 
-    //     return \Excel::download(new UserExport($this->indexFilter()),$filetype,$extension);        
+    //     return \Excel::download(new UserExport($this->indexFilter()),$filetype,$extension);
     // }
- 
+
     /**
-     * Print the listing of the resource 
-     *     
+     * Print the listing of the resource
+     *
      * @return \Illuminate\Http\Response
-     */   
+     */
     // public function print(){
     //     $pdf = \PDF::loadview('exports/users',[
-    //           "data" => !request()->filled("all") 
-    //             ? $this->indexFilter()->getCollection() 
+    //           "data" => !request()->filled("all")
+    //             ? $this->indexFilter()->getCollection()
     //             : $this->indexFilter()
     //     ]);
-        
+
     //     return  $pdf->stream();
     // }
 }
