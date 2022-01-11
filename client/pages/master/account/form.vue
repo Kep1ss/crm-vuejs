@@ -333,21 +333,21 @@ export default {
        let roles = this.$store.state.setting.roles
        let user = this.$auth.user;
 
-       return [roles.manager_nasional].includes(user.role);
+       return [roles.manager_nasional,roles.admin_nasional].includes(user.role) && this.parameters.form.role !== roles.admin_nasional;
      },
 
      isShowCity(){
        let roles = this.$store.state.setting.roles
        let user = this.$auth.user;
 
-       return [roles.manager_area].includes(user.role);
+       return [roles.manager_area,roles.admin_area].includes(user.role) && this.parameters.form.role !== roles.admin_area;
      },
 
      isShowDistrict(){
-      let roles = this.$store.state.setting.roles
+       let roles = this.$store.state.setting.roles
        let user = this.$auth.user;
 
-       return [roles.kaper].includes(user.role);
+       return [roles.kaper,roles.admin_kaper].includes(user.role) && this.parameters.form.role !== roles.admin_kaper;
      }
   },
 

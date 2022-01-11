@@ -63,15 +63,12 @@ class IsCheckRole
                 }
             }
 
-            if(in_array("district",$routeName) && !in_array("index",$routeName)){
-                if(in_array(auth()->user()->role,[
-                    User::ROLE_SALES,
-                    User::ROLE_MANAGER_NASIONAL,
-                    User::ROLE_ADMIN_NASIONAL,
+            if(in_array("city",$routeName) && !in_array("index",$routeName)){
+                if(!in_array(auth()->user()->role,[
                     User::ROLE_MANAGER_AREA,
-                    User::ROLE_ADMIN_AREA,                
-                    User::ROLE_KOTELE,
-                    User::ROLE_TELE_MARKETING
+                    User::ROLE_ADMIN_AREA,
+
+                    User::ROLE_SUPERADMIN
                 ])){
                     return response()->json([
                         "message" => "Unauthorized"
@@ -79,19 +76,40 @@ class IsCheckRole
                 }
             }
 
-            if(in_array("city",$routeName) && !in_array("index",$routeName)){
-                if(in_array(auth()->user()->role,[
-                    User::ROLE_SALES,
-                    User::ROLE_MANAGER_NASIONAL,
-                    User::ROLE_ADMIN_NASIONAL,
-                    User::ROLE_KOTELE,
-                    User::ROLE_TELE_MARKETING
+            if(in_array("district",$routeName) && !in_array("index",$routeName)){
+                if(!in_array(auth()->user()->role,[
+                    User::ROLE_KAPER,
+                    User::ROLE_ADMIN_KAPER,
+
+                    User::ROLE_SUPERADMIN
                 ])){
                     return response()->json([
                         "message" => "Unauthorized"
                     ],401);
                 }
             }
+
+            if(in_array("school",$routeName) && !in_array("index",$routeName)){
+                if(in_array(auth()->user()->role,[
+                    User::ROLE_SALES
+                ])){
+                    return response()->json([
+                        "message" => "Unauthorized"
+                    ],401);
+                }
+            }
+
+            // if(in_array("school",$routeName) && !in_array("index",$routeName)){
+            //     if(!in_array(auth()->user()->role,[
+            //         User::ROLE_SALES,
+
+            //         User::ROLE_SUPERADMIN
+            //     ])){
+            //         return response()->json([
+            //             "message" => "Unauthorized"
+            //         ],401);
+            //     }
+            // }
         }
 
         /* MODULE ACTIVITY */

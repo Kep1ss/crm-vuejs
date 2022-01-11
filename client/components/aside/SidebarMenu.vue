@@ -167,7 +167,7 @@ export default {
       menu_account(){
         let roles = this.$store.state.setting.roles;
 
-        return ![
+        return ![          
           roles.sales,
           roles.tele_marketing,
         ].includes(this.$auth.user.role)
@@ -187,30 +187,18 @@ export default {
       menu_city(){
         let roles = this.$store.state.setting.roles;
     
-        return ![    
-          roles.sales,
-          roles.manager_nasional,
-          roles.admin_nasional,
-          roles.kotele,
-          roles.tele_marketing,
-          roles.admin_kaper,
-          roles.kaper,
-          roles.spv
+        return [    
+          roles.manager_area,
+          roles.admin_area
         ].includes(this.$auth.user.role)
       },
 
       menu_district(){
         let roles = this.$store.state.setting.roles;
     
-        return ![    
-          roles.sales,
-          roles.manager_nasional,
-          roles.admin_nasional,
-          roles.manager_area,
-          roles.admin_area,
-          roles.kotele,
-          roles.tele_marketing,
-          roles.spv
+        return [    
+          roles.kaper,
+          roles.admin_kaper
         ].includes(this.$auth.user.role)
       },
 
@@ -223,12 +211,13 @@ export default {
       },
 
       menu_customer_sales(){
-        let roles = this.$store.state.setting.roles;
+        return true;
+        // let roles = this.$store.state.setting.roles;
 
-        return [
-          roles.sales,
-          roles.superadmin
-        ].includes(this.$auth.user.role);
+        // return [
+        //   roles.sales,
+        //   roles.superadmin
+        // ].includes(this.$auth.user.role);
       },
     /* MODULE MASTER DATA */
 
