@@ -22,7 +22,10 @@ class AccountRequest extends FormRequest
             "fullname" => "nullable|max:255",
             "email" => "required|max:255|unique:users",
             "password" => "required|min:8",
-            "role" => "required|integer"
+            "role" => "required|integer",
+            "province_id" => "nullable",
+            "city_id" => "nullable",
+            "district_id" => "nullable"
         ];
 
         $role = "";
@@ -58,7 +61,19 @@ class AccountRequest extends FormRequest
         }
 
         $rules["role"] = $rules["role"].$role;
+    
+        if(in_array(auth()->user()->role,[User::ROLE_MANAGER_NASIONAL,User::ROLE_ADMIN_NASIONAL])){
+            $rules["province_id"] = "required|integer|exists:provinces,id";
+        }
 
+        if(in_array(auth()->user()->role,[User::ROLE_MANAGER_AREA,User::ROLE_ADMIN_AREA])){
+            $rules["city_id"] = "required|integer|exists:cities,id";
+        }
+        
+        if(in_array(auth()->user()->role,[User::ROLE_KAPER,User::ROLE_ADMIN_KAPER])){
+            $rules["district_id"] = "required|integer|exists:districts,id";
+        }
+    
         if($this->method() == "PUT" || $this->method() == "put"){
             $rules["email"] = $rules["email"].",email,".$this->account->id;
             $rules["username"] = $rules["username"].",username,".$this->account->id;

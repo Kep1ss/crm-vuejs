@@ -37,6 +37,7 @@
                   </ValidationProvider>                                                         
                 </div>
 
+                <!-- 
                 <div class="col">
                   <ValidationProvider 
                     name="district_id"
@@ -78,6 +79,7 @@
                     </div>                           
                   </ValidationProvider> 
                 </div>
+                -->
               </div>
 
               <div class="form-group">

@@ -18,7 +18,7 @@ class DistrictRequest extends FormRequest
     {
         return [
             "name" => "required|max:50",
-            "city_id" => "required|integer|exists:cities,id"
+            // "city_id" => "required|integer|exists:cities,id"
         ];
     }
 }

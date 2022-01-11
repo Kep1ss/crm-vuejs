@@ -34,6 +34,7 @@
                 </div>
               </ValidationProvider>                                                         
 
+              <!--
               <ValidationProvider 
                 name="city_id"
                 rules="required">                        
@@ -72,7 +73,8 @@
                       {{ errors[0] }}
                     </div>                
                 </div>                           
-              </ValidationProvider> 
+              </ValidationProvider>
+              -->
             </div>
 
             <modal-footer-section     

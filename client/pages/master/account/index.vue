@@ -111,7 +111,18 @@
                         </span>
                       </td>
                       <td>
-                        {{item.district ? item.district.name : '-'}}
+                        <div v-if="[roles.manager_area,roles.admin_area].includes(item.role)">
+                          {{item.province ? item.province.name : '-'}}
+                        </div>
+                        <div v-else-if="[roles.kaper,roles.admin_kaper].includes(item.role)">
+                          {{item.city ? item.city.name : '-'}}
+                        </div>
+                        <div v-else-if="[roles.spv].includes(item.role)">
+                          {{item.district ? item.district.name : '-'}}
+                        </div>
+                        <div v-else>
+                          -
+                        </div>
                       </td>
                       <td class="text-center">
                         <div class="btn-group">
@@ -283,7 +294,12 @@ export default {
 
     onEdit(item){
       this.$refs["form-input"].isEditable = true;
-      this.$refs["form-input"].parameters.form = {...item};
+      this.$refs["form-input"].parameters.form = {
+        ...item,
+        province_id : item.province,
+        city_id : item.city,
+        district_id : item.district
+      };
       window.$("#modal-form").modal("show");
       this.$refs["form-input"].$refs['form-validate'].reset();
     },

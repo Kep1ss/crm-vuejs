@@ -45,6 +45,7 @@
                 </select>
               </div>
 
+              <!--
               <ValidationProvider 
                 name="province_id"
                 rules="required">                        
@@ -84,6 +85,7 @@
                     </div>                
                 </div>                           
               </ValidationProvider> 
+              -->
             </div>
 
             <modal-footer-section     

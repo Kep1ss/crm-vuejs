@@ -18,7 +18,7 @@ class SchoolRequest extends FormRequest
     {
         return [
             "name" => "required|max:50",
-            "district_id" => "required|integer|exists:districts,id",
+            // "district_id" => "required|integer|exists:districts,id",
             "member" => "required|integer",
             "level" => "required|in:TK,SD,SMP,SMA,SMK,SLB",
             "is_private" => "required|integer|in:0,1",

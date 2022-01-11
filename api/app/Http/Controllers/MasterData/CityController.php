@@ -43,7 +43,7 @@ class CityController extends Controller
                 $q->orWhere("name","like","%".$request->search."%");                
             });
 
-            if(!$request->filled("province_id")){
+            if(!$request->filled("province_id") && !auth()->user()->province_id){
                 $data->orWhereHas("province",function($q) use ($request){        
                     $q->where("name","like","%".$request->search."%");                   
                 });
@@ -54,9 +54,13 @@ class CityController extends Controller
             $data->where("is_city",intval($request->is_city));
         }
 
-        if($request->filled("province_id")){
+        if($request->filled("province_id") && !auth()->user()->province_id){
             $data->where("province_id",$request->province_id)
                 ->whereNotNull("code");
+        }
+
+        if(!$request->filled("province_id") && auth()->user()->province_id){
+            $data->where("province_id",auth()->user()->province_id);
         }
 
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
@@ -92,7 +96,9 @@ class CityController extends Controller
         try{    
             \DB::beginTransaction();
             
-            $city = City::create($request->validated());
+            $city = City::create([
+                "province_id" => auth()->user()->province_id,
+            ] + $request->validated());
 
             activity()
                 ->performedOn($city)

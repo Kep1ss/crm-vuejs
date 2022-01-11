@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\{
     School,
     Setting,
-    District
+    District,
+    User
 };
 use App\Helpers\FormatResponse;
 use App\Http\Requests\{
@@ -67,6 +68,30 @@ class SchoolController extends Controller
         if($request->filled("is_private")){
             $data->where("is_private",intval($request->is_private));
         }
+        
+        if(in_array(auth()->user()->role,[
+            User::ROLE_MANAGER_AREA,
+        ])){
+            $data->whereHas("district.city.province",function($q){
+                $q->where("id",auth()->user()->province_id);
+            });
+        }
+
+        if(in_array(auth()->user()->role,[            
+            User::ROLE_KAPER,            
+        ])){
+            $data->whereHas("district.city",function($q){
+                $q->where("id",auth()->user()->city_id);
+            });
+        }
+
+        if(in_array(auth()->user()->role,[    
+            User::ROLE_SPV,    
+        ])){
+            $data->whereHas("district",function($q){
+                $q->where("id",auth()->user()->district_id);
+            });
+        }
 
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
 
@@ -101,7 +126,9 @@ class SchoolController extends Controller
         try{    
             \DB::beginTransaction();
             
-            $school = School::create($request->validated());
+            $school = School::create([
+                "district_id" => auth()->user()->district_id,
+            ] + $request->validated());
 
             activity()
                 ->performedOn($school)
@@ -221,6 +248,13 @@ class SchoolController extends Controller
                     "level" => strtoupper($item["level"])
                 ]);
             }
+
+            activity()            
+                ->causedBy(auth()->user())
+                ->withProperties([                
+                    'table' => 'schools'
+                ])
+                ->log('Save School Data');                
 
             \DB::commit();
             return response()->json([

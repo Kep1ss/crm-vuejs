@@ -37,10 +37,17 @@
           <span>Data Kecamatan</span>
         </nuxt-link>      
 
-        <nuxt-link class="nav-link" to="/master/school">
+        <nuxt-link class="nav-link" to="/master/school"
+          v-if="menu_school">
           <i class="fas fa-school"></i>
           <span>Data Sekolah</span>
         </nuxt-link>      
+
+        <nuxt-link class="nav-link" to="/master/customer-sales"
+          v-if="menu_customer_sales">
+          <i class="fas fa-money-bill-wave-alt"></i>
+          <span>Data Pelanggan</span>
+        </nuxt-link>
       </li>
       <!-- END MASTER DATA -->
 
@@ -134,6 +141,7 @@
 </template>
 
 <script>
+import NuxtLogo from '../NuxtLogo.vue';
 export default {
   computed: {
     roles(){
@@ -168,8 +176,7 @@ export default {
       menu_province(){
         let roles = this.$store.state.setting.roles;
 
-        return [    
-          roles.kotele,
+        return [          
           roles.manager_nasional,
           roles.admin_nasional,
           
@@ -186,6 +193,9 @@ export default {
           roles.admin_nasional,
           roles.kotele,
           roles.tele_marketing,
+          roles.admin_kaper,
+          roles.kaper,
+          roles.spv
         ].includes(this.$auth.user.role)
       },
 
@@ -196,9 +206,29 @@ export default {
           roles.sales,
           roles.manager_nasional,
           roles.admin_nasional,
+          roles.manager_area,
+          roles.admin_area,
           roles.kotele,
           roles.tele_marketing,
+          roles.spv
         ].includes(this.$auth.user.role)
+      },
+
+      menu_school(){
+        let roles = this.$store.state.setting.roles;
+
+        return ![
+          roles.sales
+        ].includes(this.$auth.user.role);
+      },
+
+      menu_customer_sales(){
+        let roles = this.$store.state.setting.roles;
+
+        return [
+          roles.sales,
+          roles.superadmin
+        ].includes(this.$auth.user.role);
       },
     /* MODULE MASTER DATA */
 

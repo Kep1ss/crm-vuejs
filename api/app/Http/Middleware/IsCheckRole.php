@@ -52,7 +52,6 @@ class IsCheckRole
 
             if(in_array("province",$routeName) && !in_array("index",$routeName)){
                 if(!in_array(auth()->user()->role,[
-                    User::ROLE_KOTELE,
                     User::ROLE_MANAGER_NASIONAL,
                     User::ROLE_ADMIN_NASIONAL,
         
@@ -69,6 +68,8 @@ class IsCheckRole
                     User::ROLE_SALES,
                     User::ROLE_MANAGER_NASIONAL,
                     User::ROLE_ADMIN_NASIONAL,
+                    User::ROLE_MANAGER_AREA,
+                    User::ROLE_ADMIN_AREA,                
                     User::ROLE_KOTELE,
                     User::ROLE_TELE_MARKETING
                 ])){

@@ -55,11 +55,11 @@
                         </div>                           
                     </ValidationProvider> 
 
-                      <ValidationProvider 
+                    <ValidationProvider 
                         name="city_id"
                         rules="required">                        
                         <div class="form-group" slot-scope="{errors,valid}">             
-                        <label for="city_id">Kota</label>                        
+                        <label for="city_id">Kota / Kabupaten</label>                        
                         <input type="hidden"
                             id="city_id" 
                             class="form-control" 
@@ -262,6 +262,8 @@
 import { mapActions,mapState } from 'vuex'
 
 export default {
+  middleware : ["isSpv"],
+
   data() { 
     return {
         isStopSearchProvince : false,

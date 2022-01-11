@@ -48,7 +48,7 @@ class DistrictController extends Controller
                 $q->orWhere("name","like","%".$request->search."%");                
             });
 
-            if(!$request->filled("city_id")){
+            if(!$request->filled("city_id") && !auth()->user()->city_id){
                 $data->orWhereHas("city",function($q) use ($request){
                     $q->where("name","like","%".$request->search."%");
                 });            
@@ -59,9 +59,13 @@ class DistrictController extends Controller
             }
         }    
 
-        if($request->filled("city_id")){
+        if($request->filled("city_id") && !auth()->user()->city_id){
             $data->where("city_id",$request->city_id)
                 ->whereNotNull("code");
+        }
+
+        if(!$request->filled("city_id") && auth()->user()->city_id){
+            $data->where("city_id",auth()->user()->city_id);
         }
 
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
@@ -97,7 +101,9 @@ class DistrictController extends Controller
         try{    
             \DB::beginTransaction();
             
-            $district = District::create($request->validated());
+            $district = District::create([
+                "city_id" => auth()->user()->city_id
+            ] + $request->validated());
 
             activity()
                 ->performedOn($district)
@@ -111,7 +117,8 @@ class DistrictController extends Controller
 
             \DB::commit();
             return response()->json([
-                "status" => true
+                "status" => true,
+                "district" => $district
             ]);
         }catch(\Exception $e){
             \DB::rollback();

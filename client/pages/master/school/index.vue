@@ -10,7 +10,8 @@
                   :self="this" 
                   ref="form-option">
                   <template>
-                    <nuxt-link to="/master/school/download" class="btn btn-primary btn-sm">
+                    <nuxt-link to="/master/school/download" class="btn btn-primary btn-sm"
+                      v-if="isCan">
                       <i class="fas fa-download"></i>
                       Download Data Sekolah Dari Dapodik
                     </nuxt-link>
@@ -112,7 +113,7 @@
                             <i class="fas fa-info-circle"></i>
                           </button>
                           <button class="btn btn-sm btn-primary" @click="onEdit(item)"
-                            :disabled="isSuperAdmin">
+                            :disabled="!isCan">
                             <i class="fas fa-pen"></i>
                           </button>                        
                         </div>
@@ -203,11 +204,8 @@ export default {
   mounted() {
     this.$refs["form-option"].isExport          = false;
     this.$refs['form-option'].isFilter          = true;
-    this.$refs["form-option"].isMaintenancePage = false;
-      
-    if(this.isSuperAdmin){
-      this.$refs["form-option"].isAddData = false;
-    }
+    this.$refs["form-option"].isMaintenancePage = false;  
+    this.$refs["form-option"].isAddData = this.isCan;    
   },
 
   data() {
@@ -249,9 +247,10 @@ export default {
   computed : {
     ...mapState('modulMaster',['data','error','result']),
 
-    isSuperAdmin(){
-      return this.$auth.user.role === this.$store.state.setting.roles.superadmin
-    },    
+    isCan(){
+      let roles = this.$store.state.setting.roles;
+      return [roles.spv].includes(this.$auth.user.role); 
+    }
   },
 
   components : {

@@ -101,35 +101,36 @@
                 </select>
               </div>                               
 
-              <!-- <ValidationProvider 
+              <ValidationProvider 
                 name="province_id"
-                rules="required">                        
+                rules="required"
+                v-if="isShowProvince">                        
                 <div class="form-group" slot-scope="{errors,valid}">             
-                  <label for="reseller_id">Province</label>                        
+                  <label for="province_id">Provinsi</label>                        
                   <input type="hidden"
                     id="province_id" 
                     class="form-control" 
                     name="province_id"                      
-                    v-model="form.province_id"
+                    v-model="parameters.form.province_id"
                     :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')"/> 
                                     
                     <v-select                           
                       :class="errors[0] ? 'border rounded-lg border-danger' : (valid ? 'border rounded-lg border-success' : '')"                         
-                      label="reseller_name"   
+                      label="name"   
                       :loading="isLoadingGetProvince"
-                      :options="provinces"
+                      :options="lookup_province.data"
                       :filterable="false"
                       @search="onGetProvince"
-                      v-model="form.province">              
+                      v-model="parameters.form.province_id">              
                       <li slot-scope="{search}" slot="list-footer"
                         class="d-flex justify-content-between"
-                        v-if="resellers.length || search">
-                        <a v-if="resellers_pagination.current_page > 1" 
-                          @click="onGetReseller(search,false)"
+                        v-if="lookup_province.length || search">
+                        <a v-if="lookup_province.current_page > 1" 
+                          @click="onGetProvince(search,false)"
                           class="flex-fill bg-primary text-white text-center"
                           href="#">Sebelumnya</a>
-                        <a v-if="resellers_pagination.last_page > resellers_pagination.current_page" 
-                          @click="onGetReseller(search,true)"
+                        <a v-if="lookup_province.last_page > lookup_province.current_page" 
+                          @click="onGetProvince(search,true)"
                           class="flex-fill bg-primary text-white text-center"
                           href="#">Selanjutnya</a>
                       </li> 
@@ -137,14 +138,91 @@
 
                     <div class="invalid-feedback" v-if="errors[0]">
                       {{ errors[0] }}
-                    </div>      
-
-                    <div class="text-help pt-2" style="font-size:11px"
-                      v-if="!errors[0]">                         
-                      <nuxt-link to="/master/resellers" target="_blank">Tambahkan Reseller</nuxt-link>
-                    </div>                                               
+                    </div>                                                                  
                 </div>                           
-              </ValidationProvider> -->
+              </ValidationProvider> 
+
+              <ValidationProvider 
+                name="city_id"
+                rules="required"
+                v-if="isShowCity">                        
+                <div class="form-group" slot-scope="{errors,valid}">             
+                  <label for="city_id">Kota / Kabupaten</label>                        
+                  <input type="hidden"
+                    id="city_id" 
+                    class="form-control" 
+                    name="city_id"                      
+                    v-model="parameters.form.city_id"
+                    :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')"/> 
+                                    
+                    <v-select                           
+                      :class="errors[0] ? 'border rounded-lg border-danger' : (valid ? 'border rounded-lg border-success' : '')"                         
+                      label="name"   
+                      :loading="isLoadingGetCity"
+                      :options="lookup_city.data"
+                      :filterable="false"
+                      @search="onGetCity"
+                      v-model="parameters.form.city_id">              
+                      <li slot-scope="{search}" slot="list-footer"
+                        class="d-flex justify-content-between"
+                        v-if="lookup_city.length || search">
+                        <a v-if="lookup_city.current_page > 1" 
+                          @click="onGetCity(search,false)"
+                          class="flex-fill bg-primary text-white text-center"
+                          href="#">Sebelumnya</a>
+                        <a v-if="lookup_city.last_page > lookup_city.current_page" 
+                          @click="onGetCity(search,true)"
+                          class="flex-fill bg-primary text-white text-center"
+                          href="#">Selanjutnya</a>
+                      </li> 
+                    </v-select>
+
+                    <div class="invalid-feedback" v-if="errors[0]">
+                      {{ errors[0] }}
+                    </div>                                                                  
+                </div>                           
+              </ValidationProvider> 
+
+              <ValidationProvider 
+                name="district_id"
+                rules="required"
+                v-if="isShowDistrict">
+                <div class="form-group" slot-scope="{errors,valid}">             
+                  <label for="district_id">Kecamatan</label>                        
+                  <input type="hidden"
+                    id="district_id" 
+                    class="form-control" 
+                    name="district_id"                      
+                    v-model="parameters.form.district_id"
+                    :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')"/> 
+                                    
+                    <v-select                           
+                      :class="errors[0] ? 'border rounded-lg border-danger' : (valid ? 'border rounded-lg border-success' : '')"                         
+                      label="name"   
+                      :loading="isLoadingGetDistrict"
+                      :options="lookup_district.data"
+                      :filterable="false"
+                      @search="onGetDistrict"
+                      v-model="parameters.form.district_id">              
+                      <li slot-scope="{search}" slot="list-footer"
+                        class="d-flex justify-content-between"
+                        v-if="lookup_district.length || search">
+                        <a v-if="lookup_district.current_page > 1" 
+                          @click="onGetCity(search,false)"
+                          class="flex-fill bg-primary text-white text-center"
+                          href="#">Sebelumnya</a>
+                        <a v-if="lookup_district.last_page > lookup_district.current_page" 
+                          @click="onGetCity(search,true)"
+                          class="flex-fill bg-primary text-white text-center"
+                          href="#">Selanjutnya</a>
+                      </li> 
+                    </v-select>
+
+                    <div class="invalid-feedback" v-if="errors[0]">
+                      {{ errors[0] }}
+                    </div>                                                                  
+                </div>                           
+              </ValidationProvider> 
             </div>
         
             <modal-footer-section     
@@ -168,25 +246,62 @@ export default {
 
   data() {
     return {
+      isStopSearchProvince : false,
+      isLoadingGetProvince :  false,
+      province_search : '',
+
+      isStopSearchCity : false,
+      isLoadingGetCity :  false,
+      city_search : '',
+
+      isStopSearchDistrict : false,
+      isLoadingGetDistrict :  false,
+      district_search : '',
+
       isEditable  : false,
       isLoadingForm : false,
       title: 'Akun',      
       parameters : {
         url : 'account',
         form : {
-          fullname : '',
-          username : '',
-          password : '',
-          email    : '',
-          role     : ''
+          fullname    : '',
+          username    : '',
+          password    : '',
+          email       : '',
+          role        : '',
+          province_id : '',
+          city_id     : '',
+          district_id : ''
         }
       }
     };
   },
 
+  mounted(){
+    (async () => {
+        await this.lookUp({
+            url : "province",
+            lookup : "province",
+            query : "?per_page=50"
+        });
+
+        await this.lookUp({
+            url : "city",
+            lookup : "city",
+            query : "?per_page=50"
+        });
+
+        await this.lookUp({
+            url : "district",
+            lookup : "district",
+            query : "?per_page=50"
+        })
+    })()
+  },
+
   computed :{
-     ...mapState('modulMaster',['error','result']),
-     
+     ...mapState('modulMaster',['error','result','lookup_province','lookup_city','lookup_district']),     
+
      roles(){
       if(!this.$auth.loggedIn) return {};
       
@@ -212,21 +327,157 @@ export default {
           case roles.admin_kaper:
             return this.$store.state.setting.getRoles([roles.spv],roles);
       }        
+     },
+
+     isShowProvince(){
+       let roles = this.$store.state.setting.roles
+       let user = this.$auth.user;
+
+       return [roles.manager_nasional].includes(user.role);
+     },
+
+     isShowCity(){
+       let roles = this.$store.state.setting.roles
+       let user = this.$auth.user;
+
+       return [roles.manager_area].includes(user.role);
+     },
+
+     isShowDistrict(){
+      let roles = this.$store.state.setting.roles
+       let user = this.$auth.user;
+
+       return [roles.kaper].includes(user.role);
      }
   },
 
   methods: {    
-     ...mapActions('modulMaster',['addData','updateData']),
+     ...mapActions('modulMaster',['addData','updateData','lookUp']),
 
-     async onSubmit(isInvalid){       
+    onGetProvince(search,isNext){      
+      if(!search.length && typeof isNext === "function") return false;             
+
+      clearTimeout(this.isStopSearchProvince);
+      
+      this.isStopSearchProvince = setTimeout(() => {
+        this.province_search = search;
+
+        if(typeof isNext !== "function"){
+          this.lookup_province.current_page = isNext 
+            ? this.lookup_province.current_page + 1 
+            : this.lookup_province.current_page - 1;        
+        }else{
+          this.lookup_province.current_page = 1;
+        }
+
+        this.onSearchProvince();
+      },600);        
+    },
+
+    async onSearchProvince(){
+      if(!this.isLoadingGetProvince){
+        this.isLoadingGetProvince = true;
+                
+        await this.lookUp({    
+          url : "province",      
+          lookup  : 'province',
+          query : "?search="+this.province_search+"&page="+this.lookup_province.current_page+"&per_page=50&is_get_school=true"
+        })
+
+        this.isLoadingGetProvince= false;      
+      }
+    },
+
+    onGetCity(search,isNext){      
+      if(!search.length && typeof isNext === "function") return false;             
+
+      clearTimeout(this.isStopSearchCity);
+      
+      this.isStopSearchCity = setTimeout(() => {
+        this.city_search = search;
+
+        if(typeof isNext !== "function"){
+          this.lookup_city.current_page = isNext 
+            ? this.lookup_city.current_page + 1 
+            : this.lookup_city.current_page - 1;        
+        }else{
+          this.lookup_city.current_page = 1;
+        }
+
+        this.onSearchCity();
+      },600);        
+    },
+
+    async onSearchCity(){
+      if(!this.isLoadingGetCity){
+        this.isLoadingGetCity = true;
+                
+        await this.lookUp({    
+          url : "city",      
+          lookup  : 'city',
+          query : "?search="+this.city_search+"&page="+this.lookup_city.current_page+"&per_page=50&province_id="+(typeof this.form.province_id  === 'object' ? this.form.province_id.id : 0)
+        })
+
+        this.isLoadingGetCity = false;      
+      }
+    },
+
+    onGetDistrict(search,isNext){      
+      if(!search.length && typeof isNext === "function") return false;             
+
+      clearTimeout(this.isStopSearchDistrict);
+      
+      this.isStopSearchDistrict = setTimeout(() => {
+        this.district_search = search;
+
+        if(typeof isNext !== "function"){
+          this.lookup_district.current_page = isNext 
+            ? this.lookup_district.current_page + 1 
+            : this.lookup_district.current_page - 1;        
+        }else{
+          this.lookup_district.current_page = 1;
+        }
+
+        this.onSearchDistrict();
+      },600);        
+    },
+
+    async onSearchDistrict(){
+      if(!this.isLoadingGetDistrict){
+        this.isLoadingGetDistrict = true;
+                
+        await this.lookUp({    
+          url : "district",      
+          lookup  : 'district',
+          query : "?search="+this.district_search+"&page="+this.lookup_district.current_page+"&per_page=50&city_id="+(typeof this.form.city_id  === 'object' ? this.form.city_id.id : 0)
+        })
+
+        this.isLoadingGetDistrict = false;      
+      }
+    },
+
+    async onSubmit(isInvalid){       
       if(isInvalid || this.isLoadingForm) return;            
       
       this.isLoadingForm = true;
 
+      let parameters = {
+        ...this.parameters,
+        form : {
+          ...this.parameters.form,    
+          district_id : this.parameters.form.district_id 
+            ? this.parameters.form.district_id.id : '',
+          province_id : this.parameters.form.province_id 
+            ? this.parameters.form.province_id.id : '',
+          city_id     : this.parameters.form.city_id 
+            ? this.parameters.form.city_id.id : '' 
+        }
+      }
+
       if(this.isEditable){
-        await this.updateData(this.parameters)
+        await this.updateData(parameters)
       }else{ 
-        await this.addData(this.parameters)
+        await this.addData(parameters)
       }
 
       if (this.result == true) {      
