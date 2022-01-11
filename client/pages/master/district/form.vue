@@ -91,7 +91,7 @@ import { mapActions,mapState } from 'vuex'
 export default {  
   mounted(){
     this.lookUp({    
-      url : "district/city",      
+      url : "city",      
       lookup  : 'city',
       query : "?per_page=50"
     })
@@ -184,7 +184,7 @@ export default {
         this.isLoadingGetCity = true;
                 
         await this.lookUp({    
-          url : "district/city",      
+          url : "city",      
           lookup  : 'city',
           query : "?search="+this.city_search+"&page="+this.lookup_city.current_page+"&per_page=50"
         })

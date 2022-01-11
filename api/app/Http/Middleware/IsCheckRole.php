@@ -50,7 +50,7 @@ class IsCheckRole
                 }
             }
 
-            if(in_array("province",$routeName)){
+            if(in_array("province",$routeName) && !in_array("index",$routeName)){
                 if(!in_array(auth()->user()->role,[
                     User::ROLE_KOTELE,
                     User::ROLE_MANAGER_NASIONAL,
@@ -64,7 +64,7 @@ class IsCheckRole
                 }
             }
 
-            if(in_array("district",$routeName)){
+            if(in_array("district",$routeName) && !in_array("index",$routeName)){
                 if(in_array(auth()->user()->role,[
                     User::ROLE_SALES,
                     User::ROLE_MANAGER_NASIONAL,
@@ -78,7 +78,7 @@ class IsCheckRole
                 }
             }
 
-            if(in_array("city",$routeName)){
+            if(in_array("city",$routeName) && !in_array("index",$routeName)){
                 if(in_array(auth()->user()->role,[
                     User::ROLE_SALES,
                     User::ROLE_MANAGER_NASIONAL,

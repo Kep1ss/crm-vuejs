@@ -12,15 +12,13 @@ use App\Models\{
 use App\Helpers\FormatResponse;
 use App\Http\Requests\{
     SchoolRequest,
-    SchoolGetRequest
+    SchoolGetRequest,
+    SchoolSaveRequest
 };
-use App\Traits\ConstructControllerSuperAdminTrait;
 use Illuminate\Support\Facades\Http;
 
 class SchoolController extends Controller
 {
-    use ConstructControllerSuperAdminTrait;
-
      /**
      * Display a listing of the resource Index And Export
      *
@@ -197,9 +195,39 @@ class SchoolController extends Controller
                 !$response->ok(),
                 new \Exception("Terjadi Kesalahan Saat Mengambil Data",422)
             );
-
+            
             return $response->json();
         }catch(\Exception $e){
+            return FormatResponse::failed($e);
+        }
+    }
+
+    /**
+     * Save Data School From Dapodik
+     */
+    public function saveSchool(SchoolSaveRequest $request){
+        try{
+            \DB::beginTransaction();
+            
+            foreach($request->schools as $item){        
+                School::updateOrCreate([            
+                    "code" => $item["code"]
+                ],[
+                    "district_id" => $request->district_id,
+                    "code" => $item["code"],
+                    "is_private" => $item["is_private"],
+                    "member" => $item["member"] ?? 0,
+                    "name" => $item["name"],
+                    "level" => strtoupper($item["level"])
+                ]);
+            }
+
+            \DB::commit();
+            return response()->json([
+                "message" => true 
+             ]);
+        }catch(\Exception $e){
+            \DB::rollback();
             return FormatResponse::failed($e);
         }
     }

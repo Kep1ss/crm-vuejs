@@ -61,9 +61,6 @@ Route::group(["prefix" => $version],function() use ($version) {
 	// 	Route::group(["as" => "setting.","middleware" => "is-super-admin"],function(){
 	// 		Route::get('/user/export/{type}', [UserController::class,"export"])->name("user.export");
 	// 		Route::get('/user/print',[UserController::class,"print"])->name("user.print");
-
-	// 		Route::get('/activity/export/{type}', [ActivityController::class,"export"])->name("activity.export");
-	// 		Route::get('/activity/print',[ActivityController::class,"print"])->name("activity.print");
 	// 	});		
 	// });
 	
@@ -103,14 +100,12 @@ Route::group(["prefix" => $version],function() use ($version) {
 
 			Route::apiResource("province",ProvinceController::class)->only("index","store","update");
 
-			Route::get("/city/province",[ProvinceController::class,"index"])->name("city.get-province");
 			Route::apiResource("city",CityController::class)->only("index","store","update");
 
-			Route::get("/district/city",[CityController::class,"index"])->name("district.get-city");
 			Route::apiResource("district",DistrictController::class)->only("index","store","update");	
 
 			Route::post("/school/get/dapodik",[SchoolController::class,"getSchool"])->name("school.get-dapodik");
-			Route::get("/school/district",[DistrictController::class,"index"])->name("school.get-district");
+			Route::post("/school/save/dapodik",[SchoolController::class,"saveSchool"])->name("school.save-dapodik");
 			Route::apiResource("school",SchoolController::class)->only("index","store","update");	
 		});
 
