@@ -7,14 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\District;
 use App\Helpers\FormatResponse;
 use App\Http\Requests\DistrictRequest;
-use App\Traits\{
-    ConstructControllerSuperAdminTrait
-};
 
 class DistrictController extends Controller
 {
-    use ConstructControllerSuperAdminTrait;
-
      /**
      * Display a listing of the resource Index And Export
      *

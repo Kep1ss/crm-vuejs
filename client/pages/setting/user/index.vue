@@ -114,7 +114,8 @@
                           <button class="btn btn-sm btn-success" @click="onDetail(item)">
                             <i class="fas fa-info-circle"></i>
                           </button>
-                          <button class="btn btn-sm btn-primary" @click="onEdit(item)">
+                          <button class="btn btn-sm btn-primary" @click="onEdit(item)"
+                            :disabled="![roles.manager_nasional,roles.kotele].includes(item.role)">
                             <i class="fas fa-pen"></i>
                           </button>
                           <!--
@@ -236,9 +237,9 @@ export default {
 
   computed : {
     ...mapState('modulSetting',['data','error','result']),
-     roles(){
+    roles(){
       return this.$store.state.setting.roles
-     }
+    },     
   },
 
   components : {

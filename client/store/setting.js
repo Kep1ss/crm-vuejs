@@ -8,10 +8,7 @@ const state = () => ({
       spv               : 4,
       sales             : 5,
       kotele            : 6,
-      tele_marketing    : 7,
-      admin_nasional    : 8,
-      admin_area        : 9,
-      admin_kaper       : 10
+      tele_marketing    : 7,   
     },
     getRoles(targets,roles){      
       let new_roles = {};

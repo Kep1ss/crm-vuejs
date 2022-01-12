@@ -22,59 +22,25 @@ class AccountRequest extends FormRequest
             "fullname" => "nullable|max:255",
             "email" => "required|max:255|unique:users",
             "password" => "required|min:8",
-            "role" => "required|integer",
+            "role" => "nullable",
         ];
 
-        $role = "";
-
-        switch (auth()->user()->role) {            
-            case User::ROLE_SUPERADMIN:
-                $role = "|in:".User::ROLE_MANAGER_NASIONAL.",".User::ROLE_KOTELE;
-                break;            
+        switch (auth()->user()->role) {                     
             case User::ROLE_MANAGER_NASIONAL:
-                $role = "|in:".User::ROLE_ADMIN_NASIONAL.",".User::ROLE_MANAGER_AREA;
+                $rules["role"] = "required|integer|in:".User::ROLE_MANAGER_AREA;
                 break;                        
             case User::ROLE_MANAGER_AREA:
-                $role = "|in:".User::ROLE_ADMIN_AREA.",".User::ROLE_KAPER;
+                $rules["role"] = "required|integer|in:".User::ROLE_KAPER;
                 break;        
             case User::ROLE_KAPER:
-                $role = "|in:".User::ROLE_ADMIN_KAPER.",".User::ROLE_SPV;
+                $rules["role"] = "required|integer|in:".User::ROLE_SPV;
                 break;            
             case User::ROLE_SPV:
-                $role = "|in:".User::ROLE_SALES;
+                $rules["role"] = "required|integer|in:".User::ROLE_SALES;
                 break;            
             case User::ROLE_KOTELE:
-                $role = "|in:".User::ROLE_TELE_MARKETING;
-                break;    
-            case User::ROLE_ADMIN_NASIONAL:
-                $role = "|in:".User::ROLE_MANAGER_AREA;
-                break;            
-            case User::ROLE_ADMIN_AREA:
-                $role = "|in:".User::ROLE_KAPER;
-                break;            
-            case User::ROLE_ADMIN_KAPER:
-                $role = "|in:".User::ROLE_SPV;
-                break;
-        }
-
-        $rules["role"] = $rules["role"].$role;
-    
-        if(in_array(auth()->user()->role,[User::ROLE_MANAGER_NASIONAL,User::ROLE_ADMIN_NASIONAL])){
-            if(request()->role !== User::ROLE_ADMIN_NASIONAL){
-                $rules["province_id"] = "required|integer|exists:provinces,id";
-            }
-        }
-
-        if(in_array(auth()->user()->role,[User::ROLE_MANAGER_AREA,User::ROLE_ADMIN_AREA])){
-            if(request()->role !== User::ROLE_ADMIN_AREA){
-                $rules["city_id"] = "required|integer|exists:cities,id";
-            }
-        }
-        
-        if(in_array(auth()->user()->role,[User::ROLE_KAPER,User::ROLE_ADMIN_KAPER])){
-            if(request()->role !== User::ROLE_ADMIN_KAPER){
-                $rules["district_id"] = "required|integer|exists:districts,id";
-            }
+                $rules["role"] = "required|integer|in:".User::ROLE_TELE_MARKETING;
+                break;                
         }
     
         if($this->method() == "PUT" || $this->method() == "put"){

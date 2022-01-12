@@ -44,6 +44,12 @@ class UserController extends Controller
             });
         }
 
+        $data->whereIn("role",[
+            User::ROLE_MANAGER_NASIONAL,
+            User::ROLE_KOTELE,
+            User::ROLE_SUPERADMIN
+        ]);
+
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
 
         if(!$request->filled("all")){

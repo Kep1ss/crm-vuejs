@@ -14,15 +14,9 @@ use App\Http\Requests\{
     CheckAllRequest 
 };
 use Illuminate\Support\Str;
-use App\Traits\{
-    RoleControllerAdminTrait,
-    ConstructControllerSuperAdminTrait 
-};
 
 class AnnouncementController extends Controller
 {    
-    use RoleControllerAdminTrait,ConstructControllerSuperAdminTrait;
-
     /**
      * Display a listing of the resource Index And Export
      *
@@ -34,11 +28,8 @@ class AnnouncementController extends Controller
 
         $data = Announcement::query();
         
-        $data->select("id","content","user_id","deleted_at")
-            ->with(["user" => function($q){
-                $q->select("id","username");
-            }]);
-
+        $data->select("id","content","user_id","deleted_at");
+            
         if($request->filled("soft_deleted")){
             if($request->soft_deleted == "deleted"){
                 $data->onlyTrashed();
@@ -46,26 +37,15 @@ class AnnouncementController extends Controller
                 $data->withTrashed();
             }          
         }               
-
-        if(auth()->user()->role !== USER::ROLE_SUPERADMIN){
-            if(in_array(auth()->user()->role,$this->role_admins)){
-                $data->where("user_id",auth()->user()->parent_id)
-                    ->orWhere("user_id",auth()->user()->id);
-            }else{
-                $data->where("user_id",auth()->user()->id);
-            }            
-        }
-
+     
         if($request->filled("search")){
             $data->where(function($q) use ($request) {
                 $q->orWhere("content","like","%".$request->search."%");
-            });
-
-            $data->orWhereHas("user",function($q) use ($request){
-                $q->where("username","like","%".$request->search."%");
-            });
+            });    
         }
 
+        $data->where("user_id",auth()->user()->id);
+        
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
 
         if(!$request->filled("all")){
@@ -99,7 +79,7 @@ class AnnouncementController extends Controller
             \DB::beginTransaction();
 
             $announcement = Announcement::create($request->validated() + [
-                "user_id" => $this->getCurrentUserId()
+                "user_id" => auth()->user()->id
             ]);        
 
             activity()
@@ -134,7 +114,7 @@ class AnnouncementController extends Controller
             \DB::beginTransaction();      
 
             throw_if(
-                $announcement->user_id !== $this->getCurrentUserId(),
+                $announcement->user_id !== auth()->user()->id,
                 new \Exception("Anda tidak punya hak akses",422)
             );
 
@@ -171,7 +151,7 @@ class AnnouncementController extends Controller
             \DB::beginTransaction();            
 
             throw_if(
-                $announcement->user_id !== $this->getCurrentUserId(),
+                $announcement->user_id !== auth()->user()->id,
                 new \Exception("Anda tidak punya hak akses",422)
             );
                     
@@ -206,9 +186,10 @@ class AnnouncementController extends Controller
         try{
             \DB::beginTransaction(); 
                             
-            $announcement = Announcement::withTrashed()
+            $announcement = Announcement::query()
+                ->withTrashed()
                 ->where("id",$id)
-                ->where("user_id",$this->getCurrentUserId())
+                ->where("user_id",auth()->user()->id)
                 ->firstOrFail();            
                         
             $announcement->restore();
@@ -242,7 +223,8 @@ class AnnouncementController extends Controller
         try{
             \DB::beginTransaction();
     
-            Announcement::where("user_id",$this->getCurrentUserId())        
+            Announcement::query()
+                ->where("user_id",auth()->user()->id)        
                 ->whereIn("id",$request->checkboxs)
                 ->delete();  
                 
@@ -274,8 +256,9 @@ class AnnouncementController extends Controller
         try{
             \DB::beginTransaction();            
             
-            Announcement::withTrashed()
-                ->where("user_id",$this->getCurrentUserId())
+            Announcement::query()
+                ->withTrashed()
+                ->where("user_id",auth()->user()->id)
                 ->whereIn("id",$request->checkboxs)
                 ->restore();    
 

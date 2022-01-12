@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('remember_token',100)->nullable();			
-            $table->decimal("target_copies",20,2)->default(0)->usigned();
             $table->integer("role")->default(0);
             /*
                 // ROLE =>
@@ -32,20 +31,12 @@ class CreateUsersTable extends Migration
                 5 => Sales
                 6 => Kotele
                 7 => Tele Marketing
-                8 => Admin Nasional
-                9 => Admin Area
-                10 => Admin Kaper
             */
+            $table->decimal("target_copies",20,2)->default(0)->usigned();
             $table->bigInteger("parent_id")->unsigned()->nullable();
-            $table->bigInteger("province_id")->unsigned()->nullable();
-            $table->bigInteger("city_id")->unsigned()->nullable();
-            $table->bigInteger("district_id")->unsigned()->nullable();
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign("province_id")->references("id")->on("provinces");
-            $table->foreign("city_id")->references("id")->on("cities");
-            $table->foreign("district_id")->references("id")->on("districts");
+            
             $table->foreign('parent_id')->references('id')->on('users');         
         });
     }

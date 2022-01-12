@@ -7,12 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\City;
 use App\Helpers\FormatResponse;
 use App\Http\Requests\CityRequest;
-use App\Traits\ConstructControllerSuperAdminTrait;
 
 class CityController extends Controller
 {
-    use ConstructControllerSuperAdminTrait;
-
      /**
      * Display a listing of the resource Index And Export
      *

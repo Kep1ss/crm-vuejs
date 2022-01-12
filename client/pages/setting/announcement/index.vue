@@ -36,8 +36,12 @@
                   ref="formContainer">
                   <thead>
                     <tr>
-                      <th><input type="checkbox" id="checkAll" @click="onCheckAll"
-                        :disabled="isSuperAdmin"></th>
+                      <th>
+                        <input 
+                          type="checkbox" 
+                          id="checkAll" 
+                          @click="onCheckAll"/>
+                      </th>
                       <th>No</th>
                       <th>Isi</th>
                       <th v-if="$auth.user.role === 0">Username</th>
@@ -145,10 +149,6 @@ export default {
     this.$refs["form-option"].isExport          = false;
     this.$refs['form-option'].isFilter          = false;
     this.$refs["form-option"].isMaintenancePage = true;
-
-    if(this.isSuperAdmin){
-      this.$refs["form-option"].isAddData = false;
-    }
   },
 
   data() {
@@ -182,10 +182,6 @@ export default {
 
   computed : {
     ...mapState('modulSetting',['data','error','result']),
-
-    isSuperAdmin(){
-      return this.$auth.user.role === this.$store.state.setting.roles.superadmin
-    }
   },
 
   components : {
