@@ -227,7 +227,7 @@ export default {
 
   data() {
     return {
-      title               : 'Akun',
+      title               : 'Manager Area',
       isLoadingData       : false,
       isPaginate          : true,
       parameters : {

@@ -5,9 +5,9 @@
       <!-- DASHBOARD -->
       <li class="nav-item dropdown"
         v-if="menu_dashboard">
-        <nuxt-link to="/" 
+        <nuxt-link to="/"
           class="nav-link">
-          <i class="fas fa-columns"></i> 
+          <i class="fas fa-columns"></i>
           <span>
             Dashboard
           </span>
@@ -113,13 +113,13 @@
       </li>
 
       <li class="nav-item dropdown">
-        <nuxt-link class="nav-link" 
+        <nuxt-link class="nav-link"
           to="/setting/user"
           v-if="menu_activity_history">
           <i class="fas fa-list-alt"></i>
           <span> Riwayat Aktifitas </span>
         </nuxt-link>
-        <nuxt-link class="nav-link" 
+        <nuxt-link class="nav-link"
           to="/setting/user"
           v-if="menu_yet_visted">
           <i class="fas fa-list"></i>
@@ -153,28 +153,16 @@
           <i class="fas fa-key"></i>
           <span> Ganti Password </span>
         </nuxt-link>
-<<<<<<< HEAD
-        <nuxt-link class="nav-link" to="/setting/announcement"
-          v-if="menu_announcement">
-          <i class="fas fa-scroll"></i>
-          <span> Pengumuman </span>
-        </nuxt-link>
         <nuxt-link class="nav-link" to="/setting/download-catalog"
-=======
-        <nuxt-link class="nav-link" to="/setting/download-catalog" 
->>>>>>> 490dab1e394328194773cb0d50b7228de443af7c
           v-if="$auth.user.role === roles.superadmin">
           <i class="fas fa-download"></i>
           <span> Download Catalog</span>
         </nuxt-link>
-<<<<<<< HEAD
-=======
         <nuxt-link class="nav-link" to="/setting/announcement"
           v-if="menu_announcement">
           <i class="fas fa-scroll"></i>
           <span> Pengumuman </span>
-        </nuxt-link>      
->>>>>>> 490dab1e394328194773cb0d50b7228de443af7c
+        </nuxt-link>
       </li>
       <!-- END PENGATURAN -->
     </ul>
@@ -191,12 +179,12 @@ export default {
 
     /* MODULE DASHBOARD */
       menu_dashboard(){
-        return this.roles.superadmin !== this.$auth.user.role 
+        return this.roles.superadmin !== this.$auth.user.role
       },
     /* MODULE DASHBOARD */
 
     /* MODULE SETTING */
-      menu_announcement(){      
+      menu_announcement(){
         return [
           this.roles.manager_nasional,
           this.roles.manager_area,
@@ -208,43 +196,7 @@ export default {
 
     /* MODULE MASTER DATA */
       menu_account(){
-<<<<<<< HEAD
-        let roles = this.$store.state.setting.roles;
-
-        return ![
-          roles.sales,
-          roles.tele_marketing,
-        ].includes(this.$auth.user.role)
-      },
-
-      menu_province(){
-        let roles = this.$store.state.setting.roles;
-
         return [
-          roles.manager_nasional,
-          roles.admin_nasional,
-
-          roles.superadmin
-        ].includes(this.$auth.user.role)
-      },
-
-      menu_city(){
-        let roles = this.$store.state.setting.roles;
-
-        return [
-          roles.manager_area,
-          roles.admin_area
-        ].includes(this.$auth.user.role)
-      },
-
-      menu_district(){
-        let roles = this.$store.state.setting.roles;
-
-        return [
-          roles.kaper,
-          roles.admin_kaper
-=======
-        return [          
           this.roles.manager_nasional,
           this.roles.manager_area,
           this.roles.kaper,
@@ -253,22 +205,21 @@ export default {
         ].includes(this.$auth.user.role)
       },
 
-      menu_province(){      
-        return [          
-          this.roles.manager_area    
-        ].includes(this.$auth.user.role)
-      },
-
-      menu_city(){    
-        return [    
-          this.roles.manager_area,            
-        ].includes(this.$auth.user.role)
-      },
-
-      menu_district(){        
-        return [    
+      menu_province(){
+        return [
           this.roles.manager_area
->>>>>>> 490dab1e394328194773cb0d50b7228de443af7c
+        ].includes(this.$auth.user.role)
+      },
+
+      menu_city(){
+        return [
+          this.roles.manager_area,
+        ].includes(this.$auth.user.role)
+      },
+
+      menu_district(){
+        return [
+          this.roles.manager_area
         ].includes(this.$auth.user.role)
       },
 
@@ -287,7 +238,7 @@ export default {
       },
 
       menu_customer_sales(){
-        return false;        
+        return false;
         // return [
         //   roles.sales,
         //   roles.superadmin
@@ -295,86 +246,30 @@ export default {
       },
 
       menu_master_data(){
-        return this.menu_account || 
-          this.menu_province || 
-          this.menu_city || 
-          this.menu_district || 
-          this.menu_school || 
+        return this.menu_account ||
+          this.menu_province ||
+          this.menu_city ||
+          this.menu_district ||
+          this.menu_school ||
           this.menu_customer_sales
       },
     /* MODULE MASTER DATA */
 
     /* MODULE ACTIVITY */
-<<<<<<< HEAD
       menu_set_area_sales(){
-        let roles = this.$store.state.setting.roles;
-
         return [
-          roles.spv,
-          roles.superadmin
+          this.roles.spv,
         ].includes(this.$auth.user.role)
       },
 
       menu_set_target_customer(){
-        let roles = this.$store.state.setting.roles;
-
         return [
-          roles.spv,
-          roles.superadmin
+          this.roles.spv,
         ].includes(this.$auth.user.role)
       },
 
       menu_set_target_eksemplar(){
-        let roles = this.$store.state.setting.roles;
-
         return ![
-          roles.sales,
-          roles.kotele,
-          roles.tele_marketing,
-        ].includes(this.$auth.user.role)
-      },
-
-      menu_set_target_telemaraketing(){
-        let roles = this.$store.state.setting.roles;
-
-        return [
-          roles.kotele,
-          roles.superadmin
-        ].includes(this.$auth.user.role)
-      },
-
-      menu_input_visit(){
-        let roles = this.$store.state.setting.roles;
-
-        return ![
-          roles.manager_nasional,
-          roles.admin_nasional,
-          roles.kotele,
-          roles.tele_marketing,
-        ].includes(this.$auth.user.role)
-      },
-
-      menu_input_activity_tele_marketing(){
-        let roles = this.$store.state.setting.roles;
-
-        return [
-          roles.tele_marketing,
-          roles.superadmin
-=======
-      menu_set_area_sales(){    
-        return [    
-          this.roles.spv,        
-        ].includes(this.$auth.user.role)
-      },
-
-      menu_set_target_customer(){    
-        return [    
-          this.roles.spv,        
-        ].includes(this.$auth.user.role)
-      },
-
-      menu_set_target_eksemplar(){    
-        return ![                
           this.roles.sales,
           this.roles.kotele,
           this.roles.tele_marketing,
@@ -382,51 +277,50 @@ export default {
         ].includes(this.$auth.user.role)
       },
 
-      menu_set_target_telemaraketing(){    
-        return [    
-          this.roles.kotele,    
+      menu_set_target_telemaraketing(){
+        return [
+          this.roles.kotele,
         ].includes(this.$auth.user.role)
       },
 
-      menu_input_visit(){    
-        return ![            
+      menu_input_visit(){
+        return ![
           this.roles.manager_nasional,
           this.roles.admin_nasional,
           this.roles.kotele,
-          this.roles.tele_marketing,          
+          this.roles.tele_marketing,
           this.roles.superadmin
         ].includes(this.$auth.user.role)
       },
 
-      menu_input_activity_tele_marketing(){    
-        return [    
-          this.roles.tele_marketing,      
->>>>>>> 490dab1e394328194773cb0d50b7228de443af7c
+      menu_input_activity_tele_marketing(){
+        return [
+          this.roles.tele_marketing,
         ].includes(this.$auth.user.role)
       },
 
       menu_activity(){
-        return this.menu_set_area_sales || 
-          this.menu_set_target_customer || 
-          this.menu_set_target_eksemplar || 
-          this.menu_set_target_telemaraketing || 
-          this.menu_input_visit || 
+        return this.menu_set_area_sales ||
+          this.menu_set_target_customer ||
+          this.menu_set_target_eksemplar ||
+          this.menu_set_target_telemaraketing ||
+          this.menu_input_visit ||
           this.menu_input_activity_tele_marketing
       },
     /* MODULE ACTIVITY */
 
     /* MODULE REPORT */
       menu_activity_history(){
-        return this.roles.superadmin !== this.$auth.user.role 
+        return this.roles.superadmin !== this.$auth.user.role
       },
 
       menu_yet_visted(){
-        return this.roles.superadmin !== this.$auth.user.role 
+        return this.roles.superadmin !== this.$auth.user.role
       },
 
       menu_report(){
-        return this.menu_activity_history || 
-          this.menu_yet_visted 
+        return this.menu_activity_history ||
+          this.menu_yet_visted
       },
     /* MODULE REPORT */
   }

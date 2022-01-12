@@ -1,7 +1,7 @@
 <template>
   <portal to="modal">
-    <div class="modal fade" 
-      aria-hidden="true" 
+    <div class="modal fade"
+      aria-hidden="true"
       id="modal-form">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -24,7 +24,7 @@
                       type="text"
                       class="form-control"
                       name="fullname"
-                      v-model="parameters.form.fullname"/>               
+                      v-model="parameters.form.fullname"/>
                   </div>
                 </div>
 
@@ -43,7 +43,7 @@
 
                       <div class="invalid-feedback" v-if="errors[0]">
                         {{ errors[0] }}
-                      </div>      
+                      </div>
                     </div>
                   </ValidationProvider>
                 </div>
@@ -57,16 +57,16 @@
                   <input id="email"
                     type="text"
                     class="form-control"
-                    name="email"            
+                    name="email"
                     v-model="parameters.form.email"
                     :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')">
 
                   <div class="invalid-feedback" v-if="errors[0]">
                     {{ errors[0] }}
-                  </div>      
+                  </div>
                 </div>
               </ValidationProvider>
-              
+
               <ValidationProvider
                 name="password"
                 :rules="isEditable ? 'min:8' : 'required|min:8'">
@@ -75,157 +75,21 @@
                   <input id="password"
                     type="password"
                     class="form-control"
-                    name="password"            
+                    name="password"
                     v-model="parameters.form.password"
                     :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')">
 
                   <div class="invalid-feedback" v-if="errors[0]">
                     {{ errors[0] }}
-                  </div>      
+                  </div>
                   <div class="text-muted" v-if="!errors[0] && isEditable">
                     * Isi password jika ingin mengantinya
                   </div>
                 </div>
-              </ValidationProvider>    
-          
-              <div class="form-group"
-                v-if="!isEditable">
-                <label for="role">Role</label>
-                <select class="form-control" name="role" v-model="parameters.form.role">
-                  <option value="">Pilih</option>
-                  <option v-for="item,index in Object.keys(roles)"
-                    :value="roles[item]"
-                    :key="index">
-                    {{item.split("_").join(" ").toUpperCase()}}
-                  </option>                  
-                </select>
-              </div>                               
-
-              <ValidationProvider 
-                name="province_id"
-                rules="required"
-                v-if="isShowProvince">                        
-                <div class="form-group" slot-scope="{errors,valid}">             
-                  <label for="province_id">Provinsi</label>                        
-                  <input type="hidden"
-                    id="province_id" 
-                    class="form-control" 
-                    name="province_id"                      
-                    v-model="parameters.form.province_id"
-                    :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')"/> 
-                                    
-                    <v-select                           
-                      :class="errors[0] ? 'border rounded-lg border-danger' : (valid ? 'border rounded-lg border-success' : '')"                         
-                      label="name"   
-                      :loading="isLoadingGetProvince"
-                      :options="lookup_province.data"
-                      :filterable="false"
-                      @search="onGetProvince"
-                      v-model="parameters.form.province_id">              
-                      <li slot-scope="{search}" slot="list-footer"
-                        class="d-flex justify-content-between"
-                        v-if="lookup_province.length || search">
-                        <a v-if="lookup_province.current_page > 1" 
-                          @click="onGetProvince(search,false)"
-                          class="flex-fill bg-primary text-white text-center"
-                          href="#">Sebelumnya</a>
-                        <a v-if="lookup_province.last_page > lookup_province.current_page" 
-                          @click="onGetProvince(search,true)"
-                          class="flex-fill bg-primary text-white text-center"
-                          href="#">Selanjutnya</a>
-                      </li> 
-                    </v-select>
-
-                    <div class="invalid-feedback" v-if="errors[0]">
-                      {{ errors[0] }}
-                    </div>                                                                  
-                </div>                           
-              </ValidationProvider> 
-
-              <ValidationProvider 
-                name="city_id"
-                rules="required"
-                v-if="isShowCity">                        
-                <div class="form-group" slot-scope="{errors,valid}">             
-                  <label for="city_id">Kota / Kabupaten</label>                        
-                  <input type="hidden"
-                    id="city_id" 
-                    class="form-control" 
-                    name="city_id"                      
-                    v-model="parameters.form.city_id"
-                    :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')"/> 
-                                    
-                    <v-select                           
-                      :class="errors[0] ? 'border rounded-lg border-danger' : (valid ? 'border rounded-lg border-success' : '')"                         
-                      label="name"   
-                      :loading="isLoadingGetCity"
-                      :options="lookup_city.data"
-                      :filterable="false"
-                      @search="onGetCity"
-                      v-model="parameters.form.city_id">              
-                      <li slot-scope="{search}" slot="list-footer"
-                        class="d-flex justify-content-between"
-                        v-if="lookup_city.length || search">
-                        <a v-if="lookup_city.current_page > 1" 
-                          @click="onGetCity(search,false)"
-                          class="flex-fill bg-primary text-white text-center"
-                          href="#">Sebelumnya</a>
-                        <a v-if="lookup_city.last_page > lookup_city.current_page" 
-                          @click="onGetCity(search,true)"
-                          class="flex-fill bg-primary text-white text-center"
-                          href="#">Selanjutnya</a>
-                      </li> 
-                    </v-select>
-
-                    <div class="invalid-feedback" v-if="errors[0]">
-                      {{ errors[0] }}
-                    </div>                                                                  
-                </div>                           
-              </ValidationProvider> 
-
-              <ValidationProvider 
-                name="district_id"
-                rules="required"
-                v-if="isShowDistrict">
-                <div class="form-group" slot-scope="{errors,valid}">             
-                  <label for="district_id">Kecamatan</label>                        
-                  <input type="hidden"
-                    id="district_id" 
-                    class="form-control" 
-                    name="district_id"                      
-                    v-model="parameters.form.district_id"
-                    :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')"/> 
-                                    
-                    <v-select                           
-                      :class="errors[0] ? 'border rounded-lg border-danger' : (valid ? 'border rounded-lg border-success' : '')"                         
-                      label="name"   
-                      :loading="isLoadingGetDistrict"
-                      :options="lookup_district.data"
-                      :filterable="false"
-                      @search="onGetDistrict"
-                      v-model="parameters.form.district_id">              
-                      <li slot-scope="{search}" slot="list-footer"
-                        class="d-flex justify-content-between"
-                        v-if="lookup_district.length || search">
-                        <a v-if="lookup_district.current_page > 1" 
-                          @click="onGetCity(search,false)"
-                          class="flex-fill bg-primary text-white text-center"
-                          href="#">Sebelumnya</a>
-                        <a v-if="lookup_district.last_page > lookup_district.current_page" 
-                          @click="onGetCity(search,true)"
-                          class="flex-fill bg-primary text-white text-center"
-                          href="#">Selanjutnya</a>
-                      </li> 
-                    </v-select>
-
-                    <div class="invalid-feedback" v-if="errors[0]">
-                      {{ errors[0] }}
-                    </div>                                                                  
-                </div>                           
-              </ValidationProvider> 
+              </ValidationProvider>
             </div>
-        
-            <modal-footer-section     
+
+            <modal-footer-section
               :isLoadingForm="isLoadingForm"/>
           </form>
         </ValidationObserver>
@@ -239,7 +103,7 @@
 <script>
 import { mapActions,mapState } from 'vuex'
 
-export default {  
+export default {
   middleware : ["isNotAccessable"],
 
   props: ["self"],
@@ -260,7 +124,7 @@ export default {
 
       isEditable  : false,
       isLoadingForm : false,
-      title: 'Akun',      
+      title: 'Akun',
       parameters : {
         url : 'account',
         form : {
@@ -300,16 +164,16 @@ export default {
   },
 
   computed :{
-     ...mapState('modulMaster',['error','result','lookup_province','lookup_city','lookup_district']),     
+     ...mapState('modulMaster',['error','result','lookup_province','lookup_city','lookup_district']),
 
      roles(){
       if(!this.$auth.loggedIn) return {};
-      
+
       let roles = this.$store.state.setting.roles
-      
-      switch(this.$auth.user.role){            
-          case roles.superadmin:                         
-            return this.$store.state.setting.getRoles([roles.manager_nasional,roles.kotele],roles);                    
+
+      switch(this.$auth.user.role){
+          case roles.superadmin:
+            return this.$store.state.setting.getRoles([roles.manager_nasional,roles.kotele],roles);
           case roles.manager_nasional:
             return this.$store.state.setting.getRoles([roles.admin_nasional,roles.manager_area],roles);
           case roles.manager_area:
@@ -326,7 +190,7 @@ export default {
             return this.$store.state.setting.getRoles([roles.kaper],roles);
           case roles.admin_kaper:
             return this.$store.state.setting.getRoles([roles.spv],roles);
-      }        
+      }
      },
 
      isShowProvince(){
@@ -351,141 +215,141 @@ export default {
      }
   },
 
-  methods: {    
+  methods: {
      ...mapActions('modulMaster',['addData','updateData','lookUp']),
 
-    onGetProvince(search,isNext){      
-      if(!search.length && typeof isNext === "function") return false;             
+    onGetProvince(search,isNext){
+      if(!search.length && typeof isNext === "function") return false;
 
       clearTimeout(this.isStopSearchProvince);
-      
+
       this.isStopSearchProvince = setTimeout(() => {
         this.province_search = search;
 
         if(typeof isNext !== "function"){
-          this.lookup_province.current_page = isNext 
-            ? this.lookup_province.current_page + 1 
-            : this.lookup_province.current_page - 1;        
+          this.lookup_province.current_page = isNext
+            ? this.lookup_province.current_page + 1
+            : this.lookup_province.current_page - 1;
         }else{
           this.lookup_province.current_page = 1;
         }
 
         this.onSearchProvince();
-      },600);        
+      },600);
     },
 
     async onSearchProvince(){
       if(!this.isLoadingGetProvince){
         this.isLoadingGetProvince = true;
-                
-        await this.lookUp({    
-          url : "province",      
+
+        await this.lookUp({
+          url : "province",
           lookup  : 'province',
           query : "?search="+this.province_search+"&page="+this.lookup_province.current_page+"&per_page=50&is_get_school=true"
         })
 
-        this.isLoadingGetProvince= false;      
+        this.isLoadingGetProvince= false;
       }
     },
 
-    onGetCity(search,isNext){      
-      if(!search.length && typeof isNext === "function") return false;             
+    onGetCity(search,isNext){
+      if(!search.length && typeof isNext === "function") return false;
 
       clearTimeout(this.isStopSearchCity);
-      
+
       this.isStopSearchCity = setTimeout(() => {
         this.city_search = search;
 
         if(typeof isNext !== "function"){
-          this.lookup_city.current_page = isNext 
-            ? this.lookup_city.current_page + 1 
-            : this.lookup_city.current_page - 1;        
+          this.lookup_city.current_page = isNext
+            ? this.lookup_city.current_page + 1
+            : this.lookup_city.current_page - 1;
         }else{
           this.lookup_city.current_page = 1;
         }
 
         this.onSearchCity();
-      },600);        
+      },600);
     },
 
     async onSearchCity(){
       if(!this.isLoadingGetCity){
         this.isLoadingGetCity = true;
-                
-        await this.lookUp({    
-          url : "city",      
+
+        await this.lookUp({
+          url : "city",
           lookup  : 'city',
           query : "?search="+this.city_search+"&page="+this.lookup_city.current_page+"&per_page=50&province_id="+(typeof this.form.province_id  === 'object' ? this.form.province_id.id : 0)
         })
 
-        this.isLoadingGetCity = false;      
+        this.isLoadingGetCity = false;
       }
     },
 
-    onGetDistrict(search,isNext){      
-      if(!search.length && typeof isNext === "function") return false;             
+    onGetDistrict(search,isNext){
+      if(!search.length && typeof isNext === "function") return false;
 
       clearTimeout(this.isStopSearchDistrict);
-      
+
       this.isStopSearchDistrict = setTimeout(() => {
         this.district_search = search;
 
         if(typeof isNext !== "function"){
-          this.lookup_district.current_page = isNext 
-            ? this.lookup_district.current_page + 1 
-            : this.lookup_district.current_page - 1;        
+          this.lookup_district.current_page = isNext
+            ? this.lookup_district.current_page + 1
+            : this.lookup_district.current_page - 1;
         }else{
           this.lookup_district.current_page = 1;
         }
 
         this.onSearchDistrict();
-      },600);        
+      },600);
     },
 
     async onSearchDistrict(){
       if(!this.isLoadingGetDistrict){
         this.isLoadingGetDistrict = true;
-                
-        await this.lookUp({    
-          url : "district",      
+
+        await this.lookUp({
+          url : "district",
           lookup  : 'district',
           query : "?search="+this.district_search+"&page="+this.lookup_district.current_page+"&per_page=50&city_id="+(typeof this.form.city_id  === 'object' ? this.form.city_id.id : 0)
         })
 
-        this.isLoadingGetDistrict = false;      
+        this.isLoadingGetDistrict = false;
       }
     },
 
-    async onSubmit(isInvalid){       
-      if(isInvalid || this.isLoadingForm) return;            
-      
+    async onSubmit(isInvalid){
+      if(isInvalid || this.isLoadingForm) return;
+
       this.isLoadingForm = true;
 
       let parameters = {
         ...this.parameters,
         form : {
-          ...this.parameters.form,    
-          district_id : this.parameters.form.district_id 
+          ...this.parameters.form,
+          district_id : this.parameters.form.district_id
             ? this.parameters.form.district_id.id : '',
-          province_id : this.parameters.form.province_id 
+          province_id : this.parameters.form.province_id
             ? this.parameters.form.province_id.id : '',
-          city_id     : this.parameters.form.city_id 
-            ? this.parameters.form.city_id.id : '' 
+          city_id     : this.parameters.form.city_id
+            ? this.parameters.form.city_id.id : ''
         }
       }
 
       if(this.isEditable){
         await this.updateData(parameters)
-      }else{ 
+      }else{
         await this.addData(parameters)
       }
 
-      if (this.result == true) {      
-        this.self.onLoad(this.self.parameters.params.page);  
+      if (this.result == true) {
+        this.self.onLoad(this.self.parameters.params.page);
         this.$toaster.success('Data berhasil di '+ (this.isEditable == true ? 'Diedit': 'Tambah'));
         window.$("#modal-form").modal("hide");
       }else {
-        this.$globalErrorToaster(this.$toaster,this.error);      
+        this.$globalErrorToaster(this.$toaster,this.error);
       }
 
       this.isLoadingForm = false;
