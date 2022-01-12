@@ -18,7 +18,8 @@ class CityRequest extends FormRequest
     {
         return [
             "name" => "required|max:50",
-            "province_id" => "required|integer|exists:provinces,id"
+            "is_city" => "required|integer|in:1,0"
+            // "province_id" => "required|integer|exists:provinces,id"
         ];
     }
 }

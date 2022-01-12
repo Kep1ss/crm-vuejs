@@ -14,34 +14,34 @@
             </div>
      
             <div class="modal-body">
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <label for="name">Nama</label>
-                    <div>{{parameters.form.name}}</div>
-                  </div>
-                </div>  
-                <div class="col">
-                  <div class="form-group">
-                    <label for="is_city">Status</label>
-                    <div>
-                      <span class="badge badge-danger" v-if="parameters.form.is_city">
-                        Kota
-                      </span>
-                      <span class="badge badge-success" v-else>
-                        Kabupaten
-                      </span>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="name">Nama</label>
+                      <div>{{parameters.form.name}}</div>
+                    </div>
+                  </div>  
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="is_city">Status</label>
+                      <div>
+                        <span class="badge badge-danger" v-if="parameters.form.is_city">
+                          Kota
+                        </span>
+                        <span class="badge badge-success" v-else>
+                          Kabupaten
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-                </div>
-
-                  <div class="form-group">
-                    <label for="province_id">Province</label> 
-                    <div>
-                      {{parameters.form.province ? parameters.form.province.name : '-'}}
-                    </div>
+                
+                <div class="form-group">
+                  <label for="province">Provinsi</label> 
+                  <div>
+                    {{parameters.form.province ? parameters.form.province.name : '-'}}
                   </div>
+                </div>
             </div>            
         </div>
       </div>
@@ -61,6 +61,7 @@ export default {
         form : {
           name : '',
           province : '',
+          province_id : '',
           is_city : 0
         }
       }

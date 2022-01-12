@@ -6,11 +6,11 @@
           <div class="card">
             <div class="card-body">
               <div class="card-title">
-                <list-option-section
-                  :self="this"
+                <list-option-section 
+                  :self="this" 
                   ref="form-option"/>
               </div>
-
+                                  
               <!-- start table -->
               <div class="table-responsive">
                 <table class="table table-striped table-sm vld-parent"
@@ -29,25 +29,18 @@
                               :class="parameters.params.order == 'name' && parameters.params.sort == 'desc' ? '' : 'light-gray'"></i>
                           </div>
                         </div>
-                      </th>       
-                      <th>Status</th>              
+                      </th>                   
+                      <th>Kota</th>
                       <th>Provinsi</th>
                       <th class="text-center">Options</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(item,i) in data" :key="i">
+                    <tr v-for="(item,i) in data" :key="i">                  
                       <td>{{ i + 1 }}</td>
-                      <td>{{item.name}}</td>
-                      <td>
-                        <span class="badge badge-danger" v-if="item.is_city">
-                          Kota
-                        </span>
-                        <span class="badge badge-success" v-else>
-                          Kabupaten
-                        </span>
-                      </td>
-                      <td>{{item.province ? item.province.name : '-'}}
+                      <td>{{item.name}}</td>                      
+                      <td>{{item.city ? item.city.name : '-'}}</td>
+                      <td>{{item.city ? (item.city.province ? item.city.province.name : '-') : '-'}}                 
                       <td class="text-center">
                         <div class="btn-group">
                           <button class="btn btn-sm btn-success" @click="onDetail(item)">
@@ -56,12 +49,12 @@
                           <button class="btn btn-sm btn-primary" @click="onEdit(item)"
                             :disabled="isSuperAdmin">
                             <i class="fas fa-pen"></i>
-                          </button>
+                          </button>                        
                         </div>
                       </td>
                     </tr>
                   </tbody>
-
+                  
                   <table-data-loading-section
                     :self="this"/>
 
@@ -71,10 +64,10 @@
               </div>
               <!-- end table -->
 
-              <div class="card-title border-top"
+              <div class="card-title border-top"  
                 style="padding-bottom: -100px !important">
-                <pagination-section
-                  :self="this"
+                <pagination-section 
+                  :self="this" 
                   ref="pagination"/>
               </div>
             </div>
@@ -91,23 +84,6 @@
       :self="this"
       ref="form-input"/>
 
-    <filter-section
-      :self="this"
-      ref="form-filter">
-      <template>
-       <div class="col-md-12">
-          <div class="form-group">
-            <label for="is_city">Status</label>
-            <select name="is_city" v-model="parameters.params.is_city" class="form-control">
-              <option value="">Pilih</option>
-              <option value="0">Kabupaten</option>
-              <option value="1">Kota</option>
-            </select>
-          </div>
-        </div>
-      </template>
-    </filter-section>
-
   </section>
 </template>
 
@@ -123,18 +99,16 @@ export default {
     }
   },
 
-  created() {
+  created() {    
     this.set_data([]);
-    this.onLoad();
-
+    this.onLoad();    
   },
 
   mounted() {
-
     this.$refs["form-option"].isExport          = false;
-    this.$refs['form-option'].isFilter          = true;
+    this.$refs['form-option'].isFilter          = false;
     this.$refs["form-option"].isMaintenancePage = false;
-
+      
     if(this.isSuperAdmin){
       this.$refs["form-option"].isAddData = false;
     }
@@ -142,11 +116,11 @@ export default {
 
   data() {
     return {
-      title               : 'Kota',
+      title               : 'Kecamatan',
       isLoadingData       : false,
       isPaginate          : true,
       parameters : {
-        url : 'city',
+        url : 'district',
         params :{
           soft_deleted : '',
           search      : '',
@@ -155,18 +129,7 @@ export default {
           all         : '',
           per_page    : 10,
           page        : 1,
-          is_city     : ""
-        },
-        default_params :  {
-          soft_deleted : '',
-          search      : '',
-          order       : 'id',
-          sort        : 'desc',
-          all         : '',
-          per_page    : 10,
-          page        : 1,
-          is_city     : ""
-        }       
+        }
       }    
     }
   },
@@ -177,7 +140,7 @@ export default {
 
     isSuperAdmin(){
       return this.$auth.user.role === this.$store.state.setting.roles.superadmin
-    },
+    },    
   },
 
   components : {
@@ -193,9 +156,8 @@ export default {
     onFormShow(){
       this.$refs["form-input"].parameters.form = {
         name : '',
-        is_city : 0,
-        province : '',
-        province_id : ''
+        city : '',
+        city_id : ''
       };
 
       this.$refs["form-input"].isEditable = false;
@@ -204,13 +166,13 @@ export default {
     },
 
     onEdit(item){
-      this.$refs["form-input"].isEditable = true;
+      this.$refs["form-input"].isEditable = true;      
       this.$refs["form-input"].parameters.form = {
         ...item,
-        province_id : item.province,
+        city_id : item.city,
       };
-      window.$("#modal-form").modal("show");
-      this.$refs["form-input"].$refs['form-validate'].reset();
+      window.$("#modal-form").modal("show");    
+      this.$refs["form-input"].$refs['form-validate'].reset();  
     },
 
     onDetail(item){
@@ -220,7 +182,7 @@ export default {
       window.$("#modal-detail").modal("show");
     },
 
-    async onLoad(page = 1){
+    async onLoad(page = 1){      
       if(this.isLoadingData) return;
 
       this.isLoadingData            = true;
@@ -236,13 +198,14 @@ export default {
 
       if(this.result == true){
         loader.hide();
+
         if (page == 1) {
             this.$refs['pagination'].generatePage();
         }
-        this.$refs['pagination'].active_page = this.parameters.params.page;
+        this.$refs['pagination'].active_page = this.parameters.params.page;    
       }else{
-        this.$globalErrorToaster(this.$toaster,this.error);
-      }
+        this.$globalErrorToaster(this.$toaster,this.error);      
+      }  
 
       this.isLoadingData = false;
     },
@@ -253,15 +216,15 @@ export default {
         order : column,
         sort : sort
       }
-
+      
       this.onLoad(this.parameters.params.page)
-    }
+    }    
   }
 }
 </script>
 
 <style scoped>
-/*
+/* 
 select.form-control:not([size]):not([multiple]) {
   height: calc(1.5em + .5rem + 2px);
   padding-top: 5px;

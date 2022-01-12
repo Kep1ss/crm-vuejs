@@ -22,7 +22,7 @@ class SettingController extends Controller
     public function index(){
         return response()->json(
             Setting::select("name","value")
-                ->whereIn("name",["email","company_name","phone","address","logo","header_color"])
+                ->whereIn("name",["email","company_name","phone","address","logo","header_color","dapodik_url","dapodik_school_id"])
                 ->get()
         );
     }

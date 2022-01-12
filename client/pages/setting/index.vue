@@ -130,6 +130,34 @@
                   <input type="color" class="form-control" v-model="form.header_color"/>
                 </div>
 
+                <ValidationProvider
+                    name="dapodik_url"
+                    rules="required">
+                    <div class="form-group col" slot-scope="{errors,valid}">              
+                      <label for="dapodik_url">Dapodik Url</label>
+                      <input type="text" class="form-control" v-model="form.dapodik_url" :class="errors[0] ? 'is-invalid' : (valid ? 'is-valid' : '')"/>
+                      <div class="invalid-feedback" v-if="errors[0]">
+                        {{ errors[0] }}
+                      </div>
+                      <div class="text-muted text-info" v-else>
+                        * Dapodik Url Digunakan untuk mengambil/download data sekolah
+                      </div>
+                  </div>
+                </ValidationProvider>
+
+                
+                <div class="form-group col">     
+                  <label for="dapodik_school_id">Dapdoik Id Level (Untuk Sekolah)</label>
+                  <input type="text" class="form-control" v-model="form.dapodik_school_id" disabled/>              
+                  <div class="text-muted text-info">
+                    * Id Level Wilayah Digunakan untuk mengambil/download data sekolah sekolah  <br/>
+                    0 => Provinsi  <br/> 
+                    1 => Kabupaten / Kota <br/>
+                    2 => Kecamatan <br/>
+                    3 => Sekolah
+                  </div>
+                </div>
+                
               </div>
               <div class="card-footer text-right">
                 <button class="btn btn-primary"
@@ -170,7 +198,9 @@ export default {
         email : '',
         phone : '',
         logo : '',
-        header_color : ''
+        header_color : '',
+        dapodik_url : '',
+        dapodik_school_id : ''
       },
 
       isLoadingForm : false,

@@ -116,8 +116,7 @@ export default {
       isLoadingData       : false,
       isPaginate          : true,
       parameters : {
-        url : 'province',
-        type : 'pdf',
+        url : 'province',    
         params :{
           soft_deleted : '',
           search      : '',
@@ -126,27 +125,14 @@ export default {
           all         : '',
           per_page    : 10,
           page        : 1,
-        },
-        form : {
-          checkboxs : []
-        },
-        loadings : {
-          isDelete  : false,
-          isRestore : false,
-        }
-      }
+        }             
+      }    
     }
   },
 
 
   computed : {
     ...mapState('modulMaster',['data','error','result']),
-
-
-
-    roles(){
-      return this.$store.state.setting.roles
-    },
 
     isSuperAdmin(){
       return this.$auth.user.role === this.$store.state.setting.roles.superadmin
@@ -174,14 +160,18 @@ export default {
     },
 
     onEdit(item){
-      this.$refs["form-input"].isEditable = true;
-      this.$refs["form-input"].parameters.form = {...item};
-      window.$("#modal-form").modal("show");
-      this.$refs["form-input"].$refs['form-validate'].reset();
+      this.$refs["form-input"].isEditable = true;      
+      this.$refs["form-input"].parameters.form = {
+        ...item
+      };
+      window.$("#modal-form").modal("show");    
+      this.$refs["form-input"].$refs['form-validate'].reset();  
     },
 
     onDetail(item){
-      this.$refs["modal-detail"].parameters.form = {...item};
+      this.$refs["modal-detail"].parameters.form = {
+        ...item
+      };
       window.$("#modal-detail").modal("show");
     },
 

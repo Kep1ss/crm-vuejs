@@ -4,12 +4,14 @@ namespace App\Http\Controllers\MasterData;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\City;
+use App\Models\District;
 use App\Helpers\FormatResponse;
-use App\Http\Requests\CityRequest;
-use App\Traits\ConstructControllerSuperAdminTrait;
+use App\Http\Requests\DistrictRequest;
+use App\Traits\{
+    ConstructControllerSuperAdminTrait
+};
 
-class CityController extends Controller
+class DistrictController extends Controller
 {
     use ConstructControllerSuperAdminTrait;
 
@@ -22,12 +24,15 @@ class CityController extends Controller
     public function indexFilter(){
         $request = request();
 
-        $data = City::query();
+        $data = District::query();
 
-        $data->select("id","name","is_city","province_id");
+        $data->select("id","name","city_id");
 
-        $data->with(["province" => function($q){
-            $q->select("id","name");
+        $data->with(["city" => function($q){
+            $q->select("id","name","is_city","province_id") 
+                ->with(["province" => function($qp){
+                    $qp->select("id","name");
+                }]);
         }]);
 
         if($request->filled("soft_deleted")){
@@ -37,30 +42,30 @@ class CityController extends Controller
                 $data->withTrashed();
             }          
         }        
-            
+
         if($request->filled("search")){
             $data->where(function($q) use ($request) {
                 $q->orWhere("name","like","%".$request->search."%");                
             });
 
-            if(!$request->filled("province_id") && !auth()->user()->province_id){
-                $data->orWhereHas("province",function($q) use ($request){        
-                    $q->where("name","like","%".$request->search."%");                   
+            if(!$request->filled("city_id") && !auth()->user()->city_id){
+                $data->orWhereHas("city",function($q) use ($request){
+                    $q->where("name","like","%".$request->search."%");
+                });            
+
+                $data->orWhereHas("city.province",function($q) use ($request){
+                    $q->where("name","like","%".$request->search."%");
                 });
             }
-        }   
-        
-        if($request->filled("is_city")){
-            $data->where("is_city",intval($request->is_city));
-        }
+        }    
 
-        if($request->filled("province_id") && !auth()->user()->province_id){
-            $data->where("province_id",$request->province_id)
+        if($request->filled("city_id") && !auth()->user()->city_id){
+            $data->where("city_id",$request->city_id)
                 ->whereNotNull("code");
         }
 
-        if(!$request->filled("province_id") && auth()->user()->province_id){
-            $data->where("province_id",auth()->user()->province_id);
+        if(!$request->filled("city_id") && auth()->user()->city_id){
+            $data->where("city_id",auth()->user()->city_id);
         }
 
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
@@ -91,28 +96,29 @@ class CityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CityRequest $request)
+    public function store(DistrictRequest $request)
     {
         try{    
             \DB::beginTransaction();
             
-            $city = City::create([
-                "province_id" => auth()->user()->province_id,
+            $district = District::create([
+                "city_id" => auth()->user()->city_id
             ] + $request->validated());
 
             activity()
-                ->performedOn($city)
+                ->performedOn($district)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'name' => $city->name,
-                    'id' => $city->id,
-                    'table' => 'cities'
+                    'name' => $district->name,
+                    'id' => $district->id,
+                    'table' => 'districts'
                 ])
                 ->log('Created Data');
 
             \DB::commit();
             return response()->json([
-                "status" => true
+                "status" => true,
+                "district" => $district
             ]);
         }catch(\Exception $e){
             \DB::rollback();
@@ -127,20 +133,20 @@ class CityController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CityRequest $request, City $city)
+    public function update(DistrictRequest $request, District $district)
     {
         try{    
             \DB::beginTransaction();
                         
-            $city->update($request->validated());
+            $district->update($request->validated());
 
             activity()
-                ->performedOn($city)
+                ->performedOn($district)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'name' => $city->name,
-                    'id' => $city->id,
-                    'table' => 'cities'
+                    'name' => $district->name,
+                    'id' => $district->id,
+                    'table' => 'districts'
                 ])
                 ->log('Upadated Data');
 

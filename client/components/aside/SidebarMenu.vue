@@ -17,30 +17,42 @@
           v-if="menu_account">
           <i class="fas fa-user-circle"></i>
           <span>Data Akun</span>
-        </nuxt-link>   
-          
+        </nuxt-link>
+
         <nuxt-link class="nav-link" to="/master/province"
           v-if="menu_province">
           <i class="fas fa-map"></i>
           <span>Data Provinsi</span>
-        </nuxt-link>      
+        </nuxt-link>
 
         <nuxt-link class="nav-link" to="/master/city"
           v-if="menu_city">
           <i class="fas fa-route"></i>
           <span>Data Kaputen/Kota</span>
-        </nuxt-link>      
+        </nuxt-link>
 
-        <nuxt-link class="nav-link" to="/master/school"
+        <nuxt-link class="nav-link" to="/master/district"
          v-if="menu_district">
           <i class="fas fa-location-arrow"></i>
           <span>Data Kecamatan</span>
-        </nuxt-link>      
+        </nuxt-link>
 
-        <nuxt-link class="nav-link" to="/master/school">
+        <nuxt-link class="nav-link" to="/master/school"
+          v-if="menu_school">
           <i class="fas fa-school"></i>
           <span>Data Sekolah</span>
-        </nuxt-link>      
+        </nuxt-link>
+        <nuxt-link class="nav-link" to="/master/manager-area"
+          v-if="menu_manager_area">
+          <i class="fas fa-money-bill-wave-alt"></i>
+          <span>Manager Area</span>
+        </nuxt-link>
+
+        <nuxt-link class="nav-link" to="/master/customer-sales"
+          v-if="menu_customer_sales">
+          <i class="fas fa-money-bill-wave-alt"></i>
+          <span>Data Pelanggan</span>
+        </nuxt-link>
       </li>
       <!-- END MASTER DATA -->
 
@@ -61,7 +73,7 @@
           v-if="menu_set_target_eksemplar">
           <i class="far fa-chart-bar"></i>
           <span> Set Target Eksemplar</span>
-        </nuxt-link>  
+        </nuxt-link>
         <nuxt-link class="nav-link" to="/setting/user"
           v-if="menu_set_target_telemaraketing">
           <i class="fas fa-chart-line"></i>
@@ -78,7 +90,7 @@
           <!-- Input Aktivitas tele_marketing -->
           <span> Input Aktivitas Tele</span>
         </nuxt-link>
-      </li> 
+      </li>
       <!-- ACIVITY -->
 
       <!-- REPORT -->
@@ -91,7 +103,7 @@
         <nuxt-link class="nav-link" to="/setting/user">
           <i class="fas fa-list"></i>
           <span> Belum Dikunjungi </span>
-        </nuxt-link>      
+        </nuxt-link>
       </li>
       <!-- REPORT -->
 
@@ -122,11 +134,11 @@
           <i class="fas fa-scroll"></i>
           <span> Pengumuman </span>
         </nuxt-link>
-        <nuxt-link class="nav-link" to="/setting/download-catalog" 
+        <nuxt-link class="nav-link" to="/setting/download-catalog"
           v-if="$auth.user.role === roles.superadmin">
           <i class="fas fa-download"></i>
           <span> Download Catalog</span>
-        </nuxt-link>      
+        </nuxt-link>
       </li>
       <!-- END PENGATURAN -->
     </ul>
@@ -134,6 +146,7 @@
 </template>
 
 <script>
+import NuxtLogo from '../NuxtLogo.vue';
 export default {
   computed: {
     roles(){
@@ -168,45 +181,64 @@ export default {
       menu_province(){
         let roles = this.$store.state.setting.roles;
 
-        return [    
-          roles.kotele,
+        return [
           roles.manager_nasional,
           roles.admin_nasional,
-          
+
           roles.superadmin
         ].includes(this.$auth.user.role)
       },
 
       menu_city(){
         let roles = this.$store.state.setting.roles;
-    
-        return ![    
-          roles.sales,
-          roles.manager_nasional,
-          roles.admin_nasional,
-          roles.kotele,
-          roles.tele_marketing,
+
+        return [
+          roles.manager_area,
+          roles.admin_area
         ].includes(this.$auth.user.role)
       },
 
       menu_district(){
         let roles = this.$store.state.setting.roles;
-    
-        return ![    
-          roles.sales,
-          roles.manager_nasional,
-          roles.admin_nasional,
-          roles.kotele,
-          roles.tele_marketing,
+
+        return [
+          roles.kaper,
+          roles.admin_kaper
         ].includes(this.$auth.user.role)
+      },
+
+      menu_school(){
+        let roles = this.$store.state.setting.roles;
+
+        return ![
+          roles.sales
+        ].includes(this.$auth.user.role);
+      },
+
+      menu_manager_area(){
+        let roles = this.$store.state.setting.roles;
+
+        return [
+          roles.manager_nasional,
+        ].includes(this.$auth.user.role);
+      },
+
+      menu_customer_sales(){
+        return true;
+        // let roles = this.$store.state.setting.roles;
+
+        // return [
+        //   roles.sales,
+        //   roles.superadmin
+        // ].includes(this.$auth.user.role);
       },
     /* MODULE MASTER DATA */
 
     /* MODULE ACTIVITY */
       menu_set_area_sales(){
         let roles = this.$store.state.setting.roles;
-    
-        return [    
+
+        return [
           roles.spv,
           roles.superadmin
         ].includes(this.$auth.user.role)
@@ -214,8 +246,8 @@ export default {
 
       menu_set_target_customer(){
         let roles = this.$store.state.setting.roles;
-    
-        return [    
+
+        return [
           roles.spv,
           roles.superadmin
         ].includes(this.$auth.user.role)
@@ -223,8 +255,8 @@ export default {
 
       menu_set_target_eksemplar(){
         let roles = this.$store.state.setting.roles;
-    
-        return ![                
+
+        return ![
           roles.sales,
           roles.kotele,
           roles.tele_marketing,
@@ -233,8 +265,8 @@ export default {
 
       menu_set_target_telemaraketing(){
         let roles = this.$store.state.setting.roles;
-    
-        return [    
+
+        return [
           roles.kotele,
           roles.superadmin
         ].includes(this.$auth.user.role)
@@ -242,19 +274,19 @@ export default {
 
       menu_input_visit(){
         let roles = this.$store.state.setting.roles;
-    
-        return ![            
+
+        return ![
           roles.manager_nasional,
           roles.admin_nasional,
           roles.kotele,
-          roles.tele_marketing,          
+          roles.tele_marketing,
         ].includes(this.$auth.user.role)
       },
 
       menu_input_activity_tele_marketing(){
         let roles = this.$store.state.setting.roles;
-    
-        return [    
+
+        return [
           roles.tele_marketing,
           roles.superadmin
         ].includes(this.$auth.user.role)

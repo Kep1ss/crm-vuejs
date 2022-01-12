@@ -14,14 +14,10 @@
             </div>
      
             <div class="modal-body">
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <label for="fullname">Nama</label>
-                    <div>{{parameters.form.name}}</div>
-                  </div>
-                </div>            
-              </div>                         
+              <div class="form-group">
+                <label for="name">Nama</label>
+                <div>{{parameters.form.name}}</div>
+              </div>             
             </div>            
         </div>
       </div>
@@ -43,12 +39,6 @@ export default {
         }
       }
     };
-  },
-
-  computed: {
-    roles(){      
-      return this.$store.state.setting.roles     
-     }
-  }
+  }  
 };
 </script>

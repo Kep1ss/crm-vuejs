@@ -11,4 +11,8 @@ class School extends Model
     use HasFactory,SoftDeletes;
     
     protected $guarded = [];
+
+    public function district(){
+        return $this->belongsTo(District::class);
+    }
 }

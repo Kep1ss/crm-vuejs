@@ -7,9 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Province;
 use App\Helpers\FormatResponse;
 use App\Http\Requests\ProvinceRequest;
-use App\Traits\{
-    ConstructControllerSuperAdminTrait
-};
+use App\Traits\ConstructControllerSuperAdminTrait;
 
 class ProvinceController extends Controller
 {
@@ -41,7 +39,11 @@ class ProvinceController extends Controller
                 $q->orWhere("name","like","%".$request->search."%");
             });
         }    
-    
+        
+        if($request->filled("is_get_school")){
+            $data->whereNotNull("code");
+        }
+
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
 
         if(!$request->filled("all")){

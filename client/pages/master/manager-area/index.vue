@@ -43,7 +43,7 @@
                       <th @click="onSort('username',parameters.params.sort == 'asc' ? 'desc' : 'asc')"
                         class="cursor-pointer">
                         <div class="d-flex flex-row justify-content-between align-items-baseline">
-                          <div>Username</div>
+                          <div>Nama</div>
                           <div>
                             <i class="fas fa-caret-up"
                               :class="parameters.params.order == 'username' && parameters.params.sort == 'asc' ? '' : 'light-gray'"></i>
@@ -231,7 +231,7 @@ export default {
       isLoadingData       : false,
       isPaginate          : true,
       parameters : {
-        url : 'account',
+        url : 'manager-area',
         type : 'pdf',
         params :{
           soft_deleted : '',

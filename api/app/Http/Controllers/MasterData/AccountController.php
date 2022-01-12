@@ -33,19 +33,23 @@ class AccountController extends Controller
 
         $data = User::query();
 
-        $data->select("id","username","fullname","email","role","parent_id","district_id","deleted_at");
+        $data->select("id","username","fullname","email","role","parent_id","district_id","province_id","city_id","deleted_at");
+
+        $data->with(["province" => function($q){
+            $q->select("id","name");
+        }]);
+
+        $data->with(["city" => function($q){
+            $q->select("id","name");
+        }]);
 
         $data->with(["district" => function($q){
-                $q->select("id","name")
-                    ->with(["city" => function($qcity){
-                        $qcity->select("id","name")
-                            ->with(["province" => function($qprovince){
-                                $qprovince->select("id","name");
-                            }]);
-                    }]);
-            },"parent" => function($q){
-                $q->select("id","username","role");
-            }]);
+            $q->select("id","name");
+        }]);
+
+     $data->with(["parent" => function($q){
+            $q->select("id","username","role");
+        }]);
 
         if($request->filled("soft_deleted")){
             if($request->soft_deleted == "deleted"){
@@ -172,181 +176,4 @@ class AccountController extends Controller
             return FormatResponse::failed($e);
         }
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function destroy(User $account)
-    // {
-    //     try{
-    //         \DB::beginTransaction();
-
-    //         throw_if(
-    //             $account->id == auth()->user()->id,
-    //             new \Exception("Anda tidak dapat menghapus diri anda sendiri",422)
-    //         );
-
-    //         // RELASIONAL DELETE
-
-    //         $account->delete();
-
-    //         activity()
-    //             ->performedOn($user)
-    //             ->causedBy(auth()->user())
-    //             ->withProperties([
-    //                 'name' => $user->username,
-    //                 'id' => $user->id,
-    //                 'table' => 'users'
-    //             ])
-    //             ->log('Deleted Data');
-
-    //         \DB::commit();
-    //         return response()->json([
-    //             "status" => true
-    //         ]);
-    //     }catch(\Exception $e){
-    //         \DB::rollback();
-    //         return FormatResponse::failed($e);
-    //     }
-    // }
-
-    /**
-     * Restore the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function restore($id){
-    //     try{
-    //         \DB::beginTransaction();
-
-    //         $user = User::withTrashed()->findOrFail($id);
-
-    //         $user->restore();
-
-    //         activity()
-    //             ->performedOn($user)
-    //             ->causedBy(auth()->user())
-    //             ->withProperties([
-    //                 'name' => $user->username,
-    //                 'id' => $user->id,
-    //                 'table' => 'users'
-    //             ])
-    //             ->log('Restore Data');
-
-    //         \DB::commit();
-    //         return response()->json([
-    //             "status" => true
-    //         ]);
-    //     }catch(\Exception $e){
-    //         \DB::rollback();
-    //         return FormatResponse::failed($e);
-    //     }
-    // }
-
-    /**
-     * Remove all listing of the resource
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    // public function destroyAll(CheckAllRequest $request){
-    //     try{
-    //         \DB::beginTransaction();
-
-    //         throw_if(
-    //             in_array(auth()->user()->id,$request->checkboxs),
-    //             new \Exception("Anda tidak dapat menghapus diri anda sendiri",422)
-    //         );
-
-    //         // RELASIONAL DELETE
-
-    //         User::whereIn("id",$request->checkboxs)
-    //             ->delete();
-
-    //         activity()
-    //             ->causedBy(auth()->user())
-    //             ->withProperties([
-    //                 'id' => $request->checkboxs,
-    //                 'table' => 'users'
-    //             ])
-    //             ->log('Deleted All Data');
-
-    //         \DB::commit();
-    //         return response()->json([
-    //             "status" => true
-    //         ]);
-    //     }catch(\Exception $e){
-    //         \DB::rollback();
-    //         return FormatResponse::failed($e);
-    //     }
-    // }
-
-    /**
-     * Restore all listing of the resource
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    // public function restoreAll(CheckAllRequest $request){
-    //     try{
-    //         \DB::beginTransaction();
-
-    //         User::withTrashed()
-    //             ->whereIn("id",$request->checkboxs)
-    //             ->restore();
-
-    //         activity()
-    //             ->causedBy(auth()->user())
-    //             ->withProperties([
-    //                 'id' => $request->checkboxs,
-    //                 'table' => 'users'
-    //             ])
-    //             ->log('Restore All Data');
-
-    //         \DB::commit();
-    //         return response()->json([
-    //             "status" => true
-    //         ]);
-    //     }catch(\Exception $e){
-    //         \DB::rollback();
-    //         return FormatResponse::failed($e);
-    //     }
-    // }
-
-    /**
-     * Export the listing of the resource
-     *
-     * @param  $type excel | pdf
-     * @return \Illuminate\Http\Response
-     */
-    // public function export($type){
-    //     $filetype = $type == 'pdf'
-    //         ? 'user.pdf'
-    //         : 'user.xlsx';
-
-    //     $extension =  $type == "pdf"
-    //         ? \Maatwebsite\Excel\Excel::DOMPDF
-    //         : \Maatwebsite\Excel\Excel::XLSX;
-
-    //     return \Excel::download(new UserExport($this->indexFilter()),$filetype,$extension);
-    // }
-
-    /**
-     * Print the listing of the resource
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function print(){
-    //     $pdf = \PDF::loadview('exports/users',[
-    //           "data" => !request()->filled("all")
-    //             ? $this->indexFilter()->getCollection()
-    //             : $this->indexFilter()
-    //     ]);
-
-    //     return  $pdf->stream();
-    // }
 }

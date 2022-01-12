@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Traits\RequestTrait;
 
-class SettingRequest extends FormRequest
+class DistrictRequest extends FormRequest
 {
     use RequestTrait;
 
@@ -17,12 +17,8 @@ class SettingRequest extends FormRequest
     public function rules()
     {
         return [
-            "company_name" => "required",
-            "email" => "required|email",
-            "phone" => "required",
-            "address" => "required",
-            "header_color" => "required",
-            "dapodik_url" => "required|url"
+            "name" => "required|max:50",
+            // "city_id" => "required|integer|exists:cities,id"
         ];
     }
 }

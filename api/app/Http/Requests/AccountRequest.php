@@ -22,7 +22,7 @@ class AccountRequest extends FormRequest
             "fullname" => "nullable|max:255",
             "email" => "required|max:255|unique:users",
             "password" => "required|min:8",
-            "role" => "required|integer"
+            "role" => "required|integer",
         ];
 
         $role = "";
@@ -38,7 +38,7 @@ class AccountRequest extends FormRequest
                 $role = "|in:".User::ROLE_ADMIN_AREA.",".User::ROLE_KAPER;
                 break;        
             case User::ROLE_KAPER:
-                $role = "|in:".User::ROLE_ADMIN_KAPER.",".User::SPV;
+                $role = "|in:".User::ROLE_ADMIN_KAPER.",".User::ROLE_SPV;
                 break;            
             case User::ROLE_SPV:
                 $role = "|in:".User::ROLE_SALES;
@@ -58,7 +58,25 @@ class AccountRequest extends FormRequest
         }
 
         $rules["role"] = $rules["role"].$role;
+    
+        if(in_array(auth()->user()->role,[User::ROLE_MANAGER_NASIONAL,User::ROLE_ADMIN_NASIONAL])){
+            if(request()->role !== User::ROLE_ADMIN_NASIONAL){
+                $rules["province_id"] = "required|integer|exists:provinces,id";
+            }
+        }
 
+        if(in_array(auth()->user()->role,[User::ROLE_MANAGER_AREA,User::ROLE_ADMIN_AREA])){
+            if(request()->role !== User::ROLE_ADMIN_AREA){
+                $rules["city_id"] = "required|integer|exists:cities,id";
+            }
+        }
+        
+        if(in_array(auth()->user()->role,[User::ROLE_KAPER,User::ROLE_ADMIN_KAPER])){
+            if(request()->role !== User::ROLE_ADMIN_KAPER){
+                $rules["district_id"] = "required|integer|exists:districts,id";
+            }
+        }
+    
         if($this->method() == "PUT" || $this->method() == "put"){
             $rules["email"] = $rules["email"].",email,".$this->account->id;
             $rules["username"] = $rules["username"].",username,".$this->account->id;

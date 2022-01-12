@@ -76,6 +76,20 @@ class UserController extends Controller
         try{    
             \DB::beginTransaction();
 
+            if($request->role === User::ROLE_MANAGER_NASIONAL){
+                throw_if(
+                    User::select("id")->where("role",User::ROLE_MANAGER_NASIONAL)->count(),
+                    new \Exception("Manager Nasional Hanya Boleh Satu User",422)
+                );
+            }
+
+            if($request->role === User::ROLE_KOTELE){
+                throw_if(   
+                    User::select("id")->where("role",User::ROLE_KOTELE)->count(),
+                    new \Exception("Kotele Hanya Boleh Satu User",422)
+                );
+            }
+
             $user = User::create([
                 "password" => \Hash::make($request->password),
                 "username" => Str::slug($request->username,'-'),
