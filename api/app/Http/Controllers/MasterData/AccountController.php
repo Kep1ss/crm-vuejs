@@ -5,7 +5,6 @@ namespace App\Http\Controllers\MasterData;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-// use App\Exports\AccountExport;
 use App\Helpers\FormatResponse;
 use App\Http\Requests\{
     AccountRequest,
@@ -13,15 +12,8 @@ use App\Http\Requests\{
 };
 use Illuminate\Support\Str;
 
-use App\Traits\{
-    RoleControllerAdminTrait,
-    ConstructControllerSuperAdminTrait
-};
-
 class AccountController extends Controller
 {
-    use RoleControllerAdminTrait,ConstructControllerSuperAdminTrait;
-
     /**
      * Display a listing of the resource Index And Export
      *
@@ -33,19 +25,7 @@ class AccountController extends Controller
 
         $data = User::query();
 
-        $data->select("id","username","fullname","email","role","parent_id","district_id","province_id","city_id","deleted_at");
-
-        $data->with(["province" => function($q){
-            $q->select("id","name");
-        }]);
-
-        $data->with(["city" => function($q){
-            $q->select("id","name");
-        }]);
-
-        $data->with(["district" => function($q){
-            $q->select("id","name");
-        }]);
+        $data->select("id","username","fullname","email","role","parent_id","deleted_at");
 
      $data->with(["parent" => function($q){
             $q->select("id","username","role");
@@ -67,14 +47,7 @@ class AccountController extends Controller
             });
         }
 
-        if(auth()->user()->role !== User::ROLE_SUPERADMIN){
-            if(in_array(auth()->user()->role,$this->role_admins)){
-                $data->where("parent_id",auth()->user()->parent_id)
-                    ->whereNotIn("role",$this->role_admins);
-            }else{
-                $data->where("parent_id",auth()->user()->id);
-            }
-        }
+        $data->where("parent_id",auth()->user()->id);
 
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
 
@@ -108,11 +81,13 @@ class AccountController extends Controller
         try{
             \DB::beginTransaction();
 
-            $user = User::create([
+            $payload = [
                 "password" => \Hash::make($request->password),
                 "username" => Str::slug($request->username,'-'),
                 "parent_id" => $this->getCurrentUserId()
-            ] + $request->validated());
+            ] + $request->validated();
+
+            $user = User::create($payload);
 
             activity()
                 ->performedOn($user)

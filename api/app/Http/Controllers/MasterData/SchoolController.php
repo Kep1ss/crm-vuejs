@@ -56,9 +56,13 @@ class SchoolController extends Controller
                 $q->orWhere("name","like","%".$request->search."%");                
             });
 
-            $data->orWhereHas("district",function($q) use ($request){
-                $q->where("name","like","%".$request->search."%");
-            });                
+            if(!in_array(auth()->user()->role,[    
+                User::ROLE_SPV,    
+            ])){
+                $data->orWhereHas("district",function($q) use ($request){
+                    $q->where("name","like","%".$request->search."%");
+                });                
+            }
         }    
 
         if($request->filled("level")){
@@ -71,17 +75,19 @@ class SchoolController extends Controller
         
         if(in_array(auth()->user()->role,[
             User::ROLE_MANAGER_AREA,
-        ])){
-            $data->whereHas("district.city.province",function($q){
-                $q->where("id",auth()->user()->province_id);
+            User::ROLE_ADMIN_AREA
+        ])){            
+            $data->whereHas("district.city.province",function($q){                           
+                $q->where("id",auth()->user()->province_id);                
             });
         }
 
         if(in_array(auth()->user()->role,[            
-            User::ROLE_KAPER,            
-        ])){
-            $data->whereHas("district.city",function($q){
-                $q->where("id",auth()->user()->city_id);
+            User::ROLE_KAPER,    
+            User::ROLE_ADMIN_KAPER            
+        ])){            
+            $data->whereHas("district.city",function($q){              
+                $q->where("id",auth()->user()->city_id);                
             });
         }
 

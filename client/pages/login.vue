@@ -144,7 +144,10 @@ export default {
       company_name(){        
         let company_name = this.$store.state.setting.settings.find(item => item.name == "company_name");
         return company_name ? company_name.value : "PT. Software Anak Bangsa";        
-      }
+      },
+      roles(){
+        return this.$store.state.setting.roles
+      },   
     },
 
     methods:{
@@ -155,8 +158,8 @@ export default {
 
         this.$auth.login({
           data: this.form,
-        }).then(res => {            
-          this.$router.push("/");        
+        }).then(res => {          
+          this.$router.push(res.data.user.role === this.roles.superadmin ? "/setting/user" : "");                    
         }).catch(err => {
           console.log(err);          
           this.isLoadingForm = false;

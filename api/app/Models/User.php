@@ -22,9 +22,6 @@ class User extends Authenticatable
     const ROLE_SALES = 5;
     const ROLE_KOTELE = 6;
     const ROLE_TELE_MARKETING = 7;
-    const ROLE_ADMIN_NASIONAL = 8;
-    const ROLE_ADMIN_AREA = 9;
-    const ROLE_ADMIN_KAPER = 10;
 
     /**
      * The attributes that are mass assignable.
@@ -57,5 +54,9 @@ class User extends Authenticatable
 
     public function parent(){
         return $this->belongsTo(User::class);
+    }
+
+    public function areas(){
+        return $this->hasMany(Area::class);
     }
 }

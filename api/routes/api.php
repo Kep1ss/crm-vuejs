@@ -64,7 +64,7 @@ Route::group(["prefix" => $version],function() use ($version) {
 	// 	});
 	// });
 
-    Route::group(["middleware" => ["auth:sanctum","is-check-role"]],function(){
+    Route::group(["middleware" => ["auth:sanctum"]],function(){
 		// DASHBOARD
 
 		// PROFIL
@@ -73,10 +73,12 @@ Route::group(["prefix" => $version],function() use ($version) {
 
 		/* MODULE SETTING */
 		Route::group(["as" => "setting."],function(){
-			Route::post("/announcement/restore-all",[AnnouncementController::class,"restoreAll"])->name("announcement.restore-all");
-			Route::delete("/announcement/destroy-all",[AnnouncementController::class,"destroyAll"])->name("announcement.destroy-all");
-			Route::post("/announcement/restore/{id}",[AnnouncementController::class,"restore"])->name("announcement.restore");
-			Route::apiResource("announcement",AnnouncementController::class);
+			Route::group(["middleware" => "is-not-super-admin"],function(){
+				Route::post("/announcement/restore-all",[AnnouncementController::class,"restoreAll"])->name("announcement.restore-all");
+				Route::delete("/announcement/destroy-all",[AnnouncementController::class,"destroyAll"])->name("announcement.destroy-all");
+				Route::post("/announcement/restore/{id}",[AnnouncementController::class,"restore"])->name("announcement.restore");
+				Route::apiResource("announcement",AnnouncementController::class);
+			});
 
 			Route::group(["middleware" => "is-super-admin"],function(){
 				Route::apiResource("user",UserController::class)->only(["index","store","update"]);
@@ -95,7 +97,7 @@ Route::group(["prefix" => $version],function() use ($version) {
 		});
 
 		/* MODULE MASTER DATA */
-		Route::group(["as" => "master.data."],function(){
+		Route::group(["as" => "master.data.","middleware" => "is-not-super-admin"],function(){
 			Route::apiResource("account",AccountController::class);
 
 			Route::apiResource("province",ProvinceController::class)->only("index","store","update");
@@ -110,12 +112,12 @@ Route::group(["prefix" => $version],function() use ($version) {
 		});
 
 		/* MODULE ACTIVITY */
-		Route::group(["as" => "activity."],function(){
+		Route::group(["as" => "activity.","middleware" => "is-not-super-admin"],function(){
 
 		});
 
 		/* MODULE ANALYSIS DATA */
-		Route::group(["as" => "analysis.data"],function(){
+		Route::group(["as" => "analysis.data","middleware" => "is-not-super-admin"],function(){
 
 		});
     });

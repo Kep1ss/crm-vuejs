@@ -22,43 +22,15 @@ class UserRequest extends FormRequest
             "fullname" => "nullable|max:255",
             "email" => "required|max:255|unique:users",
             "password" => "required|min:8",
-            "role" => "required|integer"
+            "rules" => "nullable"
         ];
-
-        $role = "";
 
         switch (auth()->user()->role) {            
             case User::ROLE_SUPERADMIN:
-                $role = "|in:".User::ROLE_MANAGER_NASIONAL.",".User::ROLE_KOTELE;
-                break;            
-            case User::ROLE_MANAGER_NASIONAL:
-                $role = "|in:".User::ROLE_ADMIN_NASIONAL.",".User::ROLE_MANAGER_AREA;
-                break;                        
-            case User::ROLE_MANAGER_AREA:
-                $role = "|in:".User::ROLE_ADMIN_AREA.",".User::ROLE_KAPER;
-                break;        
-            case User::ROLE_KAPER:
-                $role = "|in:".User::ROLE_ADMIN_KAPER.",".User::SPV;
-                break;            
-            case User::ROLE_SPV:
-                $role = "|in:".User::ROLE_SALES;
-                break;            
-            case User::ROLE_KOTELE:
-                $role = "|in:".User::ROLE_TELE_MARKETING;
-                break;    
-            case User::ROLE_ADMIN_NASIONAL:
-                $role = "|in:".User::ROLE_MANAGER_AREA;
-                break;            
-            case User::ROLE_ADMIN_AREA:
-                $role = "|in:".User::ROLE_KAPER;
-                break;            
-            case User::ROLE_ADMIN_KAPER:
-                $role = "|in:".User::ROLE_SPV;
-                break;
-        }
-
-        $rules["role"] = $rules["role"].$role;
-
+                $rules["role"] = "required|integer|in:".User::ROLE_MANAGER_NASIONAL.",".User::ROLE_KOTELE;
+                break;                       
+        }    
+            
         if($this->method() == "PUT" || $this->method() == "put"){
             $rules["email"] = $rules["email"].",email,".$this->user->id;
             $rules["username"] = $rules["username"].",username,".$this->user->id;

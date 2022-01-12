@@ -7,11 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Province;
 use App\Helpers\FormatResponse;
 use App\Http\Requests\ProvinceRequest;
-use App\Traits\ConstructControllerSuperAdminTrait;
 
 class ProvinceController extends Controller
 {
-    use ConstructControllerSuperAdminTrait;
 
      /**
      * Display a listing of the resource Index And Export
