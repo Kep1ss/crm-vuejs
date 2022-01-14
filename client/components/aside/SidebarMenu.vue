@@ -51,10 +51,29 @@
           <i class="fas fa-school"></i>
           <span>Data Sekolah</span>
         </nuxt-link>
+
         <nuxt-link class="nav-link" to="/master/manager-area"
           v-if="menu_manager_area">
-          <i class="fas fa-money-bill-wave-alt"></i>
+          <i class="fas fa-user-shield"></i>
           <span>Manager Area</span>
+        </nuxt-link>
+
+        <nuxt-link class="nav-link" to="/master/kaper"
+          v-if="menu_kaper">
+          <i class="fas fa-user-secret"></i>
+          <span>Kaper</span>
+        </nuxt-link>
+
+        <nuxt-link class="nav-link" to="/master/spv"
+          v-if="menu_spv">
+          <i class="fas fa-user-astronaut"></i>
+          <span>SPV</span>
+        </nuxt-link>
+
+        <nuxt-link class="nav-link" to="/master/sales"
+          v-if="menu_sales">
+          <i class="fas fa-user-friends"></i>
+          <span>Sales</span>
         </nuxt-link>
 
         <nuxt-link class="nav-link" to="/master/customer-sales"
@@ -72,31 +91,25 @@
       </li>
 
       <li class="nav-item dropdown">
-        <nuxt-link class="nav-link" to="/setting/user"
-          v-if="menu_set_area_sales">
-          <i class="fas fa-chart-area"></i>
-          <span> Set Area Sales </span>
-        </nuxt-link>
-        <nuxt-link class="nav-link" to="/setting/user"
+
+        <nuxt-link class="nav-link" to="/activity/set-target-pelanggan"
           v-if="menu_set_target_customer">
           <i class="fas fa-chart-pie"></i>
-          <span> Set Target Pelanggan </span>
+          <span>Set Target Pelanggan</span>
         </nuxt-link>
-        <nuxt-link class="nav-link" to="/setting/user"
-          v-if="menu_set_target_eksemplar">
-          <i class="far fa-chart-bar"></i>
-          <span> Set Target Eksemplar</span>
-        </nuxt-link>
+
         <nuxt-link class="nav-link" to="/setting/user"
           v-if="menu_set_target_telemaraketing">
           <i class="fas fa-chart-line"></i>
           <span> Set Target Tele </span>
         </nuxt-link>
+
         <nuxt-link class="nav-link" to="/setting/user"
           v-if="menu_input_visit">
           <i class="fas fa-keyboard"></i>
           <span> Input Visit</span>
         </nuxt-link>
+
         <nuxt-link class="nav-link" to="/setting/user"
           v-if="menu_input_activity_tele_marketing">
           <i class="far fa-keyboard"></i>
@@ -190,53 +203,68 @@ export default {
           this.roles.manager_area,
           this.roles.admin_nasional,
           this.roles.admin_area,
+          this.roles.superadmin,
         ].includes(this.$auth.user.role)
       },
     /* MODULE SETTING */
 
     /* MODULE MASTER DATA */
-      menu_account(){
-        return [
-          this.roles.manager_nasional,
-          this.roles.manager_area,
-          this.roles.kaper,
-          this.roles.spa,
-          this.roles.kotele
-        ].includes(this.$auth.user.role)
-      },
+      // menu_account(){
+      //   return(
+      //     this.roles.superadmin  == this.$auth.user.role ||
+      //     this.roles.manager_nasional  == this.$auth.user.role ||
+      //     this.roles.manager_area  == this.$auth.user.role ||
+      //     this.roles.kaper  == this.$auth.user.role ||
+      //     this.roles.spa  == this.$auth.user.role ||
+      //     this.roles.kotele  == this.$auth.user.role )
+      // },
 
       menu_province(){
-        return [
-          this.roles.manager_area
-        ].includes(this.$auth.user.role)
+        return (
+          this.roles.manager_area == this.$auth.user.role ||
+          this.roles.superadmin == this.$auth.user.role )
       },
 
       menu_city(){
-        return [
-          this.roles.manager_area,
-        ].includes(this.$auth.user.role)
+        return (
+          this.roles.manager_area == this.$auth.user.role ||
+          this.roles.superadmin == this.$auth.user.role )
       },
 
       menu_district(){
-        return [
-          this.roles.manager_area
-        ].includes(this.$auth.user.role)
+        return (
+          this.roles.manager_area == this.$auth.user.role ||
+          this.roles.superadmin == this.$auth.user.role)
       },
 
-      menu_school(){
-        return ![
-          this.roles.superadmin
-        ].includes(this.$auth.user.role);
-      },
+     menu_school(){
+       return true;
+     },
 
       menu_manager_area(){
-        let roles = this.$store.state.setting.roles;
+        return (this.roles.manager_nasional == this.$auth.user.role ||
+          this.roles.superadmin == this.$auth.user.role)
+      },
+      menu_kaper(){
 
-        return [
-          roles.manager_nasional,
-        ].includes(this.$auth.user.role);
+        return (this.roles.manager_nasional == this.$auth.user.role ||
+                this.roles.manager_area == this.$auth.user.role ||
+          this.roles.superadmin == this.$auth.user.role)
+      },
+      menu_spv(){
+        return (this.roles.manager_nasional == this.$auth.user.role ||
+                this.roles.manager_area == this.$auth.user.role ||
+                this.roles.kaper == this.$auth.user.role ||
+                this.roles.superadmin == this.$auth.user.role)
       },
 
+      menu_sales(){
+        return (this.roles.manager_nasional == this.$auth.user.role ||
+                this.roles.manager_area == this.$auth.user.role ||
+                this.roles.kaper == this.$auth.user.role ||
+                this.roles.spv == this.$auth.user.role ||
+                this.roles.superadmin == this.$auth.user.role)
+      },
       menu_customer_sales(){
         return false;
         // return [
@@ -246,40 +274,28 @@ export default {
       },
 
       menu_master_data(){
-        return this.menu_account ||
-          this.menu_province ||
-          this.menu_city ||
-          this.menu_district ||
-          this.menu_school ||
-          this.menu_customer_sales
+        return this.menu_account == this.$auth.user.role ||
+          this.menu_province == this.$auth.user.role ||
+          this.menu_city == this.$auth.user.role ||
+          this.menu_district == this.$auth.user.role ||
+          this.menu_school == this.$auth.user.role ||
+          this.menu_customer_sales == this.$auth.user.role ||
+          this.roles.superadmin == this.$auth.user.role
       },
     /* MODULE MASTER DATA */
 
     /* MODULE ACTIVITY */
-      menu_set_area_sales(){
-        return [
-          this.roles.spv,
-        ].includes(this.$auth.user.role)
-      },
-
       menu_set_target_customer(){
-        return [
-          this.roles.spv,
-        ].includes(this.$auth.user.role)
+        return (this.roles.spv == this.$auth.user.role ||
+          this.roles.superadmin == this.$auth.user.role)
       },
 
-      menu_set_target_eksemplar(){
-        return ![
-          this.roles.sales,
-          this.roles.kotele,
-          this.roles.tele_marketing,
-          this.roles.superadmin
-        ].includes(this.$auth.user.role)
-      },
+
 
       menu_set_target_telemaraketing(){
         return [
-          this.roles.kotele,
+          this.roles.kotele,,
+          this.roles.superadmin
         ].includes(this.$auth.user.role)
       },
 
@@ -296,16 +312,16 @@ export default {
       menu_input_activity_tele_marketing(){
         return [
           this.roles.tele_marketing,
+          this.roles.superadmin
         ].includes(this.$auth.user.role)
       },
 
       menu_activity(){
-        return this.menu_set_area_sales ||
-          this.menu_set_target_customer ||
-          this.menu_set_target_eksemplar ||
-          this.menu_set_target_telemaraketing ||
-          this.menu_input_visit ||
-          this.menu_input_activity_tele_marketing
+        return (this.menu_set_area_sales == this.$auth.user.role ||
+          this.menu_set_target_customer  == this.$auth.user.role||
+          this.menu_set_target_telemaraketing == this.$auth.user.role ||
+          this.menu_input_visit == this.$auth.user.role ||
+          this.menu_input_activity_tele_marketing == this.$auth.user.role)
       },
     /* MODULE ACTIVITY */
 

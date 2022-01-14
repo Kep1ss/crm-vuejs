@@ -48,22 +48,22 @@ class SchoolController extends Controller
                 $data->onlyTrashed();
             }else if($request->soft_deleted == "all"){
                 $data->withTrashed();
-            }          
-        }        
+            }
+        }
 
         if($request->filled("search")){
             $data->where(function($q) use ($request) {
-                $q->orWhere("name","like","%".$request->search."%");                
+                $q->orWhere("name","like","%".$request->search."%");
             });
 
-            if(!in_array(auth()->user()->role,[    
-                User::ROLE_SPV,    
+            if(!in_array(auth()->user()->role,[
+                User::ROLE_SPV,
             ])){
                 $data->orWhereHas("district",function($q) use ($request){
                     $q->where("name","like","%".$request->search."%");
-                });                
+                });
             }
-        }    
+        }
 
         if($request->filled("level")){
             $data->where("level",$request->level);
@@ -72,27 +72,25 @@ class SchoolController extends Controller
         if($request->filled("is_private")){
             $data->where("is_private",intval($request->is_private));
         }
-        
+
         if(in_array(auth()->user()->role,[
             User::ROLE_MANAGER_AREA,
-            User::ROLE_ADMIN_AREA
-        ])){            
-            $data->whereHas("district.city.province",function($q){                           
-                $q->where("id",auth()->user()->province_id);                
+        ])){
+            $data->whereHas("district.city.province",function($q){
+                $q->where("id",auth()->user()->province_id);
             });
         }
 
-        if(in_array(auth()->user()->role,[            
-            User::ROLE_KAPER,    
-            User::ROLE_ADMIN_KAPER            
-        ])){            
-            $data->whereHas("district.city",function($q){              
-                $q->where("id",auth()->user()->city_id);                
+        if(in_array(auth()->user()->role,[
+            User::ROLE_KAPER,
+        ])){
+            $data->whereHas("district.city",function($q){
+                $q->where("id",auth()->user()->city_id);
             });
         }
 
-        if(in_array(auth()->user()->role,[    
-            User::ROLE_SPV,    
+        if(in_array(auth()->user()->role,[
+            User::ROLE_SPV,
         ])){
             $data->whereHas("district",function($q){
                 $q->where("id",auth()->user()->district_id);
@@ -105,8 +103,8 @@ class SchoolController extends Controller
             $data = $data->paginate($request->per_page ?? 10);
         }else{
             $data = $data->get();
-        }                   
-    
+        }
+
         return $data;
     }
 
@@ -117,7 +115,7 @@ class SchoolController extends Controller
      */
     public function index()
     {
-        return response()->json($this->indexFilter());                
+        return response()->json($this->indexFilter());
     }
 
 
@@ -129,9 +127,9 @@ class SchoolController extends Controller
      */
     public function store(SchoolRequest $request)
     {
-        try{    
+        try{
             \DB::beginTransaction();
-            
+
             $school = School::create([
                 "district_id" => auth()->user()->district_id,
             ] + $request->validated());
@@ -165,9 +163,9 @@ class SchoolController extends Controller
      */
     public function update(SchoolRequest $request, School $school)
     {
-        try{    
+        try{
             \DB::beginTransaction();
-                        
+
             $school->update($request->validated());
 
             activity()
@@ -194,7 +192,7 @@ class SchoolController extends Controller
      * Get Data School From Dapodik
      */
     public function getSchool(SchoolGetRequest $request){
-        try{            
+        try{
             $dapodik_url = Setting::query()
                 ->select("value")
                 ->where("name","dapodik_url")
@@ -212,23 +210,23 @@ class SchoolController extends Controller
                 ->where("id",$request->district_id)
                 ->first()
                 ->code;
-            
+
             $queryDapodik = [
                 "kode_wilayah" => $district_code,
                 "bentuk_pendidikan_id" => strtolower($request->level),
                 "semester_id" => $request->year . $request->semester,
-                "id_level_wilayah" => $dapodik_school_id 
+                "id_level_wilayah" => $dapodik_school_id
             ];
-        
-            $compelete_url = $dapodik_url . "?" . http_build_query($queryDapodik);           
-            
+
+            $compelete_url = $dapodik_url . "?" . http_build_query($queryDapodik);
+
             $response = Http::get($compelete_url);
 
             throw_if(
                 !$response->ok(),
                 new \Exception("Terjadi Kesalahan Saat Mengambil Data",422)
             );
-            
+
             return $response->json();
         }catch(\Exception $e){
             return FormatResponse::failed($e);
@@ -241,9 +239,9 @@ class SchoolController extends Controller
     public function saveSchool(SchoolSaveRequest $request){
         try{
             \DB::beginTransaction();
-            
-            foreach($request->schools as $item){        
-                School::updateOrCreate([            
+
+            foreach($request->schools as $item){
+                School::updateOrCreate([
                     "code" => $item["code"]
                 ],[
                     "district_id" => $request->district_id,
@@ -255,16 +253,16 @@ class SchoolController extends Controller
                 ]);
             }
 
-            activity()            
+            activity()
                 ->causedBy(auth()->user())
-                ->withProperties([                
+                ->withProperties([
                     'table' => 'schools'
                 ])
-                ->log('Save School Data');                
+                ->log('Save School Data');
 
             \DB::commit();
             return response()->json([
-                "message" => true 
+                "message" => true
              ]);
         }catch(\Exception $e){
             \DB::rollback();

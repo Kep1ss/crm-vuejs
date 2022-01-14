@@ -25,9 +25,6 @@ class IsCheckRole
                 if(!in_array(auth()->user()->role,[
                     User::ROLE_MANAGER_NASIONAL,
                     User::ROLE_MANAGER_AREA,
-                    User::ROLE_ADMIN_NASIONAL,
-                    User::ROLE_ADMIN_AREA,
-
                     User::ROLE_SUPERADMIN
                 ])){
                     return response()->json([
@@ -43,6 +40,7 @@ class IsCheckRole
                 if(in_array(auth()->user()->role,[
                     User::ROLE_SALES,
                     User::ROLE_TELE_MARKETING,
+                    User::ROLE_SUPERADMIN
                 ])){
                     return response()->json([
                         "message" => "Unauthorized"
@@ -53,8 +51,6 @@ class IsCheckRole
             if(in_array("province",$routeName) && !in_array("index",$routeName)){
                 if(!in_array(auth()->user()->role,[
                     User::ROLE_MANAGER_NASIONAL,
-                    User::ROLE_ADMIN_NASIONAL,
-
                     User::ROLE_SUPERADMIN
                 ])){
                     return response()->json([
@@ -66,8 +62,6 @@ class IsCheckRole
             if(in_array("city",$routeName) && !in_array("index",$routeName)){
                 if(!in_array(auth()->user()->role,[
                     User::ROLE_MANAGER_AREA,
-                    User::ROLE_ADMIN_AREA,
-
                     User::ROLE_SUPERADMIN
                 ])){
                     return response()->json([
@@ -79,8 +73,6 @@ class IsCheckRole
             if(in_array("district",$routeName) && !in_array("index",$routeName)){
                 if(!in_array(auth()->user()->role,[
                     User::ROLE_KAPER,
-                    User::ROLE_ADMIN_KAPER,
-
                     User::ROLE_SUPERADMIN
                 ])){
                     return response()->json([
@@ -91,7 +83,8 @@ class IsCheckRole
 
             if(in_array("school",$routeName) && !in_array("index",$routeName)){
                 if(in_array(auth()->user()->role,[
-                    User::ROLE_SALES
+                    User::ROLE_SALES,
+                    User::ROLE_SUPERADMIN
                 ])){
                     return response()->json([
                         "message" => "Unauthorized"
@@ -102,7 +95,44 @@ class IsCheckRole
             if(in_array("manager-area",$routeName) && !in_array("index",$routeName)){
                 if(in_array(auth()->user()->role,[
                     User::ROLE_MANAGER_NASIONAL,
-                    User::ROLE_ADMIN_NASIONAL,
+                    User::ROLE_SUPERADMIN
+                ])){
+                    return response()->json([
+                        "message" => "Unauthorized"
+                    ],401);
+                }
+            }
+            if(in_array("kaper",$routeName) && !in_array("index",$routeName)){
+                if(in_array(auth()->user()->role,[
+                    User::ROLE_MANAGER_AREA,
+                    User::ROLE_MANAGER_NASIONAL,
+                    User::ROLE_SUPERADMIN
+                ])){
+                    return response()->json([
+                        "message" => "Unauthorized"
+                    ],401);
+                }
+            }
+            if(in_array("spv",$routeName) && !in_array("index",$routeName)){
+                if(in_array(auth()->user()->role,[
+                    User::ROLE_MANAGER_NASIONAL,
+                    User::ROLE_MANAGER_AREA,
+                    User::ROLE_KAPER,
+                    User::ROLE_SUPERADMIN
+                ])){
+                    return response()->json([
+                        "message" => "Unauthorized"
+                    ],401);
+                }
+            }
+            if(in_array("sales",$routeName) && !in_array("index",$routeName)){
+                if(in_array(auth()->user()->role,[
+                    User::ROLE_MANAGER_NASIONAL,
+                    User::ROLE_MANAGER_AREA,
+                    User::ROLE_KAPER,
+                    User::ROLE_SPV,
+                    User::ROLE_SUPERADMIN
+
                 ])){
                     return response()->json([
                         "message" => "Unauthorized"
@@ -128,7 +158,6 @@ class IsCheckRole
             if(in_array("set-area-sales",$routeName)){
                 if(!in_array(auth()->user()->role,[
                     User::ROLE_SPV,
-
                     User::ROLE_SUPERADMIN,
                 ])){
                     return response()->json([
@@ -140,7 +169,6 @@ class IsCheckRole
             if(in_array("set-target-customer",$routeName)){
                 if(!in_array(auth()->user()->role,[
                     User::ROLE_SPV,
-
                     User::ROLE_SUPERADMIN,
                 ])){
                     return response()->json([
@@ -153,7 +181,8 @@ class IsCheckRole
                 if(in_array(auth()->user()->role,[
                     User::ROLE_SALES,
                     User::ROLE_KOTELE,
-                    User::ROLE_TELE_MARKETING
+                    User::ROLE_TELE_MARKETING,
+                    User::ROLE_SUPERADMIN
                 ])){
                     return response()->json([
                         "message" => "Unauthorized"
@@ -164,7 +193,6 @@ class IsCheckRole
             if(in_array("set-target-telemarketing",$routeName)){
                 if(!in_array(auth()->user()->role,[
                     User::ROLE_KOTELE,
-
                     User::ROLE_SUPERADMIN,
                 ])){
                     return response()->json([
@@ -176,9 +204,9 @@ class IsCheckRole
             if(in_array("input-visit",$routeName)){
                 if(in_array(auth()->user()->role,[
                     User::ROLE_MANAGER_NASIONAL,
-                    User::ROLE_ADMIN_NASIONAL,
                     User::ROLE_KOTELE,
-                    User::ROLE_TELE_MARKETING
+                    User::ROLE_TELE_MARKETING,
+                    User::ROLE_SUPERADMIN
                 ])){
                     return response()->json([
                         "message" => "Unauthorized"

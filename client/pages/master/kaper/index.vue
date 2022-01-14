@@ -64,8 +64,8 @@
                           </div>
                         </div>
                       </th>
-                      <th>Role</th>
-                      <th>Jabatan</th>
+                      <th>Manager Area</th>
+                      <th>Area</th>
                       <th>Target Eksemplar</th>
                       <th class="text-center">Options</th>
                     </tr>
@@ -74,25 +74,24 @@
                     <tr v-for="(item,i) in data" :key="i">
                       <!-- <td><input type="checkbox" name="checkboxs[]" :value="item.id" v-model="parameters.form.checkboxs"></td> -->
                       <td>{{ i + 1 }}</td>
-                      <td>{{ item.username }}</td>
+                      <td>{{ item.fullname }}</td>
                       <td>{{ item.email }}</td>
-                      <td class="badge badge-success"> Manager Area </td>
-                      <td>{{ item.description }}</td>
+                      <td>{{ item.managerarea }}</td>
+                      <td>-</td>
                       <td>{{ item.target_copies }}</td>
                       <td class="text-center">
                         <div class="btn-group">
                           <button class="btn btn-sm btn-success" @click="onDetail(item)">
                             <i class="fas fa-info-circle"></i>
                           </button>
-                          <button class="btn btn-sm btn-primary" @click="onEdit(item)">
+                          <button class="btn btn-sm btn-primary" @click="onEdit(item)"
+                            :disabled="isSuperAdmin">
                             <i class="fas fa-pen"></i>
                           </button>
 
                          <!-- <button class="btn btn-sm btn-danger" @click="onTrashed(item)" v-if="!item.deleted_at">
                             <i class="fas fa-trash"></i>
                           </button>
-
-
                           <button class="btn btn-sm btn-success" @click="onRestored(item)" v-if="item.deleted_at">
                             <i class="fas fa-redo"></i>
                           </button>
@@ -162,7 +161,7 @@ import ModalDetail from "./detail";
 export default {
   head() {
     return {
-      title: 'Akun',
+      title: 'Kaper',
     }
   },
 
@@ -183,11 +182,11 @@ export default {
 
   data() {
     return {
-      title               : 'Manager Area',
+      title               : 'Kaper',
       isLoadingData       : false,
       isPaginate          : true,
       parameters : {
-        url : 'managerarea',
+        url : 'kaper',
         type : 'pdf',
         params :{
           soft_deleted : '',
@@ -213,8 +212,6 @@ export default {
   computed : {
     ...mapState('modulMaster',['data','error','result']),
 
-
-
     roles(){
       return this.$store.state.setting.roles
     },
@@ -236,13 +233,11 @@ export default {
 
     onFormShow(){
       this.$refs["form-input"].parameters.form = {
-        fullname      : '',
-        username      : '',
-        password      : '',
-        email         : '',
-        role          : 2,
-        description   : '',
-        target_copies : '',
+        fullname : '',
+        username : '',
+        password : '',
+        email    : '',
+        role     : 3
       };
 
       this.$refs["form-input"].isEditable = false;

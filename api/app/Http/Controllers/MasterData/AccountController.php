@@ -22,14 +22,28 @@ class AccountController extends Controller
     */
     public function indexFilter(){
         $request = request();
+        $routeName = explode(".",$request->route()->getName());
 
-        $data = User::query();
+        if(in_array("managerarea",$routeName)){
+            $data   = \DB::table('v_manager_area');
+        }else if (in_array("kaper",$routeName)){
+            $data   = \DB::table('v_kaper');
+        }else if (in_array("spv",$routeName)){
+            $data   = \DB::table('v_spv');
+        }else if (in_array("sales",$routeName)){
+            $data   = \DB::table('v_sales');
+        }else if (in_array("kotele",$routeName)){
+        }else {
+            $data = User::query();
+            $data->select("id","username","fullname","email","role","target_copies","description","parent_id","deleted_at");
+            $data->with(["parent" => function($q){
+                $q->select("id","username","role");
+            }]);
+        }
 
-        $data->select("id","username","fullname","email","role","parent_id","deleted_at");
 
-     $data->with(["parent" => function($q){
-            $q->select("id","username","role");
-        }]);
+
+
 
         if($request->filled("soft_deleted")){
             if($request->soft_deleted == "deleted"){
@@ -47,7 +61,15 @@ class AccountController extends Controller
             });
         }
 
-        $data->where("parent_id",auth()->user()->id);
+        if (auth()->user()->role != User::ROLE_MANAGER_NASIONAL){
+            if (auth()->user()->role == User::ROLE_MANAGER_AREA){
+                $data->where("parent_manager_area",auth()->user()->id);
+            }else if(auth()->user()->role == User::ROLE_KAPER){
+                $data->where("parent_kaper",auth()->user()->id);
+            }else if(auth()->user()->role == User::ROLE_SPV){
+                $data->where("parent_spv",auth()->user()->id);
+            }
+        }
 
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
 
@@ -76,6 +98,7 @@ class AccountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(AccountRequest $request)
     {
         try{
@@ -84,7 +107,7 @@ class AccountController extends Controller
             $payload = [
                 "password" => \Hash::make($request->password),
                 "username" => Str::slug($request->username,'-'),
-                "parent_id" => $this->getCurrentUserId()
+                "parent_id" => auth()->user()->id,
             ] + $request->validated();
 
             $user = User::create($payload);
@@ -142,6 +165,32 @@ class AccountController extends Controller
                 ])
                 ->log('Upadated Data');
 
+            \DB::commit();
+            return response()->json([
+                "status" => true
+            ]);
+        }catch(\Exception $e){
+            \DB::rollback();
+            return FormatResponse::failed($e);
+        }
+    }
+
+    public function destroy(User $account)
+    {
+        try{
+            \DB::beginTransaction();
+
+            $account->delete();
+
+            activity()
+                ->performedOn($account)
+                ->causedBy(auth()->user())
+                ->withProperties([
+                    'name' => $account->username,
+                    'id' => $account->id,
+                    'table' => 'users'
+                ])
+                ->log('Delete Data');
             \DB::commit();
             return response()->json([
                 "status" => true

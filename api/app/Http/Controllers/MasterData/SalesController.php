@@ -4,7 +4,7 @@ namespace App\Http\Controllers\MasterData;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\ManagerArea;
+use App\Models\Sales;
 use App\Helpers\FormatResponse;
 use App\Models\User;
 use App\Http\Requests\{
@@ -12,20 +12,13 @@ use App\Http\Requests\{
     CheckAllRequest
 };
 use Illuminate\Support\Str;
-
-class ManagerAreaController extends Controller
+class SalesController extends Controller
 {
-    /**
-     * Display a listing of the resource Index And Export
-     *
-     * @return \Iluminate\Http\Response
-     *
-    */
-
+    //
     public function indexFilter(){
         $request = request();
 
-        $data = ManagerArea::query();
+        $data = Sales::query();
 
         $data = $data->with(["parent" => function($q){
             $q->select("id","username","role");
@@ -46,8 +39,15 @@ class ManagerAreaController extends Controller
                     ->orWhere("email","like","%".$request->search."%");
             });
         }
-
-        $data->where("parent_id",auth()->user()->id);
+        if (auth()->user()->role != User::ROLE_MANAGER_NASIONAL){
+            if (auth()->user()->role == User::ROLE_MANAGER_AREA){
+                $data->where("parent_manager_area",auth()->user()->id);
+            }else if(auth()->user()->role == User::ROLE_KAPER){
+                $data->where("parent_kaper",auth()->user()->id);
+            }else if(auth()->user()->role == User::ROLE_SPV){
+                $data->where("parent_spv",auth()->user()->id);
+            }
+        }
 
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
 
@@ -111,12 +111,12 @@ class ManagerAreaController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(AccountRequest $request,User $managerarea)
+
+    public function update(AccountRequest $request,User $sales)
     {
         try{
             \DB::beginTransaction();
@@ -130,14 +130,14 @@ class ManagerAreaController extends Controller
                 unset($payload["password"]);
             }
 
-            $managerarea->update($payload);
+            $sales->update($payload);
 
             activity()
-                ->performedOn($managerarea)
+                ->performedOn($sales)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'name' => $managerarea->username,
-                    'id' => $managerarea->id,
+                    'name' => $sales->username,
+                    'id' => $sales->id,
                     'table' => 'users'
                 ])
                 ->log('Upadated Data');

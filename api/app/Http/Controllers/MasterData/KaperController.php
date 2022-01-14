@@ -4,7 +4,7 @@ namespace App\Http\Controllers\MasterData;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\ManagerArea;
+use App\Models\Kaper;
 use App\Helpers\FormatResponse;
 use App\Models\User;
 use App\Http\Requests\{
@@ -13,19 +13,13 @@ use App\Http\Requests\{
 };
 use Illuminate\Support\Str;
 
-class ManagerAreaController extends Controller
+class KaperController extends Controller
 {
-    /**
-     * Display a listing of the resource Index And Export
-     *
-     * @return \Iluminate\Http\Response
-     *
-    */
-
+    //
     public function indexFilter(){
         $request = request();
 
-        $data = ManagerArea::query();
+        $data = Kaper::query();
 
         $data = $data->with(["parent" => function($q){
             $q->select("id","username","role");
@@ -46,8 +40,9 @@ class ManagerAreaController extends Controller
                     ->orWhere("email","like","%".$request->search."%");
             });
         }
-
-        $data->where("parent_id",auth()->user()->id);
+        if (auth()->user()->role != User::ROLE_MANAGER_NASIONAL){
+            $data->where("parent_manager_area",auth()->user()->id);
+        }
 
         $data = $data->orderBy($request->order ?? "id",$request->sort ?? "desc");
 
@@ -111,12 +106,12 @@ class ManagerAreaController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(AccountRequest $request,User $managerarea)
+
+    public function update(AccountRequest $request,User $kaper)
     {
         try{
             \DB::beginTransaction();
@@ -130,14 +125,14 @@ class ManagerAreaController extends Controller
                 unset($payload["password"]);
             }
 
-            $managerarea->update($payload);
+            $kaper->update($payload);
 
             activity()
-                ->performedOn($managerarea)
+                ->performedOn($kaper)
                 ->causedBy(auth()->user())
                 ->withProperties([
-                    'name' => $managerarea->username,
-                    'id' => $managerarea->id,
+                    'name' => $kaper->username,
+                    'id' => $kaper->id,
                     'table' => 'users'
                 ])
                 ->log('Upadated Data');

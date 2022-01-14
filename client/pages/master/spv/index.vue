@@ -64,8 +64,8 @@
                           </div>
                         </div>
                       </th>
-                      <th>Role</th>
                       <th>Jabatan</th>
+                      <th>Kaper</th>
                       <th>Target Eksemplar</th>
                       <th class="text-center">Options</th>
                     </tr>
@@ -76,23 +76,22 @@
                       <td>{{ i + 1 }}</td>
                       <td>{{ item.username }}</td>
                       <td>{{ item.email }}</td>
-                      <td class="badge badge-success"> Manager Area </td>
-                      <td>{{ item.description }}</td>
+                      <td>SPV</td>
+                      <td>{{ item.kaper }}</td>
                       <td>{{ item.target_copies }}</td>
                       <td class="text-center">
                         <div class="btn-group">
                           <button class="btn btn-sm btn-success" @click="onDetail(item)">
                             <i class="fas fa-info-circle"></i>
                           </button>
-                          <button class="btn btn-sm btn-primary" @click="onEdit(item)">
+                          <button class="btn btn-sm btn-primary" @click="onEdit(item)"
+                            :disabled="isSuperAdmin">
                             <i class="fas fa-pen"></i>
                           </button>
-
-                         <!-- <button class="btn btn-sm btn-danger" @click="onTrashed(item)" v-if="!item.deleted_at">
+                          <!--
+                          <button class="btn btn-sm btn-danger" @click="onTrashed(item)" v-if="!item.deleted_at">
                             <i class="fas fa-trash"></i>
                           </button>
-
-
                           <button class="btn btn-sm btn-success" @click="onRestored(item)" v-if="item.deleted_at">
                             <i class="fas fa-redo"></i>
                           </button>
@@ -162,7 +161,7 @@ import ModalDetail from "./detail";
 export default {
   head() {
     return {
-      title: 'Akun',
+      title: 'SPV',
     }
   },
 
@@ -183,11 +182,11 @@ export default {
 
   data() {
     return {
-      title               : 'Manager Area',
+      title               : 'SPV',
       isLoadingData       : false,
       isPaginate          : true,
       parameters : {
-        url : 'managerarea',
+        url : 'spv',
         type : 'pdf',
         params :{
           soft_deleted : '',
@@ -213,8 +212,6 @@ export default {
   computed : {
     ...mapState('modulMaster',['data','error','result']),
 
-
-
     roles(){
       return this.$store.state.setting.roles
     },
@@ -236,12 +233,12 @@ export default {
 
     onFormShow(){
       this.$refs["form-input"].parameters.form = {
-        fullname      : '',
-        username      : '',
-        password      : '',
-        email         : '',
-        role          : 2,
-        description   : '',
+        fullname    : '',
+        username    : '',
+        password    : '',
+        email       : '',
+        role        : 4,
+        description : '',
         target_copies : '',
       };
 
@@ -253,7 +250,10 @@ export default {
     onEdit(item){
       this.$refs["form-input"].isEditable = true;
       this.$refs["form-input"].parameters.form = {
-        ...item
+        ...item,
+        province_id : item.province,
+        city_id : item.city,
+        district_id : item.district
       };
       window.$("#modal-form").modal("show");
       this.$refs["form-input"].$refs['form-validate'].reset();

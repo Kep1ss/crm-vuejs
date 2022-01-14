@@ -19,7 +19,7 @@
     <portal-target name="child-modal"></portal-target>
     <portal-target name="pdf"></portal-target>
     <portal-target name="modal-detail"></portal-target>
-    
+
     <button @click="topScroll"
       id="topBtn" title="Go to top">
       <i class="fas fa-caret-up"></i>

@@ -60,6 +60,7 @@ return [
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                PDO::ATTR_EMULATE_PREPARES => true
             ]) : [],
         ],
 
@@ -70,7 +71,7 @@ return [
             'database'  => env('DB_DATABASE_USERS'),
             'username'  => env('DB_USERNAME_USERS'),
             'password'  => env('DB_PASSWORD_USERS'),
-        ],        
+        ],
 
         'pgsql' => [
             'driver' => 'pgsql',

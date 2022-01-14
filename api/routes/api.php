@@ -16,7 +16,11 @@ use App\Http\Controllers\MasterData\{
 	ProvinceController,
 	CityController,
 	DistrictController,
-	SchoolController
+	SchoolController,
+    ManagerAreaController,
+    KaperController,
+    SpvController,
+    SalesController,
 };
 /*
 |--------------------------------------------------------------------------
@@ -99,13 +103,16 @@ Route::group(["prefix" => $version],function() use ($version) {
 		/* MODULE MASTER DATA */
 		Route::group(["as" => "master.data.","middleware" => "is-not-super-admin"],function(){
 			Route::apiResource("account",AccountController::class);
-
 			Route::apiResource("province",ProvinceController::class)->only("index","store","update");
-
 			Route::apiResource("city",CityController::class)->only("index","store","update");
 
 			Route::apiResource("district",DistrictController::class)->only("index","store","update");
-            Route::apiResource("manager-area",AccountController::class);
+            Route::apiResource("managerarea",AccountController::class);
+            Route::apiResource("kaper",AccountController::class);
+            Route::apiResource("spv",AccountController::class);
+            Route::apiResource("sales",AccountController::class);
+            Route::apiResource("kotele",AccountController::class);
+
 			Route::post("/school/get/dapodik",[SchoolController::class,"getSchool"])->name("school.get-dapodik");
 			Route::post("/school/save/dapodik",[SchoolController::class,"saveSchool"])->name("school.save-dapodik");
 			Route::apiResource("school",SchoolController::class)->only("index","store","update");

@@ -6,8 +6,8 @@
           <div class="card">
             <div class="card-body">
               <div class="card-title">
-                <list-option-section 
-                  :self="this" 
+                <list-option-section
+                  :self="this"
                   ref="form-option">
                   <template>
                     <nuxt-link to="/master/school/download" class="btn btn-primary btn-sm"
@@ -16,10 +16,10 @@
                       Download Data Sekolah Dari Dapodik
                     </nuxt-link>
                   </template>
-                </list-option-section>                
+                </list-option-section>
               </div>
 
-          
+
               <!-- start table -->
               <div class="table-responsive">
                 <table class="table table-striped table-sm vld-parent"
@@ -38,7 +38,7 @@
                               :class="parameters.params.order == 'name' && parameters.params.sort == 'desc' ? '' : 'light-gray'"></i>
                           </div>
                         </div>
-                      </th>                   
+                      </th>
                       <th>Kecamatan</th>
                       <th>Jenjang</th>
                       <th>Swasta/Negeri</th>
@@ -53,19 +53,19 @@
                               :class="parameters.params.order == 'member' && parameters.params.sort == 'desc' ? '' : 'light-gray'"></i>
                           </div>
                         </div>
-                      </th>           
+                      </th>
                       <th class="text-center">Options</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(item,i) in data" :key="i">                  
+                    <tr v-for="(item,i) in data" :key="i">
                       <td>{{ i + 1 }}</td>
-                      <td>{{item.name}}</td>                      
-                      <td>                    
+                      <td>{{item.name}}</td>
+                      <td>
                         <div v-if="item.district">
                           {{item.district.name}} <br/>
                           <div v-if="item.district.city">
-                            {{item.district.city.is_city ? 'Kota' : 'Kabupaten'}} : 
+                            {{item.district.city.is_city ? 'Kota' : 'Kabupaten'}} :
                             {{item.district.city.name}} <br/>
                             <div v-if="item.district.city.province">
                               Provinsi : {{item.district.city.province.name}}
@@ -74,7 +74,7 @@
                         </div>
                         <div v-else>
                           -
-                        </div>                      
+                        </div>
                       </td>
                       <td>
                         <span v-if="item.level == 'TK'" class="badge badge-success">
@@ -98,7 +98,7 @@
                       </td>
                       <td>
                         <span v-if="item.is_private" class="badge badge-danger">
-                          Swasta 
+                          Swasta
                         </span>
                         <span class="badge badge-success" v-else>
                           Negeri
@@ -115,12 +115,12 @@
                           <button class="btn btn-sm btn-primary" @click="onEdit(item)"
                             :disabled="!isCan">
                             <i class="fas fa-pen"></i>
-                          </button>                        
+                          </button>
                         </div>
                       </td>
                     </tr>
                   </tbody>
-                  
+
                   <table-data-loading-section
                     :self="this"/>
 
@@ -130,10 +130,10 @@
               </div>
               <!-- end table -->
 
-              <div class="card-title border-top"  
+              <div class="card-title border-top"
                 style="padding-bottom: -100px !important">
-                <pagination-section 
-                  :self="this" 
+                <pagination-section
+                  :self="this"
                   ref="pagination"/>
               </div>
             </div>
@@ -196,16 +196,16 @@ export default {
     }
   },
 
-  created() {    
+  created() {
     this.set_data([]);
-    this.onLoad();    
+    this.onLoad();
   },
 
   mounted() {
     this.$refs["form-option"].isExport          = false;
     this.$refs['form-option'].isFilter          = true;
-    this.$refs["form-option"].isMaintenancePage = false;  
-    this.$refs["form-option"].isAddData = this.isCan;    
+    this.$refs["form-option"].isMaintenancePage = false;
+    this.$refs["form-option"].isAddData = this.isCan;
   },
 
   data() {
@@ -239,7 +239,7 @@ export default {
           is_private : "",
           level      : ""
         }
-      }    
+      }
     }
   },
 
@@ -249,13 +249,13 @@ export default {
 
     isCan(){
       let roles = this.$store.state.setting.roles;
-      return [roles.spv].includes(this.$auth.user.role); 
+      return  roles.spv  == this.$auth.user.role;
     }
   },
 
   components : {
      FormInput,
-     ModalDetail  
+     ModalDetail
   },
 
   methods : {
@@ -283,13 +283,13 @@ export default {
     },
 
     onEdit(item){
-      this.$refs["form-input"].isEditable = true;      
+      this.$refs["form-input"].isEditable = true;
       this.$refs["form-input"].parameters.form = {
         ...item,
         district_id : item.district,
       };
-      window.$("#modal-form").modal("show");    
-      this.$refs["form-input"].$refs['form-validate'].reset();  
+      window.$("#modal-form").modal("show");
+      this.$refs["form-input"].$refs['form-validate'].reset();
     },
 
     onDetail(item){
@@ -299,7 +299,7 @@ export default {
       window.$("#modal-detail").modal("show");
     },
 
-    async onLoad(page = 1){      
+    async onLoad(page = 1){
       if(this.isLoadingData) return;
 
       this.isLoadingData            = true;
@@ -319,10 +319,10 @@ export default {
         if (page == 1) {
             this.$refs['pagination'].generatePage();
         }
-        this.$refs['pagination'].active_page = this.parameters.params.page;    
+        this.$refs['pagination'].active_page = this.parameters.params.page;
       }else{
-        this.$globalErrorToaster(this.$toaster,this.error);      
-      }  
+        this.$globalErrorToaster(this.$toaster,this.error);
+      }
 
       this.isLoadingData = false;
     },
@@ -333,15 +333,15 @@ export default {
         order : column,
         sort : sort
       }
-      
+
       this.onLoad(this.parameters.params.page)
-    }    
+    }
   }
 }
 </script>
 
 <style scoped>
-/* 
+/*
 select.form-control:not([size]):not([multiple]) {
   height: calc(1.5em + .5rem + 2px);
   padding-top: 5px;

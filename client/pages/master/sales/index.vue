@@ -65,8 +65,7 @@
                         </div>
                       </th>
                       <th>Role</th>
-                      <th>Jabatan</th>
-                      <th>Target Eksemplar</th>
+                      <th>Area</th>
                       <th class="text-center">Options</th>
                     </tr>
                   </thead>
@@ -76,23 +75,68 @@
                       <td>{{ i + 1 }}</td>
                       <td>{{ item.username }}</td>
                       <td>{{ item.email }}</td>
-                      <td class="badge badge-success"> Manager Area </td>
-                      <td>{{ item.description }}</td>
-                      <td>{{ item.target_copies }}</td>
+                      <td>
+                        <span v-if="item.role === roles.superadmin" class="badge badge-danger">
+                          Super Admin
+                        </span>
+                        <span v-else-if="item.role === roles.manager_nasional" class="badge badge-success">
+                          Manager Nasional
+                        </span>
+                        <span v-else-if="item.role === roles.manager_area" class="badge badge-success">
+                          Manager Area
+                        </span>
+                        <span v-else-if="item.role === roles.kaper" class="badge badge-primary">
+                          Kaper
+                        </span>
+                        <span v-else-if="item.role === roles.spv" class="badge badge-primary">
+                          Spv
+                        </span>
+                        <span v-else-if="item.role === roles.sales" class="badge badge-info">
+                          Sales
+                        </span>
+                        <span v-else-if="item.role === roles.kotele" class="badge badge-info">
+                          Kotele
+                        </span>
+                        <span v-else-if="item.role === roles.tele_marketing" class="badge badge-info">
+                          Tele Markerting
+                        </span>
+                        <span v-else-if="item.role === roles.admin_nasional" class="badge badge-warning">
+                          Admin Nasional
+                        </span>
+                        <span v-else-if="item.role === roles.admin_area" class="badge badge-warning">
+                          Admin Area
+                        </span>
+                        <span v-else-if="item.role === roles.admin_kaper" class="badge badge-warning">
+                          Admin Kaper
+                        </span>
+                      </td>
+                      <td>
+                        <div v-if="[roles.manager_area,roles.admin_area].includes(item.role)">
+                          {{item.province ? item.province.name : '-'}}
+                        </div>
+                        <div v-else-if="[roles.kaper,roles.admin_kaper].includes(item.role)">
+                          {{item.city ? item.city.name : '-'}}
+                        </div>
+                        <div v-else-if="[roles.spv].includes(item.role)">
+                          {{item.district ? item.district.name : '-'}}
+                        </div>
+                        <div v-else>
+                          -
+                        </div>
+                      </td>
                       <td class="text-center">
                         <div class="btn-group">
                           <button class="btn btn-sm btn-success" @click="onDetail(item)">
                             <i class="fas fa-info-circle"></i>
                           </button>
-                          <button class="btn btn-sm btn-primary" @click="onEdit(item)">
+                          <button class="btn btn-sm btn-primary" @click="onEdit(item)"
+                            :disabled="isSuperAdmin">
                             <i class="fas fa-pen"></i>
                           </button>
-
-                         <!-- <button class="btn btn-sm btn-danger" @click="onTrashed(item)" v-if="!item.deleted_at">
+                          <!--
+                          <button class="btn btn-sm btn-danger" @click="onTrashed(item)" v-if="!item.deleted_at">
                             <i class="fas fa-trash"></i>
                           </button>
-
-
                           <button class="btn btn-sm btn-success" @click="onRestored(item)" v-if="item.deleted_at">
                             <i class="fas fa-redo"></i>
                           </button>
@@ -183,11 +227,11 @@ export default {
 
   data() {
     return {
-      title               : 'Manager Area',
+      title               : 'Data Sales',
       isLoadingData       : false,
       isPaginate          : true,
       parameters : {
-        url : 'managerarea',
+        url : 'sales',
         type : 'pdf',
         params :{
           soft_deleted : '',
@@ -236,12 +280,12 @@ export default {
 
     onFormShow(){
       this.$refs["form-input"].parameters.form = {
-        fullname      : '',
-        username      : '',
-        password      : '',
-        email         : '',
-        role          : 2,
-        description   : '',
+        fullname : '',
+        username : '',
+        password : '',
+        email    : '',
+        role        : 5,
+        description : '',
         target_copies : '',
       };
 
@@ -253,7 +297,10 @@ export default {
     onEdit(item){
       this.$refs["form-input"].isEditable = true;
       this.$refs["form-input"].parameters.form = {
-        ...item
+        ...item,
+        province_id : item.province,
+        city_id : item.city,
+        district_id : item.district
       };
       window.$("#modal-form").modal("show");
       this.$refs["form-input"].$refs['form-validate'].reset();
